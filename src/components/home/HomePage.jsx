@@ -1,9 +1,12 @@
 import React from "react";
 import AllProducts from "../products/AllProducts";
+import Carousel from "../common/Carousel";
 
 const HomePage = () => {
   return (
     <div>
+      <Carousel />
+
       <h1 className="text-3xl font-bold underline">
         Welcome to the Shopping Cart
       </h1>
