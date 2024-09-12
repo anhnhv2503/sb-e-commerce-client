@@ -23,7 +23,7 @@ const Carousel = () => {
   return (
     <div className="relative w-full mx-auto">
       {/* Images */}
-      <div className="w-full h-4/5 bg-gray-300 rounded-lg overflow-hidden">
+      <div className="w-full h-4/5 bg-gray-300 overflow-hidden">
         <img
           src={images[currentIndex]}
           alt={`Slide ${currentIndex + 1}`}

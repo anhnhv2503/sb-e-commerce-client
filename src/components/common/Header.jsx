@@ -24,6 +24,7 @@ import {
   PhoneIcon,
   PlayCircleIcon,
 } from "@heroicons/react/20/solid";
+import { Link } from "react-router-dom";
 
 const products = [
   {
@@ -64,6 +65,8 @@ const callsToAction = [
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const handleLoginClick = () => {};
 
   return (
     <header className="bg-slate-300">
@@ -234,7 +237,7 @@ const Header = () => {
               </div>
               <div className="py-6">
                 <a
-                  href="#"
+                  href="/login"
                   className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
                   Log in
