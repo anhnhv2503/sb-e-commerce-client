@@ -1,6 +1,5 @@
-import React from "react";
-import AllProducts from "../products/AllProducts";
 import Carousel from "../common/Carousel";
+import AllProducts from "../products/AllProducts";
 
 const HomePage = () => {
   return (
