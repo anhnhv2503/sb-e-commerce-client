@@ -39,7 +39,6 @@ const Header = () => {
       try {
         const response = await getAllCategories();
         setCategories(response.data?.data);
-        // console.log("Categories loaded", response.data?.data);
       } catch (error) {
         console.error("Error loading categories", error);
       }
@@ -48,7 +47,7 @@ const Header = () => {
   }, []);
 
   return (
-    <header className="bg-slate-300">
+    <header className="bg-slate-400">
       <nav
         aria-label="Global"
         className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
@@ -79,7 +78,7 @@ const Header = () => {
               Shopping
               <ChevronDownIcon
                 aria-hidden="true"
-                className="h-5 w-5 flex-none text-gray-400"
+                className="h-5 w-5 flex-none text-black-400"
               />
             </PopoverButton>
 
@@ -105,14 +104,11 @@ const Header = () => {
             </PopoverPanel>
           </Popover>
 
-          <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
-            Features
-          </a>
-          <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
-            Marketplace
-          </a>
-          <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
-            Company
+          <a
+            href="/about"
+            className="text-sm font-semibold leading-6 text-gray-900"
+          >
+            About Us
           </a>
         </PopoverGroup>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
@@ -174,22 +170,10 @@ const Header = () => {
                   </DisclosurePanel>
                 </Disclosure>
                 <a
-                  href="#"
+                  href="/about"
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
-                  Features
-                </a>
-                <a
-                  href="#"
-                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                >
-                  Marketplace
-                </a>
-                <a
-                  href="#"
-                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                >
-                  Company
+                  About Us
                 </a>
               </div>
               <div className="py-6">
