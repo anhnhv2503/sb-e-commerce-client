@@ -7,6 +7,10 @@ const instance = axios.create({
 
 axios.interceptors.request.use(
   function (config) {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     // Làm gì đó trước khi request dược gửi đi
     return config;
   },
@@ -32,6 +36,7 @@ axios.interceptors.response.use(
       // authentication (token related issues)
       case 401: {
         toast.error("Unauthorized");
+        window.location.href = "/login";
         return Promise.reject(error);
       }
 
