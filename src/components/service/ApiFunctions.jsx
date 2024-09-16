@@ -1,5 +1,9 @@
 import axios from "../service/axiosConfig";
 
+export const loginUser = async (data) => {
+  return axios.post("/api/auth/login", data);
+};
+
 export const getProducts = async () => {
   return axios.get("/api/products/all");
 };

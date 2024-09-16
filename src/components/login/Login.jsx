@@ -1,14 +1,23 @@
 import { useState } from "react";
+import { useAuth } from "../auth/AuthContext";
+import toast, { Toaster } from "react-hot-toast";
 
 const Login = () => {
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Email:", email);
-    console.log("Password:", password);
+    if (email.trim() === "" || !password.trim() === "") {
+      toast.error("Email and password are required.", {
+        duration: 4000,
+        position: "top-right",
+        icon: "❌",
+      });
+    }
     // Add your login logic here
+    login({ email, password });
   };
 
   return (
@@ -30,7 +39,7 @@ const Login = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-slate-700 focus:border-slate-800"
+              className="w-full mt-1 p-2 input input-bordered bg-white text-black border-gray-300"
               placeholder="Enter your email"
               required
             />
@@ -49,7 +58,7 @@ const Login = () => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full mt-1 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-slate-700 focus:border-slate-800"
+              className="w-full mt-1 p-2 input input-bordered bg-white text-black border-gray-300"
               placeholder="Enter your password"
               required
             />
@@ -74,6 +83,7 @@ const Login = () => {
           </a>
         </p>
       </div>
+      <Toaster />
     </div>
   );
 };
