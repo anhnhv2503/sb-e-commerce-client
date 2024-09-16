@@ -11,3 +11,7 @@ export const getAllCategories = async () => {
 export const getProductById = async (id) => {
   return axios.get(`/api/products/${id}/get`);
 };
+
+export const getNewArrivals = async () => {
+  return axios.get("/api/products/new-arrival");
+};

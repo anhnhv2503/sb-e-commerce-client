@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { getProducts } from "../service/ApiFunctions";
+import { getNewArrivals } from "../service/ApiFunctions";
 
-const AllProducts = () => {
-  const [products, setProducts] = useState([]);
+const NewArrivals = () => {
+  const [newProducts, setNewProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setIsLoading(true);
-        const response = await getProducts();
-        setProducts(response.data?.data);
+        const response = await getNewArrivals();
+        setNewProducts(response.data?.data);
         setIsLoading(false);
       } catch (error) {
         setIsLoading(true);
@@ -31,7 +31,7 @@ const AllProducts = () => {
         )}
 
         <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-          {products.map((product) => (
+          {newProducts.map((product) => (
             <a
               key={product.id}
               href={`/product/${product.id}`}
@@ -56,4 +56,4 @@ const AllProducts = () => {
   );
 };
 
-export default AllProducts;
+export default NewArrivals;
