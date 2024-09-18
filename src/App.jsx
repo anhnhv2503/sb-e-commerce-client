@@ -8,6 +8,7 @@ import AboutUs from "./components/shop/AboutUs";
 import { AuthProvider } from "./components/auth/AuthContext";
 import React from "react";
 import Logout from "./components/logout/Logout";
+import Register from "./components/register/Register";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="/product/:id" element={<ProductDetail />} />
         </Routes>

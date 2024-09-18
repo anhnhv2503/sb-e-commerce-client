@@ -25,7 +25,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getAllCategories } from "../service/ApiFunctions";
+import { getAllCategories, getBrands } from "../service/ApiFunctions";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -33,6 +33,8 @@ const Header = () => {
   const navigate = useNavigate();
 
   const [categories, setCategories] = useState([]);
+
+  const [brands, setBrands] = useState([]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -44,6 +46,19 @@ const Header = () => {
       }
     };
     fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    const fetchBrands = async () => {
+      try {
+        const response = await getBrands();
+        setBrands(response.data?.data);
+        console.log(response.data?.data);
+      } catch (error) {
+        console.error("Error loading brands", error);
+      }
+    };
+    fetchBrands();
   }, []);
 
   return (
@@ -97,6 +112,35 @@ const Header = () => {
                       <span className="absolute inset-0" />
 
                       <p className="mt-1 text-gray-600">{item.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </PopoverPanel>
+          </Popover>
+
+          <Popover className="relative">
+            <PopoverButton className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900">
+              Brand
+              <ChevronDownIcon
+                aria-hidden="true"
+                className="h-5 w-5 flex-none text-black-400"
+              />
+            </PopoverButton>
+
+            <PopoverPanel
+              transition
+              className="absolute -left-8 top-full z-10 mt-3 overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5 transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150 data-[enter]:ease-out data-[leave]:ease-in"
+            >
+              <div className="p-4">
+                {brands.map((item, index) => (
+                  <div
+                    key={index}
+                    className="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm leading-6 hover:bg-gray-50"
+                  >
+                    <div className="flex-auto">
+                      {item}
+                      <span className="absolute inset-0" />
                     </div>
                   </div>
                 ))}
@@ -162,6 +206,27 @@ const Header = () => {
                         key={item.name}
                         as="a"
                         href={item.href}
+                        className="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                      >
+                        {item.name}
+                      </DisclosureButton>
+                    ))}
+                  </DisclosurePanel>
+                </Disclosure>
+
+                <Disclosure as="div" className="-mx-3">
+                  <DisclosureButton className="group flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">
+                    Shopping
+                    <ChevronDownIcon
+                      aria-hidden="true"
+                      className="h-5 w-5 flex-none group-data-[open]:rotate-180"
+                    />
+                  </DisclosureButton>
+                  <DisclosurePanel className="mt-2 space-y-2">
+                    {[...brands].map((item, index) => (
+                      <DisclosureButton
+                        key={index}
+                        as="a"
                         className="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                       >
                         {item.name}
