@@ -7,6 +7,7 @@ const Logout = () => {
 
   const handleLogout = () => {
     // Add your logout logic here
+
     logout();
   };
 

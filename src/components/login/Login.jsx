@@ -15,9 +15,10 @@ const Login = () => {
         position: "top-right",
         icon: "❌",
       });
+    } else {
+      login({ email, password });
     }
     // Add your login logic here
-    login({ email, password });
   };
 
   return (

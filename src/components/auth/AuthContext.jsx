@@ -17,7 +17,10 @@ export const AuthProvider = ({ children }) => {
         "accessToken",
         JSON.stringify(response.data?.accessToken)
       );
-      toast.success("Login successful");
+      toast.success("Login successful", {
+        duration: 2000,
+      });
+      window.location.href = "/";
     } catch (error) {
       toast.error(error.response.data.message);
     }
@@ -25,7 +28,9 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     // Add your logout logic here
+    localStorage.removeItem("accessToken");
     setUser(null);
+    window.location.href = "/";
   };
 
   return (
