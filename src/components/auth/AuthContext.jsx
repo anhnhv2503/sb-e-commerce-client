@@ -1,11 +1,14 @@
 import React, { createContext, useContext, useState } from "react";
 import { loginUser } from "../service/ApiFunctions";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+
+  const navigate = useNavigate();
 
   const login = async (userData) => {
     // Add your login logic here
@@ -20,7 +23,7 @@ export const AuthProvider = ({ children }) => {
       toast.success("Login successful", {
         duration: 2000,
       });
-      window.location.href = "/";
+      navigate("/");
     } catch (error) {
       toast.error(error.response.data.message);
     }
@@ -30,7 +33,7 @@ export const AuthProvider = ({ children }) => {
     // Add your logout logic here
     localStorage.removeItem("accessToken");
     setUser(null);
-    window.location.href = "/";
+    navigate("/");
   };
 
   return (
