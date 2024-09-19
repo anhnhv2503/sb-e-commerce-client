@@ -8,6 +8,7 @@ import AboutUs from "./components/shop/AboutUs";
 import Header from "./components/common/Header";
 import Footer from "./components/common/Footer";
 import { AuthProvider } from "./components/auth/AuthContext";
+import Profile from "./components/user/Profile";
 
 function Layout() {
   return (
@@ -51,7 +52,7 @@ function App() {
           children: [
             {
               path: "profile",
-              element: <div>Profile</div>,
+              element: <Profile />,
             },
           ],
         },

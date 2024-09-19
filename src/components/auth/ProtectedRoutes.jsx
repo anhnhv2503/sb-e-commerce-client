@@ -10,7 +10,11 @@ const ProtectedRoute = ({ component: Component, roles, ...rest }) => {
       {...rest}
       render={(props) => {
         if (!user) {
-          return <Redirect to="/login" />;
+          return (
+            <Redirect
+              to={{ pathname: "/login", state: { from: props.state.location } }}
+            />
+          );
         }
 
         if (roles && !roles.includes(user.role)) {

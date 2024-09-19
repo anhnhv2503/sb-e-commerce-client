@@ -34,3 +34,7 @@ export const registerUser = async (data) => {
 
   return axios.post("/api/user/register", formData);
 };
+
+export const getUserDetail = async (id) => {
+  return axios.get(`/api/user/${id}/detail`);
+};
