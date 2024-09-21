@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState } from "react";
 import { loginUser } from "../service/ApiFunctions";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 const AuthContext = createContext();
 
@@ -22,7 +23,13 @@ export const AuthProvider = ({ children }) => {
       toast.success("Login successful", {
         duration: 2000,
       });
-      navigate("/");
+      const token = localStorage.getItem("accessToken");
+      const decodedToken = jwtDecode(token);
+      if (decodedToken.roles[0] === "ROLE_ADMIN") {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
     } catch (error) {
       toast.error(error.response.data.message);
     }

@@ -9,6 +9,9 @@ import Header from "./components/common/Header";
 import Footer from "./components/common/Footer";
 import { AuthProvider } from "./components/auth/AuthContext";
 import Profile from "./components/user/Profile";
+import SideBar from "./components/admin/layout/SideBar";
+import DashBoard from "./components/admin/pages/DashBoard";
+import AdminPage from "./components/admin/pages/AdminPage";
 
 function Layout() {
   return (
@@ -16,6 +19,21 @@ function Layout() {
       <Header />
       <Outlet /> {/* This will render the matched route's component */}
       <Footer />
+    </AuthProvider>
+  );
+}
+
+function AdminLayout() {
+  return (
+    <AuthProvider>
+      <div className="flex">
+        <div className="flex-col h-screen">
+          <SideBar />
+        </div>
+        <div className="flex-1 p-6 bg-gray-100">
+          <Outlet />
+        </div>
+      </div>
     </AuthProvider>
   );
 }
@@ -55,6 +73,20 @@ function App() {
               element: <Profile />,
             },
           ],
+        },
+      ],
+    },
+    {
+      path: "/admin",
+      element: <AdminLayout />,
+      children: [
+        {
+          path: "",
+          element: <AdminPage />,
+        },
+        {
+          path: "dashboard",
+          element: <DashBoard />,
         },
       ],
     },

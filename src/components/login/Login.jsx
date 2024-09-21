@@ -18,7 +18,6 @@ const Login = () => {
     } else {
       login({ email, password });
     }
-    // Add your login logic here
   };
 
   return (

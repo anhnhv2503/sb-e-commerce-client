@@ -11,7 +11,11 @@ const Logout = () => {
     logout();
   };
 
-  return <Button onClick={handleLogout}>Logout</Button>;
+  return (
+    <Button onClick={handleLogout} variant="destructive">
+      Logout
+    </Button>
+  );
 };
 
 export default Logout;
