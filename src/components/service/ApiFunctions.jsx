@@ -24,17 +24,29 @@ export const getBrands = async () => {
   return axios.get("/api/products/brand/all");
 };
 
-export const registerUser = async (data) => {
+export const registerUser = async (data, fullAddress) => {
   const formData = new FormData();
   formData.append("email", data.email);
   formData.append("password", data.password);
   formData.append("fullName", data.fullName);
   formData.append("phone", data.phone);
-  formData.append("address", data.address);
+  formData.append("address", fullAddress);
 
   return axios.post("/api/user/register", formData);
 };
 
 export const getUserDetail = async (id) => {
   return axios.get(`/api/user/${id}/detail`);
+};
+
+export const getAllProvinces = async () => {
+  return axios.get("https://esgoo.net/api-tinhthanh/1/0.htm");
+};
+
+export const getAllDistricts = async (provinceId) => {
+  return axios.get(`https://esgoo.net/api-tinhthanh/2/${provinceId}.htm`);
+};
+
+export const getAllWards = async (districtId) => {
+  return axios.get(`https://esgoo.net/api-tinhthanh/3/${districtId}.htm`);
 };

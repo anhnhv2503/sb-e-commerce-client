@@ -12,6 +12,8 @@ import Profile from "./components/user/Profile";
 import SideBar from "./components/admin/layout/SideBar";
 import DashBoard from "./components/admin/pages/DashBoard";
 import AdminPage from "./components/admin/pages/AdminPage";
+import AddProduct from "./components/admin/pages/AddProduct";
+import ProductList from "./components/admin/pages/ProductList";
 
 function Layout() {
   return (
@@ -30,7 +32,7 @@ function AdminLayout() {
         <div className="flex-col h-screen">
           <SideBar />
         </div>
-        <div className="flex-1 p-6 bg-gray-100">
+        <div className="flex-1 p-6 bg-gray-100 overflow-y-auto h-screen">
           <Outlet />
         </div>
       </div>
@@ -87,6 +89,14 @@ function App() {
         {
           path: "dashboard",
           element: <DashBoard />,
+        },
+        {
+          path: "product/add",
+          element: <AddProduct />,
+        },
+        {
+          path: "product/list",
+          element: <ProductList />,
         },
       ],
     },

@@ -27,6 +27,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAllCategories, getBrands } from "../service/ApiFunctions";
 import Logout from "../logout/Logout";
+import logo from "../../assets/logo.svg";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -72,11 +73,7 @@ const Header = () => {
         <div className="flex lg:flex-1">
           <a href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
-            <img
-              alt=""
-              src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-              className="h-8 w-auto"
-            />
+            <img alt="" src={logo} className="h-8 w-auto" />
           </a>
         </div>
         <div className="flex lg:hidden">
@@ -92,7 +89,7 @@ const Header = () => {
         <PopoverGroup className="hidden lg:flex lg:gap-x-12">
           <Popover className="relative">
             <PopoverButton className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900">
-              Shopping
+              Categories
               <ChevronDownIcon
                 aria-hidden="true"
                 className="h-5 w-5 flex-none text-black-400"
@@ -123,7 +120,7 @@ const Header = () => {
 
           <Popover className="relative">
             <PopoverButton className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900">
-              Brand
+              Brands
               <ChevronDownIcon
                 aria-hidden="true"
                 className="h-5 w-5 flex-none text-black-400"
@@ -188,7 +185,9 @@ const Header = () => {
                 className="menu menu-sm dropdown-content bg-white rounded-box z-[1] mt-3 w-52 p-2 shadow"
               >
                 <li>
-                  <a className="justify-between">Profile</a>
+                  <a className="justify-between" href="/user/profile">
+                    Profile
+                  </a>
                 </li>
                 <li>
                   <a>Settings</a>
@@ -245,7 +244,7 @@ const Header = () => {
               <div className="space-y-2 py-6">
                 <Disclosure as="div" className="-mx-3">
                   <DisclosureButton className="group flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">
-                    Shopping
+                    Categories
                     <ChevronDownIcon
                       aria-hidden="true"
                       className="h-5 w-5 flex-none group-data-[open]:rotate-180"
@@ -267,7 +266,7 @@ const Header = () => {
 
                 <Disclosure as="div" className="-mx-3">
                   <DisclosureButton className="group flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">
-                    Shopping
+                    Brands
                     <ChevronDownIcon
                       aria-hidden="true"
                       className="h-5 w-5 flex-none group-data-[open]:rotate-180"

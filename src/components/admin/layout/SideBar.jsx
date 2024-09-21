@@ -2,6 +2,12 @@ import Logout from "@/components/logout/Logout";
 import React, { useState } from "react";
 
 const SideBar = () => {
+  const [isProductDropdownOpen, setIsProductDropdownOpen] = useState(false);
+
+  const toggleProductDropdown = () => {
+    setIsProductDropdownOpen(!isProductDropdownOpen);
+  };
+
   return (
     <>
       {/* Sidebar */}
@@ -36,17 +42,45 @@ const SideBar = () => {
           <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer">
             <a href="/admin/dashboard">Dashboard</a>
           </li>
+
+          {/* Products Dropdown */}
           <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer">
-            <a href="/admin">Products</a>
+            <div
+              className="flex items-center justify-between"
+              onClick={toggleProductDropdown}
+            >
+              <a>Products</a>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-5 h-5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d={isProductDropdownOpen ? "M19 9l-7 7-7-7" : "M9 5l7 7-7 7"}
+                />
+              </svg>
+            </div>
+
+            {/* Dropdown Menu */}
+            {isProductDropdownOpen && (
+              <ul className="ml-4 mt-2">
+                <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer">
+                  <a href="/admin/product/add">Add Product</a>
+                </li>
+                <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer">
+                  <a href="/admin/product/list">View Products</a>
+                </li>
+              </ul>
+            )}
           </li>
+
           <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer">
             <a href="/admin">User</a>
-          </li>
-          <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer">
-            <a href="/admin">F3</a>
-          </li>
-          <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer">
-            <a href="/admin">F4</a>
           </li>
         </ul>
         <div className="flex items-center justify-between px-4 py-3">
