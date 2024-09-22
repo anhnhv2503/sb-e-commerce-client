@@ -15,6 +15,7 @@ import AdminPage from "./components/admin/pages/AdminPage";
 import AddProduct from "./components/admin/pages/AddProduct";
 import ProductList from "./components/admin/pages/ProductList";
 import ManageUser from "./components/admin/pages/ManageUser";
+import AllProducts from "./components/products/AllProducts";
 
 function Layout() {
   return (
@@ -66,6 +67,10 @@ function App() {
         {
           path: "product/:id",
           element: <ProductDetail />,
+        },
+        {
+          path: "shop",
+          element: <AllProducts />,
         },
         {
           path: "user",

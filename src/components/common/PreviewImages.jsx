@@ -4,17 +4,25 @@ const PreviewImages = ({ imageUrls, isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-white rounded-lg overflow-hidden shadow-xl max-w-lg w-full">
+    <div
+      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 overflow-y-auto"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-lg overflow-hidden shadow-xl max-w-7xl w-full"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="relative">
-          {imageUrls.map((imageUrl, index) => (
-            <img
-              key={index}
-              src={imageUrl}
-              alt="Preview"
-              className="w-96 h-96 object-cover rounded-md mx-auto my-4"
-            />
-          ))}
+          <div className="flex flex-row overflow-x-auto space-x-4 p-4">
+            {imageUrls.map((imageUrl, index) => (
+              <img
+                key={index}
+                src={imageUrl}
+                alt="Preview"
+                className="w-96 h-96 object-cover rounded-md"
+              />
+            ))}
+          </div>
           <button
             onClick={onClose}
             className="absolute top-0 right-0 m-2 text-white bg-indigo-600 rounded-full px-3 py-1"

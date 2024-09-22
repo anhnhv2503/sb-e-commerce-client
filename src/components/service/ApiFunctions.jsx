@@ -62,3 +62,17 @@ export const addMoreSizeForProduct = async (productId, sizeName, quantity) => {
     },
   });
 };
+
+export const addProduct = async (data) => {
+  const token = JSON.parse(localStorage.getItem("accessToken"));
+  return axios.post("/api/products/add", data, {
+    headers: {
+      Authorization: `Bearer ${token}`, // Token for authentication
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
+
+export const getInventory = async (sizeId) => {
+  return axios.get(`/api/products/size/inventory/${sizeId}`);
+};

@@ -2,7 +2,16 @@ import { useEffect, useState } from "react";
 import { StarIcon } from "@heroicons/react/20/solid";
 import { Radio, RadioGroup } from "@headlessui/react";
 import { useParams } from "react-router-dom";
-import { getProductById } from "../service/ApiFunctions";
+import { getInventory, getProductById } from "../service/ApiFunctions";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "../ui/breadcrumb";
+import { Slash } from "lucide-react";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -26,9 +35,45 @@ const ProductDetail = () => {
   }, [id]);
 
   const [selectedSize, setSelectedSize] = useState(null);
+  const [inventory, setInventory] = useState(null);
+
+  useEffect(() => {
+    if (selectedSize) {
+      const fetchInventory = async () => {
+        try {
+          const response = await getInventory(selectedSize);
+          setInventory(response.data?.data);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      fetchInventory();
+    }
+  }, [selectedSize]);
 
   return (
     <div className="bg-white">
+      <div className="flex justify-center">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/">Home</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator>
+              <Slash />
+            </BreadcrumbSeparator>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/shop">Shop</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator>
+              <Slash />
+            </BreadcrumbSeparator>
+            <BreadcrumbItem>
+              <BreadcrumbPage>Detail</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      </div>
       <div className="pt-6">
         {/* Image gallery */}
         <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8">
@@ -60,6 +105,12 @@ const ProductDetail = () => {
             <p className="text-3xl tracking-tight text-gray-900">
               ${product.price}
             </p>
+
+            {inventory && (
+              <p className="text-sm tracking-tight text-green-600">
+                In-stock: {inventory}
+              </p>
+            )}
 
             <form className="mt-10">
               {/* Sizes */}

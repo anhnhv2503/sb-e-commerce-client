@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { getProducts } from "../service/ApiFunctions";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "../ui/breadcrumb";
+import { Slash } from "lucide-react";
 
 const AllProducts = () => {
   const [products, setProducts] = useState([]);
@@ -22,6 +31,21 @@ const AllProducts = () => {
 
   return (
     <div className="bg-white">
+      <div className="flex justify-center">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/">Home</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator>
+              <Slash />
+            </BreadcrumbSeparator>
+            <BreadcrumbItem>
+              <BreadcrumbPage>Shop</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      </div>
       <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
         <h2 className="sr-only">Products</h2>
         {isLoading && (
@@ -41,7 +65,7 @@ const AllProducts = () => {
                 <img
                   alt={product.name + " image"}
                   src={product.images[0].url}
-                  className="h-full w-full object-cover object-center group-hover:opacity-75"
+                  className="h-96 w-96 object-cover object-center group-hover:opacity-75"
                 />
               </div>
               <h3 className="mt-4 text-sm text-gray-700">{product.name}</h3>

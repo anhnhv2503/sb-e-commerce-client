@@ -87,6 +87,12 @@ const Header = () => {
           </button>
         </div>
         <PopoverGroup className="hidden lg:flex lg:gap-x-12">
+          <a
+            href="/shop"
+            className="text-sm font-semibold leading-6 text-gray-900"
+          >
+            Shop
+          </a>
           <Popover className="relative">
             <PopoverButton className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900">
               Categories
@@ -279,7 +285,7 @@ const Header = () => {
                         as="a"
                         className="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                       >
-                        {item.name}
+                        {item}
                       </DisclosureButton>
                     ))}
                   </DisclosurePanel>

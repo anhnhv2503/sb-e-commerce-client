@@ -8,7 +8,10 @@ import {
 } from "@/components/ui/select";
 import { sizeOptions } from "../../../data/data";
 import React, { useEffect, useState } from "react";
-import { getAllCategories } from "@/components/service/ApiFunctions";
+import {
+  addProduct,
+  getAllCategories,
+} from "@/components/service/ApiFunctions";
 import PreviewImages from "@/components/common/PreviewImages";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -21,6 +24,8 @@ const AddProduct = () => {
   const [category, setCategory] = useState("");
   const [sizename, setSizeName] = useState("");
   const [images, setImages] = useState([]);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,9 +44,40 @@ const AddProduct = () => {
         icon: "❌",
       });
     } else {
-      toast.success("Product added successfully", {
-        duration: 3000,
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("description", description);
+      formData.append("price", price);
+      formData.append("brand", brand);
+      formData.append("inventory", inventory);
+      formData.append("categoryId", category);
+      formData.append("sizeName", sizename);
+      images.forEach((image) => {
+        formData.append("images", image);
       });
+
+      try {
+        setIsLoading(true);
+        const response = await addProduct(formData);
+        if (response.status === 200) {
+          toast.success("Product added successfully", {
+            duration: 3000,
+            icon: "✅",
+          });
+          setIsLoading(false);
+        }
+        setName("");
+        setDescription("");
+        setPrice("");
+        setBrand("");
+        setInventory("");
+        setCategory("");
+        setSizeName("");
+        setImages([]);
+        setPreviewImages([]);
+      } catch (error) {
+        console.error("Error adding product", error);
+      }
     }
   };
 
@@ -234,7 +270,7 @@ const AddProduct = () => {
             onChange={handleImageChange}
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
           />
-          <div className="mt-2 flex space-x-2">
+          <div className="mt-2 flex space-x-2 overflow-y-auto">
             {previewImages.map((url) => (
               <img
                 key={url}
@@ -246,22 +282,30 @@ const AddProduct = () => {
             ))}
           </div>
         </div>
+        <div className="">
+          <PreviewImages
+            imageUrls={previewImages}
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+          />
+        </div>
 
         {/* Submit Button */}
         <div className="mt-6">
-          <button
-            type="submit"
-            className="w-full bg-slate-800 text-white p-2 rounded-md hover:bg-indigo-700 transition duration-200"
-            onClick={handleSubmit}
-          >
-            Add Product
-          </button>
+          {isLoading ? (
+            <center>
+              <span className="loading loading-ring loading-lg"></span>
+            </center>
+          ) : (
+            <button
+              type="submit"
+              className="w-full bg-slate-800 text-white p-2 rounded-md hover:bg-indigo-700 transition duration-200"
+              onClick={handleSubmit}
+            >
+              Add Product
+            </button>
+          )}
         </div>
-        <PreviewImages
-          imageUrls={previewImages}
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-        />
       </form>
       <Toaster />
     </div>

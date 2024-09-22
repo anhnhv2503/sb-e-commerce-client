@@ -41,7 +41,7 @@ const NewArrivals = () => {
                 <img
                   alt={product.name + " image"}
                   src={product.images[0].url}
-                  className="h-full w-full object-cover object-center group-hover:opacity-75"
+                  className="h-96 w-96 object-cover object-center group-hover:opacity-75"
                 />
               </div>
               <h3 className="mt-4 text-sm text-gray-700">{product.name}</h3>
