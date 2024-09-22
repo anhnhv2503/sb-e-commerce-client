@@ -1,45 +1,87 @@
 import { Input } from "@/components/ui/input";
-import React, { useState } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { sizeOptions } from "../../../data/data";
+import React, { useEffect, useState } from "react";
+import { getAllCategories } from "@/components/service/ApiFunctions";
+import PreviewImages from "@/components/common/PreviewImages";
+import toast, { Toaster } from "react-hot-toast";
 
 const AddProduct = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    price: "",
-    brand: "",
-    inventory: "",
-    category: "",
-    sizename: "",
-    images: [],
-  });
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
+  const [brand, setBrand] = useState("");
+  const [inventory, setInventory] = useState("");
+  const [category, setCategory] = useState("");
+  const [sizename, setSizeName] = useState("");
+  const [images, setImages] = useState([]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (
+      name.trim() === "" ||
+      description.trim() === "" ||
+      price.trim() === "" ||
+      brand.trim() === "" ||
+      inventory.trim() === "" ||
+      category.trim() === "" ||
+      sizename.trim() === "" ||
+      images.length === 0
+    ) {
+      toast.error("Please fill all the fields", {
+        duration: 3000,
+        icon: "❌",
+      });
+    } else {
+      toast.success("Product added successfully", {
+        duration: 3000,
+      });
+    }
   };
+
+  const [previewImages, setPreviewImages] = useState([]);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await getAllCategories();
+        setCategories(response.data?.data);
+      } catch (error) {
+        console.error("Error loading categories", error);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-    setFormData((prevData) => ({
-      ...prevData,
-      images: files,
-    }));
+    setImages(files);
+    const imagesUrl = files.map((file) => URL.createObjectURL(file));
+    setPreviewImages(imagesUrl);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle form submission, like sending data to an API
-    console.log("Form Data:", formData);
+  const handleShowImage = () => {
+    // Open the modal when the button is clicked
+    if (previewImages) setIsModalOpen(true);
   };
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-md">
-      <h2 className="text-2xl font-bold mb-6 text-center">Add New Product</h2>
+      <h2 className="text-2xl font-bold mb-6 text-center text-slate-700">
+        Add New Product
+      </h2>
 
-      <form onSubmit={handleSubmit}>
+      <form>
         {/* Name */}
         <div className="mb-4">
           <label
@@ -49,11 +91,12 @@ const AddProduct = () => {
             Product Name
           </label>
           <input
+            required
             type="text"
             name="name"
             id="name"
-            value={formData.name}
-            onChange={handleChange}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             className="w-full mt-1 p-2 input input-bordered bg-white text-black border-gray-300"
             placeholder="Enter product name"
           />
@@ -68,10 +111,11 @@ const AddProduct = () => {
             Description
           </label>
           <textarea
+            required
             name="description"
             id="description"
-            value={formData.description}
-            onChange={handleChange}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
             className="w-full mt-1 p-2 input input-bordered bg-white text-black border-gray-300"
             placeholder="Enter product description"
             rows="4"
@@ -87,11 +131,12 @@ const AddProduct = () => {
             Price
           </label>
           <input
+            required
             type="number"
             name="price"
             id="price"
-            value={formData.price}
-            onChange={handleChange}
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
             className="w-full mt-1 p-2 input input-bordered bg-white text-black border-gray-300"
             placeholder="Enter price"
           />
@@ -106,71 +151,71 @@ const AddProduct = () => {
             Brand
           </label>
           <input
+            required
             type="text"
             name="brand"
             id="brand"
-            value={formData.brand}
-            onChange={handleChange}
+            value={brand}
+            onChange={(e) => setBrand(e.target.value)}
             className="w-full mt-1 p-2 input input-bordered bg-white text-black border-gray-300"
             placeholder="Enter brand name"
           />
         </div>
 
         {/* Inventory */}
-        <div className="mb-4">
+        <div className="mb-4 flex">
           <label
             htmlFor="inventory"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-medium text-gray-700 mx-3"
           >
-            Inventory Quantity
+            Quantity
           </label>
-          <input
+          <Input
+            required
             type="number"
-            name="inventory"
-            id="inventory"
-            value={formData.inventory}
-            onChange={handleChange}
-            className="w-full mt-1 p-2 input input-bordered bg-white text-black border-gray-300"
-            placeholder="Enter inventory quantity"
+            placeholder="Quantity"
+            max="100"
+            className="w-40"
+            onChange={(e) => setInventory(e.target.value)}
           />
-        </div>
 
-        {/* Category */}
-        <div className="mb-4">
           <label
             htmlFor="category"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-medium text-gray-700 mx-3"
           >
             Category
           </label>
-          <input
-            type="text"
-            name="category"
-            id="category"
-            value={formData.category}
-            onChange={handleChange}
-            className="w-full mt-1 p-2 input input-bordered bg-white text-black border-gray-300"
-            placeholder="Enter category"
-          />
-        </div>
+          <Select onValueChange={(value) => setCategory(value)}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select Category" />
+            </SelectTrigger>
+            <SelectContent>
+              {categories.map((category) => (
+                <SelectItem key={category.id} value={category.id}>
+                  {category.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
-        {/* Size Name */}
-        <div className="mb-4">
           <label
             htmlFor="sizename"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-medium text-gray-700 mx-3"
           >
             Size Name
           </label>
-          <input
-            type="text"
-            name="sizename"
-            id="sizename"
-            value={formData.sizename}
-            onChange={handleChange}
-            className="w-full mt-1 p-2 input input-bordered bg-white text-black border-gray-300"
-            placeholder="Enter size name"
-          />
+          <Select onValueChange={(value) => setSizeName(value)}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select Size" />
+            </SelectTrigger>
+            <SelectContent>
+              {sizeOptions.map((size) => (
+                <SelectItem key={size.id} value={size.name}>
+                  {size.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Images */}
@@ -189,18 +234,36 @@ const AddProduct = () => {
             onChange={handleImageChange}
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
           />
+          <div className="mt-2 flex space-x-2">
+            {previewImages.map((url) => (
+              <img
+                key={url}
+                src={url}
+                alt="Product photo"
+                className="w-40 h-40 object-cover rounded-md"
+                onClick={handleShowImage}
+              />
+            ))}
+          </div>
         </div>
 
         {/* Submit Button */}
         <div className="mt-6">
           <button
             type="submit"
-            className="w-full bg-indigo-600 text-white p-2 rounded-md hover:bg-indigo-700 transition duration-200"
+            className="w-full bg-slate-800 text-white p-2 rounded-md hover:bg-indigo-700 transition duration-200"
+            onClick={handleSubmit}
           >
             Add Product
           </button>
         </div>
+        <PreviewImages
+          imageUrls={previewImages}
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
       </form>
+      <Toaster />
     </div>
   );
 };

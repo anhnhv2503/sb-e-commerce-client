@@ -1,6 +1,6 @@
 import { getProducts } from "@/components/service/ApiFunctions";
-import { Button } from "@/components/ui/button";
 import React, { useEffect, useState } from "react";
+import AddMoreSize from "./AddMoreSize";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -30,22 +30,22 @@ const ProductList = () => {
                 className="h-44 w-36 flex-none bg-gray-50"
               />
               <div className="min-w-0 flex-auto">
-                <p className="text-sm font-semibold leading-6 text-gray-900">
+                <p className="text-lg font-semibold leading-6 text-gray-900">
                   {product.name}
                 </p>
-                <p className="mt-1 truncate text-xs leading-5 text-slate-500">
+                <p className="mt-1 truncate text-s leading-5 text-slate-500">
                   Brand: {product.brand}
                 </p>
-                <p className="mt-1 truncate text-xs leading-5 text-slate-800">
+                <p className="mt-1 truncate text-s leading-5 text-slate-800">
                   Category: {product.category?.name}
                 </p>
-                <p className="mt-1 truncate text-xs leading-5 text-gray-500">
+                <p className="mt-1 truncate text-s leading-5 text-gray-500">
                   {product.description}
                 </p>
-                <p className="mt-1 truncate text-xs leading-5 text-red-500">
+                <p className="mt-1 truncate text-s leading-5 text-red-500">
                   <strong>
                     {product?.size.map(
-                      (size) => size.sizeName + ":" + size.quantity + " "
+                      (size) => size.sizeName + ":" + size.quantity + "  "
                     )}
                   </strong>
                 </p>
@@ -55,9 +55,9 @@ const ProductList = () => {
               <p className="text-sm leading-6 text-white badge">
                 ${product.price}
               </p>
-              <Button className={"mt-3 text-slate-700"} variant="outline">
-                Add more Size
-              </Button>
+              <div className="mt-3">
+                <AddMoreSize productId={product.id} />
+              </div>
             </div>
           </li>
         ))}

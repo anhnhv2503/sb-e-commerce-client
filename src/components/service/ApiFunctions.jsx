@@ -50,3 +50,15 @@ export const getAllDistricts = async (provinceId) => {
 export const getAllWards = async (districtId) => {
   return axios.get(`https://esgoo.net/api-tinhthanh/3/${districtId}.htm`);
 };
+
+export const addMoreSizeForProduct = async (productId, sizeName, quantity) => {
+  const token = JSON.parse(localStorage.getItem("accessToken"));
+  const formData = new FormData();
+  formData.append("sizeName", sizeName);
+  formData.append("quantity", quantity);
+  return axios.post(`/api/products/size/add/${productId}`, formData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};

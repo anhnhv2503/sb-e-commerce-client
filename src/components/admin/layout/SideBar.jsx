@@ -80,7 +80,7 @@ const SideBar = () => {
           </li>
 
           <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer">
-            <a href="/admin">User</a>
+            <a href="/admin/manage/user">User</a>
           </li>
         </ul>
         <div className="flex items-center justify-between px-4 py-3">

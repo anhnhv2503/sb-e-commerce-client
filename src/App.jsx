@@ -14,6 +14,7 @@ import DashBoard from "./components/admin/pages/DashBoard";
 import AdminPage from "./components/admin/pages/AdminPage";
 import AddProduct from "./components/admin/pages/AddProduct";
 import ProductList from "./components/admin/pages/ProductList";
+import ManageUser from "./components/admin/pages/ManageUser";
 
 function Layout() {
   return (
@@ -97,6 +98,10 @@ function App() {
         {
           path: "product/list",
           element: <ProductList />,
+        },
+        {
+          path: "manage/user",
+          element: <ManageUser />,
         },
       ],
     },
