@@ -1,4 +1,9 @@
-import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Outlet,
+  RouterProvider,
+  useNavigate,
+} from "react-router-dom";
 import HomePage from "./components/home/HomePage";
 import Login from "./components/login/Login";
 import PrivateRoute from "./components/private-routes/PrivateRoute";
@@ -17,8 +22,21 @@ import ProductList from "./components/admin/pages/ProductList";
 import ManageUser from "./components/admin/pages/ManageUser";
 import AllProducts from "./components/products/AllProducts";
 import CartPage from "./components/cart/CartPage";
+import { jwtDecode } from "jwt-decode";
+import { useEffect } from "react";
 
 function Layout() {
+  const user = JSON.parse(localStorage.getItem("accessToken"));
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      const decodedUser = jwtDecode(user);
+      if (decodedUser.roles[0] !== "ROLE_USER") {
+        navigate("/");
+      }
+    }
+  }, []);
   return (
     <AuthProvider>
       <Header />
@@ -29,6 +47,18 @@ function Layout() {
 }
 
 function AdminLayout() {
+  const user = JSON.parse(localStorage.getItem("accessToken"));
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      const decodedUser = jwtDecode(user);
+      if (decodedUser.roles[0] !== "ROLE_ADMIN") {
+        navigate("/");
+      }
+    }
+  }, []);
+
   return (
     <AuthProvider>
       <div className="flex">

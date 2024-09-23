@@ -25,9 +25,9 @@ import { sizeOptions } from "../../../data/data";
 const AddMoreSize = ({ productId }) => {
   const [sizeName, setSizeName] = useState("");
   const [quantity, setQuantity] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleAddMoreSize = async () => {
-    ``;
     try {
       const response = await addMoreSizeForProduct(
         productId,
@@ -36,9 +36,11 @@ const AddMoreSize = ({ productId }) => {
       );
       if (response.status === 200) {
         toast.success("Size Added!");
+        setIsLoading(true);
         setTimeout(() => {
+          setIsLoading(false);
           location.reload();
-        }, 2000);
+        }, 3000);
       }
     } catch (error) {
       toast.error(error.response.data.message);
@@ -88,9 +90,15 @@ const AddMoreSize = ({ productId }) => {
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit" onClick={handleAddMoreSize}>
-            Add
-          </Button>
+          {isLoading ? (
+            <center>
+              <span className="loading loading-ring loading-lg"></span>
+            </center>
+          ) : (
+            <Button type="submit" onClick={handleAddMoreSize}>
+              Add
+            </Button>
+          )}
         </DialogFooter>
       </DialogContent>
       <Toaster />

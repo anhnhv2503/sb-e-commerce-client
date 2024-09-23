@@ -66,15 +66,9 @@ const AddProduct = () => {
           });
           setIsLoading(false);
         }
-        setName("");
-        setDescription("");
-        setPrice("");
-        setBrand("");
-        setInventory("");
-        setCategory("");
-        setSizeName("");
-        setImages([]);
-        setPreviewImages([]);
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
       } catch (error) {
         console.error("Error adding product", error);
       }
