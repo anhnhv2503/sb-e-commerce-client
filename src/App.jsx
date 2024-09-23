@@ -16,6 +16,7 @@ import AddProduct from "./components/admin/pages/AddProduct";
 import ProductList from "./components/admin/pages/ProductList";
 import ManageUser from "./components/admin/pages/ManageUser";
 import AllProducts from "./components/products/AllProducts";
+import CartPage from "./components/cart/CartPage";
 
 function Layout() {
   return (
@@ -79,6 +80,10 @@ function App() {
             {
               path: "profile",
               element: <Profile />,
+            },
+            {
+              path: "cart",
+              element: <CartPage />,
             },
           ],
         },

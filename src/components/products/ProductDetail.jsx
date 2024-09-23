@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
 import { StarIcon } from "@heroicons/react/20/solid";
 import { Radio, RadioGroup } from "@headlessui/react";
-import { useParams } from "react-router-dom";
-import { getInventory, getProductById } from "../service/ApiFunctions";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import {
+  addProductToCart,
+  getInventory,
+  getProductById,
+} from "../service/ApiFunctions";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -12,6 +16,8 @@ import {
   BreadcrumbSeparator,
 } from "../ui/breadcrumb";
 import { Slash } from "lucide-react";
+import { Input } from "../ui/input";
+import toast, { Toaster } from "react-hot-toast";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -21,6 +27,15 @@ const ProductDetail = () => {
   const { id } = useParams();
 
   const [product, setProduct] = useState({});
+
+  const [selectedSize, setSelectedSize] = useState(null);
+  const [inventory, setInventory] = useState(null);
+  const [quantity, setQuantity] = useState(null);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -33,9 +48,6 @@ const ProductDetail = () => {
     };
     fetchProduct();
   }, [id]);
-
-  const [selectedSize, setSelectedSize] = useState(null);
-  const [inventory, setInventory] = useState(null);
 
   useEffect(() => {
     if (selectedSize) {
@@ -50,6 +62,36 @@ const ProductDetail = () => {
       fetchInventory();
     }
   }, [selectedSize]);
+
+  const handleAddToCart = async (e) => {
+    e.preventDefault();
+    if (!selectedSize) {
+      toast.error("Please select a size");
+    } else if (!quantity) {
+      toast.error("Please enter quantity");
+    } else {
+      const formData = new FormData();
+      formData.append("productId", id);
+      formData.append("sizeId", selectedSize);
+      formData.append("quantity", quantity);
+      try {
+        setIsLoading(true);
+        const response = await addProductToCart(formData);
+        if (response.status === 200) {
+          setIsLoading(false);
+          toast.success("Added to cart");
+        } else if (response.status === 401) {
+          setIsLoading(false);
+          navigate("/login", { state: { from: location.pathname } });
+        }
+      } catch (error) {
+        if (error.response.status === 401) {
+          navigate("/login", { state: { from: location.pathname } });
+        }
+        console.log(error);
+      }
+    }
+  };
 
   return (
     <div className="bg-white">
@@ -143,12 +185,22 @@ const ProductDetail = () => {
                   </RadioGroup>
                 </fieldset>
               </div>
-              <button
-                type="submit"
-                className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              >
-                Add to cart
-              </button>
+              <div className="mt-4">
+                <input
+                  type="number"
+                  min={1}
+                  max={inventory}
+                  onChange={(e) => setQuantity(e.target.value)}
+                  className="bg-white block w-40 rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                />
+                <button
+                  type="submit"
+                  onClick={handleAddToCart}
+                  className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                >
+                  Add to cart
+                </button>
+              </div>
             </form>
           </div>
           <div className="py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pb-16 lg:pr-8 lg:pt-6">
@@ -163,6 +215,7 @@ const ProductDetail = () => {
           </div>
         </div>
       </div>
+      <Toaster />
     </div>
   );
 };

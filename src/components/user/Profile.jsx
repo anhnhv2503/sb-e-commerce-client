@@ -6,8 +6,6 @@ const Profile = () => {
   const accessToken = localStorage.getItem("accessToken");
 
   const userDecoded = jwtDecode(accessToken) ? jwtDecode(accessToken) : null;
-  console.log(userDecoded.roles[0]);
-  console.log(userDecoded.id);
 
   const [user, setUser] = useState({});
 

@@ -76,3 +76,21 @@ export const addProduct = async (data) => {
 export const getInventory = async (sizeId) => {
   return axios.get(`/api/products/size/inventory/${sizeId}`);
 };
+
+export const addProductToCart = async (data) => {
+  const token = JSON.parse(localStorage.getItem("accessToken"));
+  return axios.post("/api/cart-item/item/add", data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const getCartByUserId = async (userId) => {
+  const token = JSON.parse(localStorage.getItem("accessToken"));
+  return axios.get(`/api/cart/detail/${userId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
