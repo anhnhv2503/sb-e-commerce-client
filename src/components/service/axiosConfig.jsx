@@ -25,7 +25,7 @@ axios.interceptors.response.use(
   function (response) {
     // Bất kì mã trạng thái nào nằm trong tầm 2xx đều khiến hàm này được trigger
     // Làm gì đó với dữ liệu response
-    return response.data;
+    return response;
   },
   function (error) {
     // Bất kì mã trạng thái nào lọt ra ngoài tầm 2xx đều khiến hàm này được trigger\
@@ -36,7 +36,7 @@ axios.interceptors.response.use(
       // authentication (token related issues)
       case 401: {
         toast.error("Unauthorized");
-        window.location.href = "/login";
+        window.location.href = "/";
         return Promise.reject(error);
       }
 

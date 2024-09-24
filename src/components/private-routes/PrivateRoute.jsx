@@ -10,7 +10,7 @@ const PrivateRoute = () => {
     const token = localStorage.getItem("accessToken");
     if (!token) {
       //redirect to login page
-      navigate("/login", { state: { from: location.pathname } });
+      navigate("/login");
     }
   }, []);
 

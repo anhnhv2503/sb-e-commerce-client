@@ -16,20 +16,26 @@ import toast, { Toaster } from "react-hot-toast";
 const CartPage = () => {
   const accessToken = localStorage.getItem("accessToken");
 
-  const userDecoded = jwtDecode(accessToken) ? jwtDecode(accessToken) : null;
+  let userDecoded = null;
+
+  if (accessToken !== null) {
+    userDecoded = jwtDecode(accessToken);
+  }
 
   const [cart, setCart] = useState(null);
 
   useEffect(() => {
-    const fetchCart = async () => {
-      try {
-        const response = await getCartByUserId(userDecoded.id);
-        setCart(response.data?.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchCart();
+    if (userDecoded) {
+      const fetchCart = async () => {
+        try {
+          const response = await getCartByUserId(userDecoded.id);
+          setCart(response.data?.data);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      fetchCart();
+    }
   }, []);
 
   const handleCheckout = () => {
