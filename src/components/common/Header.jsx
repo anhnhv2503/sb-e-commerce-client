@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import newLogo from "../../assets/logo.png";
 import Logout from "../logout/Logout";
 import { getAllCategories, getBrands } from "../service/ApiFunctions";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -24,6 +25,8 @@ const Header = () => {
   const [categories, setCategories] = useState([]);
 
   const [brands, setBrands] = useState([]);
+
+  const nav = useNavigate();
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -56,7 +59,7 @@ const Header = () => {
         className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
       >
         <div className="flex lg:flex-1">
-          <a href="/" className="-m-1.5 p-1.5">
+          <a onClick={() => nav("/")} className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
             <img alt="" src={newLogo} className="h-8 w-auto" />
           </a>
@@ -73,8 +76,8 @@ const Header = () => {
         </div>
         <PopoverGroup className="hidden lg:flex lg:gap-x-12">
           <a
-            href="/shop"
-            className="text-sm font-semibold leading-6 text-gray-900"
+            onClick={() => nav("/shop")}
+            className="text-sm font-semibold leading-6 text-gray-900 cursor-pointer"
           >
             Shop
           </a>
@@ -139,15 +142,15 @@ const Header = () => {
           </Popover>
 
           <a
-            href="/about"
-            className="text-sm font-semibold leading-6 text-gray-900"
+            onClick={() => nav("/about")}
+            className="text-sm font-semibold leading-6 text-gray-900 cursor-pointer"
           >
             About Us
           </a>
         </PopoverGroup>
 
-        <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <a href="/user/cart">
+        <div className="hidden lg:flex lg:flex-1 lg:justify-end cursor-pointer">
+          <a onClick={() => nav("/user/cart")}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -195,7 +198,10 @@ const Header = () => {
                 className="menu menu-sm dropdown-content bg-white rounded-box z-[1] mt-3 w-52 p-2 shadow"
               >
                 <li>
-                  <a className="justify-between" href="/user/profile">
+                  <a
+                    className="justify-between"
+                    onClick={() => nav("/user/profile")}
+                  >
                     Profile
                   </a>
                 </li>
@@ -210,11 +216,11 @@ const Header = () => {
                 className="menu menu-sm dropdown-content bg-white rounded-box z-[1] mt-3 w-52 p-2 shadow"
               >
                 <li>
-                  <a href="/login">Sign In</a>
+                  <a onClick={() => nav("/login")}>Sign In</a>
                 </li>
                 <hr />
                 <li>
-                  <a href="/register">Sign Up</a>
+                  <a onClick={() => nav("/register")}>Sign Up</a>
                 </li>
               </ul>
             )}
@@ -229,7 +235,7 @@ const Header = () => {
         <div className="fixed inset-0 z-10" />
         <DialogPanel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center justify-between">
-            <a href="`/" className="-m-1.5 p-1.5">
+            <a onClick={() => nav("`/")} className="-m-1.5 p-1.5">
               <span className="sr-only">Your Company</span>
               <img
                 alt=""
@@ -262,7 +268,6 @@ const Header = () => {
                       <DisclosureButton
                         key={item.name}
                         as="a"
-                        href={item.href}
                         className="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                       >
                         {item.name}
@@ -292,7 +297,7 @@ const Header = () => {
                   </DisclosurePanel>
                 </Disclosure>
                 <a
-                  href="/about"
+                  onClick={() => nav("/about")}
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
                   About Us
@@ -305,7 +310,7 @@ const Header = () => {
               ) : (
                 <div className="py-6">
                   <a
-                    href="/login"
+                    onClick={() => nav("/login")}
                     className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                   >
                     Log in

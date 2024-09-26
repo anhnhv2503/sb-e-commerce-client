@@ -37,6 +37,8 @@ const ProductDetail = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const nav = useNavigate();
+
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -99,13 +101,13 @@ const ProductDetail = () => {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/">Home</BreadcrumbLink>
+              <BreadcrumbLink onClick={() => nav("/")}>Home</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>
               <Slash />
             </BreadcrumbSeparator>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/shop">Shop</BreadcrumbLink>
+              <BreadcrumbLink onClick={() => nav("/shop")}>Shop</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>
               <Slash />

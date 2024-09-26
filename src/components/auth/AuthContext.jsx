@@ -20,9 +20,6 @@ export const AuthProvider = ({ children }) => {
         "accessToken",
         JSON.stringify(response.data?.accessToken)
       );
-      toast.success("Login successful", {
-        duration: 2000,
-      });
       const token = localStorage.getItem("accessToken");
       const decodedToken = jwtDecode(token);
       if (decodedToken.roles[0] === "ROLE_ADMIN") {

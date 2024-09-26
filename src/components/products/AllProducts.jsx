@@ -9,10 +9,12 @@ import {
   BreadcrumbSeparator,
 } from "../ui/breadcrumb";
 import { Slash } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const AllProducts = () => {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const nav = useNavigate();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -35,7 +37,7 @@ const AllProducts = () => {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/">Home</BreadcrumbLink>
+              <BreadcrumbLink onClick={() => nav("/")}>Home</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>
               <Slash />
@@ -58,7 +60,7 @@ const AllProducts = () => {
           {products.map((product) => (
             <a
               key={product.id}
-              href={`/product/${product.id}`}
+              onClick={() => nav(`/product/${product.id}`)}
               className="group"
             >
               <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">

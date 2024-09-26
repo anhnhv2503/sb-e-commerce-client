@@ -35,7 +35,6 @@ axios.interceptors.response.use(
     switch (status) {
       // authentication (token related issues)
       case 401: {
-        toast.error("Unauthorized");
         window.location.href = "/";
         return Promise.reject(error);
       }

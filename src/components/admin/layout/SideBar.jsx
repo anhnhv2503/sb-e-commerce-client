@@ -1,8 +1,10 @@
 import Logout from "@/components/logout/Logout";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const SideBar = () => {
   const [isProductDropdownOpen, setIsProductDropdownOpen] = useState(false);
+  const nav = useNavigate();
 
   const toggleProductDropdown = () => {
     setIsProductDropdownOpen(!isProductDropdownOpen);
@@ -22,7 +24,7 @@ const SideBar = () => {
         </div>
         <ul className="mt-6">
           <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer">
-            <a href="/admin">
+            <a onClick={() => nav("/admin")}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -40,7 +42,7 @@ const SideBar = () => {
             </a>
           </li>
           <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer">
-            <a href="/admin/dashboard">Dashboard</a>
+            <a onClick={() => nav("/admin/dashboard")}>Dashboard</a>
           </li>
 
           {/* Products Dropdown */}
@@ -70,17 +72,19 @@ const SideBar = () => {
             {isProductDropdownOpen && (
               <ul className="ml-4 mt-2">
                 <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer">
-                  <a href="/admin/product/add">Add Product</a>
+                  <a onClick={() => nav("/admin/product/add")}>Add Product</a>
                 </li>
                 <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer">
-                  <a href="/admin/product/list">View Products</a>
+                  <a onClick={() => nav("/admin/product/list")}>
+                    View Products
+                  </a>
                 </li>
               </ul>
             )}
           </li>
 
           <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer">
-            <a href="/admin/manage/user">User</a>
+            <a onClick={() => nav("/admin/manage/user")}>User</a>
           </li>
         </ul>
         <div className="flex items-center justify-between px-4 py-3">

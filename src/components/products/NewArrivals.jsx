@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { getNewArrivals } from "../service/ApiFunctions";
+import { useNavigate } from "react-router-dom";
 
 const NewArrivals = () => {
   const [newProducts, setNewProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const nav = useNavigate();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -34,7 +36,7 @@ const NewArrivals = () => {
           {newProducts.map((product) => (
             <a
               key={product.id}
-              href={`/product/${product.id}`}
+              onClick={() => nav(`/product/${product.id}`)}
               className="group"
             >
               <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
