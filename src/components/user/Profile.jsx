@@ -41,11 +41,14 @@ const Profile = () => {
           </div>
 
           {/* Edit Profile Button */}
-          {/* <div>
-            <button className="px-4 py-2 bg-indigo-600 text-white rounded-md shadow hover:bg-indigo-700">
+          <div className="">
+            <button className="px-4 py-2 transition ease-in-out delay-150  bg-indigo-500 text-white rounded-md shadow hover:-translate-y-1 hover:scale-110 hover:bg-indigo-700 duration-300">
               Edit Profile
             </button>
-          </div> */}
+            <button className="px-4 py-2 rounded-md text-white transition ease-in-out delay-150 bg-rose-600 hover:-translate-y-1 hover:scale-110 hover:bg-rose-300 duration-300 ms-5">
+              Change Password
+            </button>
+          </div>
 
           {/* Additional Information */}
           <div className="w-full grid grid-cols-1 gap-6 md:grid-cols-2">

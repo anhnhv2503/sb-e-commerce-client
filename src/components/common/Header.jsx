@@ -199,7 +199,7 @@ const Header = () => {
               >
                 <li>
                   <a
-                    className="justify-between"
+                    className="justify-between my-4"
                     onClick={() => nav("/user/profile")}
                   >
                     Profile
