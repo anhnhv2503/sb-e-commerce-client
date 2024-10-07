@@ -1,4 +1,5 @@
 import { Radio, RadioGroup } from "@headlessui/react";
+import { useDocumentTitle } from "@uidotdev/usehooks";
 import { Slash } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
@@ -67,7 +68,7 @@ const ProductDetail = () => {
         toast.error("Please enter quantity");
       } else {
         const item = {
-          productId: id, // Product ID from URL params
+          productId: parseInt(id, 10), // Product ID from URL params
           productName: product.name, // Product name from product state
           sizeId: selectedSize, // Selected size from state
           price: product.price, // Product price from product state
@@ -81,6 +82,7 @@ const ProductDetail = () => {
       }
     }
   };
+  useDocumentTitle(product.name);
 
   return (
     <div className="bg-white">

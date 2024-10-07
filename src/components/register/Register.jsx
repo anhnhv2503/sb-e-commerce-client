@@ -13,8 +13,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { useDocumentTitle } from "@uidotdev/usehooks";
 
 const Register = () => {
+  useDocumentTitle("Register");
   const [formData, setFormData] = useState({
     fullName: "",
     phone: "",

@@ -1,3 +1,4 @@
+import { useDocumentTitle } from "@uidotdev/usehooks";
 import { Slash } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +14,7 @@ import {
 import { Button } from "../ui/button";
 
 const CartPage = () => {
+  useDocumentTitle("My Cart");
   const { cart, dispatch } = useCart();
   const nav = useNavigate();
 
@@ -36,7 +38,7 @@ const CartPage = () => {
     //productId, sizeId, quantity, price
     const orderItems = cart.map((item) => ({
       productId: item.productId,
-      sizeId: item.sizeId,
+      sizeId: item.sizeId.id,
       quantity: item.quantity,
     }));
     const orderRequest = {

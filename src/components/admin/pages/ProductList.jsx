@@ -1,8 +1,10 @@
 import { getProducts } from "@/components/service/ApiFunctions";
 import React, { useEffect, useState } from "react";
 import AddMoreSize from "./AddMoreSize";
+import { useDocumentTitle } from "@uidotdev/usehooks";
 
 const ProductList = () => {
+  useDocumentTitle("Products");
   const [products, setProducts] = useState([]);
 
   useEffect(() => {

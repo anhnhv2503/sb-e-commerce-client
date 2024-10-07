@@ -1,8 +1,10 @@
 import { jwtDecode } from "jwt-decode";
 import { useEffect, useState } from "react";
 import { getUserDetail } from "../service/ApiFunctions";
+import { useDocumentTitle } from "@uidotdev/usehooks";
 
 const Profile = () => {
+  useDocumentTitle("Profile");
   const accessToken = localStorage.getItem("accessToken");
 
   const userDecoded = jwtDecode(accessToken) ? jwtDecode(accessToken) : null;

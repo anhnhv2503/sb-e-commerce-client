@@ -10,8 +10,10 @@ import {
 } from "../ui/breadcrumb";
 import { Slash } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useDocumentTitle } from "@uidotdev/usehooks";
 
 const AllProducts = () => {
+  useDocumentTitle("Shopping");
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const nav = useNavigate();

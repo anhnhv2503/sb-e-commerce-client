@@ -14,8 +14,10 @@ import {
 } from "@/components/service/ApiFunctions";
 import PreviewImages from "@/components/common/PreviewImages";
 import toast, { Toaster } from "react-hot-toast";
+import { useDocumentTitle } from "@uidotdev/usehooks";
 
 const AddProduct = () => {
+  useDocumentTitle("Add Product");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");

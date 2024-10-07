@@ -7,8 +7,10 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import toast, { Toaster } from "react-hot-toast";
+import { useDocumentTitle } from "@uidotdev/usehooks";
 
 const AboutUs = () => {
+  useDocumentTitle("About Us");
   const handleContactUs = () => {
     toast.success("We'll get back to you soon!");
   };
