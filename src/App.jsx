@@ -1,29 +1,30 @@
+import { jwtDecode } from "jwt-decode";
+import { useEffect } from "react";
 import {
   createBrowserRouter,
   Outlet,
   RouterProvider,
   useNavigate,
 } from "react-router-dom";
+import SideBar from "./components/admin/layout/SideBar";
+import AddProduct from "./components/admin/pages/AddProduct";
+import AdminPage from "./components/admin/pages/AdminPage";
+import DashBoard from "./components/admin/pages/DashBoard";
+import ManageUser from "./components/admin/pages/ManageUser";
+import ProductList from "./components/admin/pages/ProductList";
+import { AuthProvider } from "./components/auth/AuthContext";
+import CartPage from "./components/cart/CartPage";
+import Footer from "./components/common/Footer";
+import Header from "./components/common/Header";
+import { CartProvider } from "./components/context/CartContext";
 import HomePage from "./components/home/HomePage";
 import Login from "./components/login/Login";
 import PrivateRoute from "./components/private-routes/PrivateRoute";
+import AllProducts from "./components/products/AllProducts";
 import ProductDetail from "./components/products/ProductDetail";
 import Register from "./components/register/Register";
 import AboutUs from "./components/shop/AboutUs";
-import Header from "./components/common/Header";
-import Footer from "./components/common/Footer";
-import { AuthProvider } from "./components/auth/AuthContext";
 import Profile from "./components/user/Profile";
-import SideBar from "./components/admin/layout/SideBar";
-import DashBoard from "./components/admin/pages/DashBoard";
-import AdminPage from "./components/admin/pages/AdminPage";
-import AddProduct from "./components/admin/pages/AddProduct";
-import ProductList from "./components/admin/pages/ProductList";
-import ManageUser from "./components/admin/pages/ManageUser";
-import AllProducts from "./components/products/AllProducts";
-import CartPage from "./components/cart/CartPage";
-import { jwtDecode } from "jwt-decode";
-import { useEffect } from "react";
 
 function Layout() {
   const user = JSON.parse(localStorage.getItem("accessToken"));
@@ -147,7 +148,11 @@ function App() {
     },
   ]);
 
-  return <RouterProvider router={router}></RouterProvider>;
+  return (
+    <CartProvider>
+      <RouterProvider router={router}></RouterProvider>
+    </CartProvider>
+  );
 }
 
 export default App;

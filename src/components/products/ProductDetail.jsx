@@ -1,12 +1,10 @@
-import { useEffect, useState } from "react";
-import { StarIcon } from "@heroicons/react/20/solid";
 import { Radio, RadioGroup } from "@headlessui/react";
+import { Slash } from "lucide-react";
+import { useEffect, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import {
-  addProductToCart,
-  getInventory,
-  getProductById,
-} from "../service/ApiFunctions";
+import { useCart } from "../context/CartContext";
+import { getInventory, getProductById } from "../service/ApiFunctions";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -15,9 +13,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "../ui/breadcrumb";
-import { Slash } from "lucide-react";
-import { Input } from "../ui/input";
-import toast, { Toaster } from "react-hot-toast";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -25,19 +20,15 @@ function classNames(...classes) {
 
 const ProductDetail = () => {
   const { id } = useParams();
-
   const [product, setProduct] = useState({});
-
   const [selectedSize, setSelectedSize] = useState(null);
   const [inventory, setInventory] = useState(null);
-  const [quantity, setQuantity] = useState(null);
-
+  const [quantity, setQuantity] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
-
   const [isLoading, setIsLoading] = useState(false);
-
   const nav = useNavigate();
+  const { cart, dispatch } = useCart();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -67,30 +58,26 @@ const ProductDetail = () => {
 
   const handleAddToCart = async (e) => {
     e.preventDefault();
-    if (!selectedSize) {
-      toast.error("Please select a size");
-    } else if (!quantity) {
-      toast.error("Please enter quantity");
+    if (localStorage.getItem("accessToken") === null) {
+      nav("/login", { state: { from: location.pathname } });
     } else {
-      const formData = new FormData();
-      formData.append("productId", id);
-      formData.append("sizeId", selectedSize);
-      formData.append("quantity", quantity);
-      try {
-        setIsLoading(true);
-        const response = await addProductToCart(formData);
-        if (response.status === 200) {
-          setIsLoading(false);
-          toast.success("Added to cart");
-        } else if (response.status === 401) {
-          setIsLoading(false);
-          navigate("/login", { state: { from: location.pathname } });
-        }
-      } catch (error) {
-        if (error.response.status === 401) {
-          navigate("/login", { state: { from: location.pathname } });
-        }
-        console.log(error);
+      if (!selectedSize) {
+        toast.error("Please select a size");
+      } else if (quantity == 0) {
+        toast.error("Please enter quantity");
+      } else {
+        const item = {
+          productId: id, // Product ID from URL params
+          productName: product.name, // Product name from product state
+          sizeId: selectedSize, // Selected size from state
+          price: product.price, // Product price from product state
+          quantity: parseInt(quantity, 10), // Quantity from state
+          image: product.images[0].url, // Product image from product state
+        };
+        dispatch({ type: "ADD_ITEM", payload: item });
+        toast.success("Added to cart");
+        setSelectedSize(null);
+        setQuantity(0);
       }
     }
   };
@@ -172,7 +159,7 @@ const ProductDetail = () => {
                     {product.size?.map((size) => (
                       <Radio
                         key={size.id}
-                        value={size.id}
+                        value={size}
                         className={
                           "cursor-pointer bg-white text-gray-900 shadow-sm group relative flex items-center justify-center rounded-md border px-4 py-3 text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none data-[focus]:ring-2 data-[focus]:ring-indigo-500 sm:flex-1 sm:py-6"
                         }
@@ -192,6 +179,7 @@ const ProductDetail = () => {
                   type="number"
                   min={1}
                   max={inventory}
+                  value={quantity}
                   onChange={(e) => setQuantity(e.target.value)}
                   className="bg-white block w-40 rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />

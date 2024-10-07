@@ -1,8 +1,8 @@
-import React, { createContext, useContext, useState } from "react";
-import { loginUser } from "../service/ApiFunctions";
-import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { createContext, useContext, useState } from "react";
+import toast from "react-hot-toast";
+import { useLocation, useNavigate } from "react-router-dom";
+import { loginUser } from "../service/ApiFunctions";
 
 const AuthContext = createContext();
 
@@ -10,6 +10,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const login = async (userData) => {
     // Add your login logic here
@@ -25,7 +26,7 @@ export const AuthProvider = ({ children }) => {
       if (decodedToken.roles[0] === "ROLE_ADMIN") {
         navigate("/admin");
       } else {
-        navigate("/");
+        navigate(location.state?.from ? location.state.from : "/");
       }
     } catch (error) {
       toast.error(error.response.data.message);

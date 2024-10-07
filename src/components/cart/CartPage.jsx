@@ -1,4 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { Slash } from "lucide-react";
+import toast, { Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,111 +10,149 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "../ui/breadcrumb";
-import { Slash } from "lucide-react";
-import { jwtDecode } from "jwt-decode";
-import { getCartByUserId } from "../service/ApiFunctions";
 import { Button } from "../ui/button";
-import toast, { Toaster } from "react-hot-toast";
 
 const CartPage = () => {
-  const accessToken = localStorage.getItem("accessToken");
+  const { cart, dispatch } = useCart();
+  const nav = useNavigate();
 
-  let userDecoded = null;
+  const removeItem = (item) => {
+    dispatch({ type: "REMOVE_ITEM", payload: item });
+  };
 
-  if (accessToken !== null) {
-    userDecoded = jwtDecode(accessToken);
-  }
+  const handleIncrease = (item) => {
+    dispatch({ type: "INCREASE_ITEM", payload: item });
+  };
+  const handleDecrease = (item) => {
+    dispatch({ type: "DECREASE_ITEM", payload: item });
+  };
 
-  const [cart, setCart] = useState(null);
-
-  useEffect(() => {
-    if (userDecoded) {
-      const fetchCart = async () => {
-        try {
-          const response = await getCartByUserId(userDecoded.id);
-          setCart(response.data?.data);
-        } catch (error) {
-          console.error(error);
-        }
-      };
-      fetchCart();
-    }
-  }, []);
+  const totalPrice = cart.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
 
   const handleCheckout = () => {
+    //productId, sizeId, quantity, price
+    const orderItems = cart.map((item) => ({
+      productId: item.productId,
+      sizeId: item.sizeId,
+      quantity: item.quantity,
+    }));
+    const orderRequest = {
+      totalPrice: totalPrice,
+      items: orderItems,
+    };
     toast.success("Continue Developement");
+    console.log(orderRequest);
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4 h-screen">
+    <div className="max-w-4xl mx-auto p-4 min-h-screen">
+      {/* Breadcrumb */}
       <Breadcrumb>
-        <BreadcrumbList>
+        <BreadcrumbList className="flex flex-wrap items-center">
           <BreadcrumbItem>
-            <BreadcrumbLink href="/">Home</BreadcrumbLink>
+            <BreadcrumbLink href="/" className="text-indigo-600">
+              Home
+            </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator>
             <Slash />
           </BreadcrumbSeparator>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/shop">Shop</BreadcrumbLink>
+            <BreadcrumbLink href="/shop" className="text-indigo-600">
+              Shop
+            </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator>
             <Slash />
           </BreadcrumbSeparator>
           <BreadcrumbItem>
-            <BreadcrumbPage>Shopping Cart</BreadcrumbPage>
+            <BreadcrumbPage className="font-semibold">
+              Shopping Cart
+            </BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      {/* Shopping Cart Header */}
-      <h1 className="text-2xl font-bold mb-4">Shopping Cart</h1>
 
-      {cart ? (
+      {/* Shopping Cart Header */}
+      <h1 className="text-2xl font-bold mb-4 text-center lg:text-left">
+        Shopping Cart
+      </h1>
+
+      {cart.length > 0 ? (
         <>
-          {cart.cartItems?.map((item, index) => (
+          {cart.map((item, index) => (
             <div
-              className="flex justify-between items-center p-4 border-b shadow-md bg-white rounded-lg mb-4"
+              className="flex flex-col lg:flex-row justify-between items-center p-4 border-b shadow-md bg-white rounded-lg mb-4"
               key={index}
             >
-              <div className="flex items-center">
+              {/* Product Image and Details */}
+              <div className="flex items-center w-full lg:w-auto mb-4 lg:mb-0">
                 <img
-                  src={item.product?.images[0]?.url}
+                  src={item.image}
                   alt="Product"
-                  className="w-28 h-28 object-cover mr-4"
+                  className="w-28 h-28 object-cover mr-4 rounded-lg"
                 />
-                <div>
-                  <h2 className="text-lg font-semibold">
-                    {item.product?.name}
-                  </h2>
-                  <p className="text-gray-500">{item.product?.description}</p>
-                  <p className="text-green-800">{item.size?.sizeName}</p>
+                <div className="flex flex-col">
+                  <a
+                    className="text-lg font-semibold cursor-pointer text-indigo-600 hover:underline"
+                    onClick={() => nav(`/product/${item.productId}`)}
+                  >
+                    {item.productName}
+                  </a>
+                  <p className="text-green-800">{item.sizeId.sizeName}</p>
                 </div>
               </div>
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center border rounded-lg">
-                  <button className="px-2 py-1 bg-gray-200 hover:bg-gray-300 rounded-l-lg">
+
+              {/* Quantity and Price */}
+              <div className="flex justify-between items-center space-x-4 w-full lg:w-auto">
+                {/* Quantity Selector */}
+                <div className="flex items-center border rounded-lg overflow-hidden">
+                  <button
+                    className="px-2 py-1 bg-gray-200 hover:bg-gray-300 focus:outline-none"
+                    onClick={() => handleDecrease(item)}
+                    disabled={item.quantity === 1}
+                  >
                     -
                   </button>
-                  <span className="px-3 py-1">{item.quantity}</span>
-                  <button className="px-2 py-1 bg-gray-200 hover:bg-gray-300 rounded-r-lg">
+                  <span className="px-4 py-2 bg-white text-gray-900">
+                    {item.quantity}
+                  </span>
+                  <button
+                    className="px-2 py-1 bg-gray-200 hover:bg-gray-300 focus:outline-none"
+                    onClick={() => handleIncrease(item)}
+                    disabled={item.quantity === 10}
+                  >
                     +
                   </button>
                 </div>
 
-                <p className="text-lg font-semibold">${item.product?.price}</p>
+                {/* Price */}
+                <p className="text-lg font-semibold">${item.price}</p>
+                <div className="">
+                  <button
+                    onClick={() => removeItem(item)}
+                    className="bg-gray-400 border rounded-badge px-3 py-3 text-white"
+                  >
+                    x
+                  </button>
+                </div>
               </div>
             </div>
           ))}
-          <div className="bg-white shadow-md rounded-lg overflow-hidden">
-            {/* Total */}
-            <div className="flex justify-between items-center p-4">
-              <p className="text-xl font-semibold">Total</p>
-              <p className="text-2xl font-bold">${cart.totalPrice}</p>
-            </div>
+
+          {/* Total Section */}
+          <div className="bg-white shadow-md rounded-lg p-4 flex justify-between items-center">
+            <p className="text-xl font-semibold">Total</p>
+            <p className="text-2xl font-bold">${totalPrice}</p>
           </div>
+
+          {/* Checkout Button */}
           <div className="mt-6 text-right">
             <Button
-              className="px-6 py-3 bg-indigo-600 text-white font-bold rounded-lg hover:bg-slate-700"
+              className="w-full lg:w-auto px-6 py-3 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700 focus:outline-none"
               onClick={handleCheckout}
             >
               Checkout
@@ -119,16 +160,17 @@ const CartPage = () => {
           </div>
         </>
       ) : (
-        <div className="flex justify-between items-center p-4 border-b  bg-white rounded-lg mb-4">
-          <p className="text-center">No items in the cart</p>
+        <div className="bg-white shadow-md rounded-lg p-4 text-center">
+          <p className="text-gray-700">No items in the cart</p>
           <a
             href="/shop"
-            className="link bg-indigo-600 text-white no-underline px-2 py-2 border rounded-lg hover:bg-indigo-700"
+            className="mt-4 inline-block bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700"
           >
             Go Shopping
           </a>
         </div>
       )}
+
       <Toaster />
     </div>
   );

@@ -1,5 +1,4 @@
 import axios from "axios";
-import { toast } from "react-hot-toast";
 
 const instance = axios.create({
   baseURL: "http://localhost:8080",
@@ -25,7 +24,7 @@ axios.interceptors.response.use(
   function (response) {
     // Bất kì mã trạng thái nào nằm trong tầm 2xx đều khiến hàm này được trigger
     // Làm gì đó với dữ liệu response
-    return response;
+    return response.data;
   },
   function (error) {
     // Bất kì mã trạng thái nào lọt ra ngoài tầm 2xx đều khiến hàm này được trigger\
