@@ -25,6 +25,9 @@ import ProductDetail from "./components/products/ProductDetail";
 import Register from "./components/register/Register";
 import AboutUs from "./components/shop/AboutUs";
 import Profile from "./components/user/Profile";
+import VerifyEmail from "./components/verify/VerifyEmail";
+import VerifyEmailSuccess from "./components/verify/VerifyEmailSuccess";
+import VerifyEmailFailed from "./components/verify/VerifyEmailFailed";
 
 function Layout() {
   const user = JSON.parse(localStorage.getItem("accessToken"));
@@ -76,6 +79,18 @@ function AdminLayout() {
 
 function App() {
   const router = createBrowserRouter([
+    {
+      path: "verify",
+      element: <VerifyEmail />,
+    },
+    {
+      path: "email/verify/success",
+      element: <VerifyEmailSuccess />,
+    },
+    {
+      path: "email/verify/failed",
+      element: <VerifyEmailFailed />,
+    },
     {
       path: "/",
       element: <Layout />, // The layout wraps the content with Header and Footer

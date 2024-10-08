@@ -94,3 +94,7 @@ export const getCartByUserId = async (userId) => {
     },
   });
 };
+
+export const verifyEmail = async (token) => {
+  return axios.post(`/api/email/verify`, { token });
+};
