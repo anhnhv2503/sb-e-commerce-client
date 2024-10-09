@@ -12,6 +12,7 @@ import {
   BreadcrumbSeparator,
 } from "../ui/breadcrumb";
 import { Button } from "../ui/button";
+import { useState } from "react";
 
 const CartPage = () => {
   useDocumentTitle("My Cart");
@@ -51,7 +52,6 @@ const CartPage = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-4 min-h-screen">
-      {/* Breadcrumb */}
       <Breadcrumb>
         <BreadcrumbList className="flex flex-wrap items-center">
           <BreadcrumbItem>
@@ -78,87 +78,108 @@ const CartPage = () => {
         </BreadcrumbList>
       </Breadcrumb>
 
-      {/* Shopping Cart Header */}
       <h1 className="text-2xl font-bold mb-4 text-center lg:text-left">
         Shopping Cart
       </h1>
-
       {cart.length > 0 ? (
         <>
-          {cart.map((item, index) => (
-            <div
-              className="flex flex-col lg:flex-row justify-between items-center p-4 border-b shadow-md bg-white rounded-lg mb-4"
-              key={index}
-            >
-              {/* Product Image and Details */}
-              <div className="flex items-center w-full lg:w-auto mb-4 lg:mb-0">
-                <img
-                  src={item.image}
-                  alt="Product"
-                  className="w-28 h-28 object-cover mr-4 rounded-lg"
-                />
-                <div className="flex flex-col">
-                  <a
-                    className="text-lg font-semibold cursor-pointer text-indigo-600 hover:underline"
-                    onClick={() => nav(`/product/${item.productId}`)}
-                  >
-                    {item.productName}
-                  </a>
-                  <p className="text-green-800">{item.sizeId.sizeName}</p>
-                </div>
-              </div>
+          <table className="w-full mb-6">
+            <thead>
+              <tr className="border-b">
+                <th className="text-left py-4">Product</th>
+                <th className="text-left py-4">Quantity</th>
+                <th className="text-left py-4">Total</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {cart.map((product, index) => (
+                <tr key={index} className="border-b">
+                  <td className="py-4 flex items-center">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="w-16 h-16 object-cover mr-4 rounded"
+                    />
+                    <div>
+                      <p
+                        className="font-semibold cursor-pointer hover:text-indigo-500"
+                        onClick={() => nav(`/product/${product.productId}`)}
+                      >
+                        {product.productName}
+                      </p>
+                      <p className="text-gray-800 text-sm">
+                        {product.sizeId.sizeName}
+                      </p>
+                      <p className="text-gray-500 text-sm">
+                        ${product.price.toFixed(2)}
+                      </p>
+                    </div>
+                  </td>
+                  <td className="py-4">
+                    <div className="flex items-center space-x-2">
+                      <button
+                        className="px-2 py-1 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
+                        onClick={() => handleDecrease(product)}
+                        disabled={product.quantity === 1}
+                      >
+                        -
+                      </button>
+                      <span>{product.quantity}</span>
+                      <button
+                        className="px-2 py-1 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
+                        onClick={() => handleIncrease(product)}
+                        disabled={product.quantity === 10}
+                      >
+                        +
+                      </button>
+                    </div>
+                  </td>
+                  <td className="py-4">
+                    ${(product.price * product.quantity).toFixed(2)}
+                  </td>
+                  <td className="py-4">
+                    <button
+                      onClick={() => removeItem(product)}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      ×
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
 
-              {/* Quantity and Price */}
-              <div className="flex justify-between items-center space-x-4 w-full lg:w-auto">
-                {/* Quantity Selector */}
-                <div className="flex items-center border rounded-lg overflow-hidden">
-                  <button
-                    className="px-2 py-1 bg-gray-200 hover:bg-gray-300 focus:outline-none"
-                    onClick={() => handleDecrease(item)}
-                    disabled={item.quantity === 1}
-                  >
-                    -
-                  </button>
-                  <span className="px-4 py-2 bg-white text-gray-900">
-                    {item.quantity}
-                  </span>
-                  <button
-                    className="px-2 py-1 bg-gray-200 hover:bg-gray-300 focus:outline-none"
-                    onClick={() => handleIncrease(item)}
-                    disabled={item.quantity === 10}
-                  >
-                    +
-                  </button>
-                </div>
-
-                {/* Price */}
-                <p className="text-lg font-semibold">${item.price}</p>
-                <div className="">
-                  <button
-                    onClick={() => removeItem(item)}
-                    className="bg-gray-400 border rounded-badge px-3 py-3 text-white"
-                  >
-                    x
-                  </button>
-                </div>
-              </div>
+          {/* Cart Summary and Checkout */}
+          <div className="flex flex-col-reverse lg:flex-row justify-between items-start lg:items-center space-y-4 lg:space-y-0">
+            {/* Continue Shopping Button */}
+            <div>
+              <button
+                onClick={() => nav("/shop")}
+                className="px-6 py-2 border border-gray-300 text-gray-800 rounded-md hover:bg-gray-100"
+              >
+                Continue Shopping
+              </button>
             </div>
-          ))}
 
-          {/* Total Section */}
-          <div className="bg-white shadow-md rounded-lg p-4 flex justify-between items-center">
-            <p className="text-xl font-semibold">Total</p>
-            <p className="text-2xl font-bold">${totalPrice}</p>
-          </div>
-
-          {/* Checkout Button */}
-          <div className="mt-6 text-right">
-            <Button
-              className="w-full lg:w-auto px-6 py-3 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700 focus:outline-none"
-              onClick={handleCheckout}
-            >
-              Checkout
-            </Button>
+            {/* Total and Checkout Section */}
+            <div className="bg-gray-100 p-4 rounded-md shadow-md w-full lg:w-1/3">
+              <div className="flex justify-between mb-2">
+                <span className="font-semibold">Subtotal</span>
+                <span className="text-red-500">${totalPrice.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between mb-4">
+                <span className="font-semibold">Total</span>
+                <span className="text-red-500">${totalPrice.toFixed(2)}</span>
+              </div>
+              <button
+                onClick={handleCheckout}
+                className="w-full bg-indigo-500 text-white py-2 rounded-md hover:bg-indigo-700"
+              >
+                Proceed to Checkout
+              </button>
+            </div>
           </div>
         </>
       ) : (
@@ -172,8 +193,6 @@ const CartPage = () => {
           </a>
         </div>
       )}
-
-      <Toaster />
     </div>
   );
 };

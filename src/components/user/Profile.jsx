@@ -2,6 +2,7 @@ import { jwtDecode } from "jwt-decode";
 import { useEffect, useState } from "react";
 import { getUserDetail } from "../service/ApiFunctions";
 import { useDocumentTitle } from "@uidotdev/usehooks";
+import ChangePassword from "./ChangePassword";
 
 const Profile = () => {
   useDocumentTitle("Profile");
@@ -10,6 +11,7 @@ const Profile = () => {
   const userDecoded = jwtDecode(accessToken) ? jwtDecode(accessToken) : null;
 
   const [user, setUser] = useState({});
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -47,10 +49,14 @@ const Profile = () => {
             <button className="px-4 py-2 transition ease-in-out delay-150  bg-indigo-500 text-white rounded-md shadow hover:-translate-y-1 hover:scale-110 hover:bg-indigo-700 duration-300">
               Edit Profile
             </button>
-            <button className="px-4 py-2 rounded-md text-white transition ease-in-out delay-150 bg-rose-600 hover:-translate-y-1 hover:scale-110 hover:bg-rose-300 duration-300 ms-5">
+            <button
+              onClick={() => setOpen(true)}
+              className="px-4 py-2 rounded-md text-white transition ease-in-out delay-150 bg-rose-600 hover:-translate-y-1 hover:scale-110 hover:bg-rose-300 duration-300 ms-5"
+            >
               Change Password
             </button>
           </div>
+          <ChangePassword open={open} setOpen={setOpen} />
 
           {/* Additional Information */}
           <div className="w-full grid grid-cols-1 gap-6 md:grid-cols-2">

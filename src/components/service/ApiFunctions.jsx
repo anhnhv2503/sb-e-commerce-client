@@ -98,3 +98,15 @@ export const getCartByUserId = async (userId) => {
 export const verifyEmail = async (token) => {
   return axios.post(`/api/email/verify`, { token });
 };
+
+export const changePassword = async (oldPassword, newPassword) => {
+  const token = JSON.parse(localStorage.getItem("accessToken"));
+  const formData = new FormData();
+  formData.append("oldPassword", oldPassword);
+  formData.append("newPassword", newPassword);
+  return axios.put("/api/user/change-password", formData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
