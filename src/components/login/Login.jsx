@@ -2,12 +2,14 @@ import { useState } from "react";
 import { useAuth } from "../auth/AuthContext";
 import toast, { Toaster } from "react-hot-toast";
 import { useDocumentTitle } from "@uidotdev/usehooks";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   useDocumentTitle("Login");
   const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const nav = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -82,13 +84,19 @@ const Login = () => {
 
         {/* Forgot Password Link */}
         <p className="text-sm text-center text-gray-500">
-          <a href="#" className="text-red-500 hover:underline">
+          <a
+            onClick={() => nav("/forgot/password")}
+            className="text-red-500 hover:underline cursor-pointer"
+          >
             Forgot your password?
           </a>
         </p>
 
         <p className="text-sm text-center text-gray-500">
-          <a href="/register" className="text-blue-500 hover:underline">
+          <a
+            onClick={() => nav("/register")}
+            className="text-blue-500 hover:underline cursor-pointer"
+          >
             Sign Up
           </a>
         </p>

@@ -28,6 +28,9 @@ import Profile from "./components/user/Profile";
 import VerifyEmail from "./components/verify/VerifyEmail";
 import VerifyEmailSuccess from "./components/verify/VerifyEmailSuccess";
 import VerifyEmailFailed from "./components/verify/VerifyEmailFailed";
+import ForgotPassword from "@/components/forgot-password/ForgotPassword";
+import NotFound from "@/components/error/NotFound";
+import ResetPassword from "@/components/forgot-password/ResetPassword";
 
 function Layout() {
   const user = JSON.parse(localStorage.getItem("accessToken"));
@@ -92,6 +95,10 @@ function App() {
       element: <VerifyEmailFailed />,
     },
     {
+      path: "reset/password",
+      element: <ResetPassword />,
+    },
+    {
       path: "/",
       element: <Layout />, // The layout wraps the content with Header and Footer
       children: [
@@ -118,6 +125,10 @@ function App() {
         {
           path: "shop",
           element: <AllProducts />,
+        },
+        {
+          path: "forgot/password",
+          element: <ForgotPassword />,
         },
         {
           path: "user",
@@ -160,6 +171,10 @@ function App() {
           element: <ManageUser />,
         },
       ],
+    },
+    {
+      path: "*",
+      element: <NotFound />,
     },
   ]);
 

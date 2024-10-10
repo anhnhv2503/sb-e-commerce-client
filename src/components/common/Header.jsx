@@ -19,41 +19,42 @@ import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
   const token = localStorage.getItem("accessToken");
-
   const [categories, setCategories] = useState([]);
-
+  const [loadingCategories, setLoadingCategories] = useState(false);
   const [brands, setBrands] = useState([]);
-
+  const [loadingBrands, setLoadingBrands] = useState(false);
   const nav = useNavigate();
+  const fetchCategories = async () => {
+    try {
+      setLoadingCategories(true);
+      const response = await getAllCategories();
+      setCategories(response.data?.data);
+      setLoadingCategories(false);
+    } catch (error) {
+      console.error("Error loading categories", error);
+      setLoadingCategories(true);
+    }
+  };
+  const fetchBrands = async () => {
+    try {
+      setLoadingBrands(true);
+      const response = await getBrands();
+      setBrands(response.data?.data);
+      setLoadingBrands(false);
+    } catch (error) {
+      console.error("Error loading brands", error);
+      setLoadingBrands(true);
+    }
+  };
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await getAllCategories();
-        setCategories(response.data?.data);
-      } catch (error) {
-        console.error("Error loading categories", error);
-      }
-    };
     fetchCategories();
-  }, []);
-
-  useEffect(() => {
-    const fetchBrands = async () => {
-      try {
-        const response = await getBrands();
-        setBrands(response.data?.data);
-      } catch (error) {
-        console.error("Error loading brands", error);
-      }
-    };
     fetchBrands();
   }, []);
 
   return (
-    <header className="bg-slate-400">
+    <header className="bg-gray-300">
       <nav
         aria-label="Global"
         className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
@@ -95,6 +96,11 @@ const Header = () => {
               className="absolute -left-8 top-full z-10 mt-3 overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5 transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150 data-[enter]:ease-out data-[leave]:ease-in"
             >
               <div className="p-4">
+                {loadingCategories && (
+                  <div className="flex items-center justify-center">
+                    <span className="loading loading-dots loading-xs"></span>
+                  </div>
+                )}
                 {categories.map((item, index) => (
                   <div
                     key={index}
@@ -126,6 +132,11 @@ const Header = () => {
               className="absolute -left-8 top-full z-10 mt-3 overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5 transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150 data-[enter]:ease-out data-[leave]:ease-in"
             >
               <div className="p-4">
+                {loadingBrands && (
+                  <div className="flex items-center justify-center">
+                    <span className="loading loading-dots loading-xs"></span>
+                  </div>
+                )}
                 {brands.map((item, index) => (
                   <div
                     key={index}
@@ -264,6 +275,11 @@ const Header = () => {
                     />
                   </DisclosureButton>
                   <DisclosurePanel className="mt-2 space-y-2">
+                    {loadingCategories && (
+                      <div className="flex items-center justify-center">
+                        <span className="loading loading-dots loading-xs"></span>
+                      </div>
+                    )}
                     {[...categories].map((item) => (
                       <DisclosureButton
                         key={item.name}
@@ -285,6 +301,11 @@ const Header = () => {
                     />
                   </DisclosureButton>
                   <DisclosurePanel className="mt-2 space-y-2">
+                    {loadingBrands && (
+                      <div className="flex items-center justify-center">
+                        <span className="loading loading-dots loading-xs"></span>
+                      </div>
+                    )}
                     {[...brands].map((item, index) => (
                       <DisclosureButton
                         key={index}
