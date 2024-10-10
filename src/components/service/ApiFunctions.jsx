@@ -110,3 +110,13 @@ export const changePassword = async (oldPassword, newPassword) => {
     },
   });
 };
+
+export const forgotPassword = async (email) => {
+  const formData = new FormData();
+  formData.append("email", email);
+  return axios.post("/api/user/forgot-password", formData);
+};
+
+export const resetPassword = async (token, newPassword) => {
+  return axios.post("/api/user/reset-password", { token, newPassword });
+};

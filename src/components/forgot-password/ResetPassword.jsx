@@ -1,27 +1,50 @@
+import { resetPassword } from "@/components/service/ApiFunctions";
 import { Button } from "@/components/ui/button";
 import { useDocumentTitle } from "@uidotdev/usehooks";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast, Toaster } from "sonner";
 
 const ResetPassword = () => {
   useDocumentTitle("Reset Password");
+  const location = useLocation();
+  const nav = useNavigate();
+  const paramUrl = new URLSearchParams(location.search);
+  const tokenParam = paramUrl.get("token");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const handleSavePassword = (e) => {
+
+  useEffect(() => {
+    if (!tokenParam) {
+      nav("/login");
+    }
+  }, []);
+
+  const handleSavePassword = async (e) => {
     e.preventDefault();
     if (password.trim() === "" || confirmPassword.trim() === "") {
       toast.error("Password and confirm password are required.");
     } else if (password !== confirmPassword) {
       toast.error("Password and confirm password do not match.");
     } else {
-      toast.success("Password updated successfully.", {
-        richColors: true,
-      });
-      console.log(password, confirmPassword);
-      setConfirmPassword("");
-      setPassword("");
+      try {
+        const response = await resetPassword(tokenParam, password);
+        if (response) {
+          toast.success("Password updated successfully.", {
+            richColors: true,
+            action: {
+              label: "Go to Login",
+              onClick: () => nav("/login"),
+            },
+          });
+          setConfirmPassword("");
+          setPassword("");
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
   return (

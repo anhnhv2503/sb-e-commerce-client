@@ -1,3 +1,4 @@
+import { forgotPassword } from "@/components/service/ApiFunctions";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { EnvelopeOpenIcon } from "@heroicons/react/20/solid";
@@ -8,19 +9,43 @@ import { toast, Toaster } from "sonner";
 const ForgotPassword = () => {
   useDocumentTitle("Forgot Password");
   const [progress, setProgress] = useState(10);
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const timer = setTimeout(() => setProgress(100), 5000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Add your code
-    toast.success("Email sent successfully.", {
-      duration: 4000,
-      icon: "✉️",
-    });
+    if (email.trim() === "") {
+      toast.error("Email is required.", {
+        duration: 4000,
+      });
+    } else {
+      try {
+        setLoading(true);
+        setTimeout(() => {
+          setProgress(50);
+        }, 2000);
+
+        const response = await forgotPassword(email);
+        if (response.status === 200) {
+          toast.success(response.data?.data, {
+            richColors: true,
+          });
+          setEmail("");
+          setTimeout(() => {
+            setProgress(100);
+          }, 3000);
+          setLoading(false);
+        }
+      } catch (error) {
+        toast.error(error.response?.data?.data, {
+          duration: 4000,
+        });
+        console.log(error);
+        setEmail("");
+        setLoading(false);
+      }
+    }
   };
   return (
     <div className="flex items-center justify-center h-screen p-8 pb-44 bg-blue-200">
@@ -43,22 +68,27 @@ const ForgotPassword = () => {
             className="w-full mt-1 p-2 input input-bordered bg-white text-black border-gray-300"
             placeholder="Enter your email"
             required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
 
         {/* Submit Button */}
         <div>
-          <Button
-            className="w-full"
-            variant="destructive"
-            onClick={handleSubmit}
-          >
-            <EnvelopeOpenIcon className="mr-2 h-4 w-4" /> Send Email
-          </Button>
+          {loading ? (
+            <Progress value={progress} className="w-full" />
+          ) : (
+            <Button
+              className="w-full"
+              variant="destructive"
+              onClick={handleSubmit}
+            >
+              <EnvelopeOpenIcon className="mr-2 h-4 w-4" /> Send Email
+            </Button>
+          )}
         </div>
-        <Progress value={progress} className="w-full" />
       </div>
-      <Toaster />
+      <Toaster position="top-center" />
     </div>
   );
 };
