@@ -16,6 +16,20 @@ import { jwtDecode } from "jwt-decode";
 import { useEffect, useState } from "react";
 import { getUserDetail } from "@/components/service/ApiFunctions";
 import { Label } from "@/components/ui/label";
+import cod from "@/assets/cod.png";
+import vnpay from "@/assets/vnpay.jpg";
+import { Radio, RadioGroup } from "@headlessui/react";
+
+const paymentMethods = [
+  {
+    name: "cod",
+    icon: cod,
+  },
+  {
+    name: "vnpay",
+    icon: vnpay,
+  },
+];
 
 const CartPage = () => {
   useDocumentTitle("My Cart");
@@ -24,6 +38,7 @@ const CartPage = () => {
   const accessToken = localStorage.getItem("accessToken");
   const userDecoded = jwtDecode(accessToken) ? jwtDecode(accessToken) : null;
   const [address, setAddress] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState(paymentMethods[0].name);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -54,7 +69,7 @@ const CartPage = () => {
   );
 
   const handleCheckout = () => {
-    if (address.trim() !== "") {
+    if (address.trim() !== "" && paymentMethod) {
       const orderItems = cart.map((item) => ({
         productId: item.productId,
         sizeId: item.sizeId.id,
@@ -67,8 +82,12 @@ const CartPage = () => {
       };
       toast.success("Continue Developement");
       console.log(orderRequest);
-    } else {
+      console.log("Payment Method: ", paymentMethod);
+      setPaymentMethod(null);
+    } else if (address.trim() === "") {
       toast.error("Please enter your address");
+    } else {
+      toast.error("Please select a payment method");
     }
   };
 
@@ -121,7 +140,7 @@ const CartPage = () => {
                     <img
                       src={product.image}
                       alt={product.name}
-                      className="w-16 h-16 object-cover mr-4 rounded"
+                      className="w-32 h-32 object-contain mr-4 rounded"
                     />
                     <div>
                       <p
@@ -183,6 +202,31 @@ const CartPage = () => {
             />
           </div>
 
+          <fieldset aria-label="Choose a method" className="mt-4">
+            <Label htmlFor="note">Payment Method</Label>
+            <RadioGroup
+              value={paymentMethod}
+              onChange={setPaymentMethod}
+              className="grid grid-cols-4 gap-4 sm:grid-cols-4 lg:grid-cols-7"
+            >
+              {paymentMethods.map((method, index) => (
+                <Radio
+                  key={index}
+                  value={method.name}
+                  className={
+                    "cursor-pointer bg-white text-gray-900 shadow-sm group relative flex items-center justify-center rounded-md border px-3 py-3 text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none data-[focus]:ring-2 data-[focus]:ring-indigo-500 sm:flex-1 sm:py-6"
+                  }
+                >
+                  <img src={method.icon} alt="" className="w-14 h-14" />
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute -inset-px rounded-md border-2 border-transparent group-data-[focus]:border group-data-[checked]:border-gray-500"
+                  />
+                </Radio>
+              ))}
+            </RadioGroup>
+          </fieldset>
+
           <div className="flex flex-col-reverse lg:flex-row justify-between items-start lg:items-center space-y-4 lg:space-y-0 mt-3">
             <div>
               <button
@@ -201,12 +245,27 @@ const CartPage = () => {
                 <span className="font-semibold">Total</span>
                 <span className="text-red-500">${totalPrice.toFixed(2)}</span>
               </div>
-              <button
-                onClick={handleCheckout}
-                className="w-full bg-indigo-500 text-white py-2 rounded-md hover:bg-indigo-700"
-              >
-                Proceed to Checkout
-              </button>
+              {paymentMethod === "cod" ? (
+                <button
+                  onClick={handleCheckout}
+                  className="w-full bg-black text-white py-2 rounded-md transition ease-in-out delay-50 hover:bg-gray-700"
+                >
+                  Proceed to Checkout
+                </button>
+              ) : (
+                <>
+                  <div className="flex justify-between mb-4">
+                    <span className="font-semibold">Bank Name</span>
+                    <span className="text-black">NCB</span>
+                  </div>
+                  <button
+                    onClick={handleCheckout}
+                    className="w-full bg-black text-white py-2 rounded-md transition ease-in-out delay-50 hover:bg-gray-700"
+                  >
+                    VNPay Banking
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </>
