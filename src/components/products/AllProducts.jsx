@@ -39,13 +39,18 @@ const AllProducts = () => {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink onClick={() => nav("/")}>Home</BreadcrumbLink>
+              <BreadcrumbLink
+                onClick={() => nav("/")}
+                className="cursor-pointer text-gray-500"
+              >
+                Home
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>
               <Slash />
             </BreadcrumbSeparator>
             <BreadcrumbItem>
-              <BreadcrumbPage>Shop</BreadcrumbPage>
+              <BreadcrumbPage className="cursor-pointer">Shop</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>

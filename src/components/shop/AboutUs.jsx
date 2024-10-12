@@ -17,7 +17,6 @@ const AboutUs = () => {
 
   return (
     <div>
-      {/* Hero Section */}
       <section className="bg-gray-900 text-white py-20">
         <div className="container mx-auto text-center px-4">
           <h1 className="text-4xl font-bold mb-4">About Our Company</h1>
@@ -26,15 +25,13 @@ const AboutUs = () => {
             to our customers.
           </p>
           <Button
-            className="bg-indigo-600 hover:bg-indigo-500 text-white"
+            className="bg-gray-700 hover:bg-gray-500 text-white"
             onClick={handleContactUs}
           >
             Contact Us
           </Button>
         </div>
       </section>
-
-      {/* Mission Section */}
       <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
@@ -65,8 +62,6 @@ const AboutUs = () => {
           </div>
         </div>
       </section>
-
-      {/* Team Section */}
       <section className="bg-gray-100 py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
@@ -75,9 +70,7 @@ const AboutUs = () => {
               We are a diverse group of professionals committed to excellence.
             </p>
           </div>
-
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-            {/* Team Member 1 */}
             <Card className="bg-white shadow-md">
               <CardHeader>
                 <img
@@ -91,13 +84,11 @@ const AboutUs = () => {
                 <p className="text-gray-600">CEO & Founder</p>
               </CardContent>
               <CardFooter className="p-4">
-                <Button variant="link" className="text-indigo-600">
+                <Button variant="link" className="text-gray-600">
                   LinkedIn Profile
                 </Button>
               </CardFooter>
             </Card>
-
-            {/* Team Member 2 */}
             <Card className="bg-white shadow-md">
               <CardHeader>
                 <img
@@ -113,13 +104,11 @@ const AboutUs = () => {
                 <p className="text-gray-600">Chief Technology Officer</p>
               </CardContent>
               <CardFooter className="p-4">
-                <Button variant="link" className="text-indigo-600">
+                <Button variant="link" className="text-gray-600">
                   LinkedIn Profile
                 </Button>
               </CardFooter>
             </Card>
-
-            {/* Team Member 3 */}
             <Card className="bg-white shadow-md">
               <CardHeader>
                 <img
@@ -135,7 +124,7 @@ const AboutUs = () => {
                 <p className="text-gray-600">Head of Marketing</p>
               </CardContent>
               <CardFooter className="p-4">
-                <Button variant="link" className="text-indigo-600">
+                <Button variant="link" className="text-gray-600">
                   LinkedIn Profile
                 </Button>
               </CardFooter>

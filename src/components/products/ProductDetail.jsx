@@ -31,28 +31,28 @@ const ProductDetail = () => {
   const nav = useNavigate();
   const { cart, dispatch } = useCart();
 
+  const fetchProduct = async () => {
+    try {
+      const response = await getProductById(id);
+      setProduct(response.data?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const fetchInventory = async () => {
+    try {
+      const response = await getInventory(selectedSize.id);
+      setInventory(response.data?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const response = await getProductById(id);
-        setProduct(response.data?.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
     fetchProduct();
   }, [id]);
 
   useEffect(() => {
     if (selectedSize) {
-      const fetchInventory = async () => {
-        try {
-          const response = await getInventory(selectedSize);
-          setInventory(response.data?.data);
-        } catch (error) {
-          console.log(error);
-        }
-      };
       fetchInventory();
     }
   }, [selectedSize]);
@@ -79,6 +79,7 @@ const ProductDetail = () => {
         toast.success("Added to cart");
         setSelectedSize(null);
         setQuantity(0);
+        setInventory(null);
       }
     }
   };
@@ -90,25 +91,34 @@ const ProductDetail = () => {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink onClick={() => nav("/")}>Home</BreadcrumbLink>
+              <BreadcrumbLink
+                onClick={() => nav("/")}
+                className="cursor-pointer text-gray-500"
+              >
+                Home
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>
               <Slash />
             </BreadcrumbSeparator>
             <BreadcrumbItem>
-              <BreadcrumbLink onClick={() => nav("/shop")}>Shop</BreadcrumbLink>
+              <BreadcrumbLink
+                onClick={() => nav("/shop")}
+                className="cursor-pointer text-gray-500"
+              >
+                Shop
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>
               <Slash />
             </BreadcrumbSeparator>
             <BreadcrumbItem>
-              <BreadcrumbPage>Detail</BreadcrumbPage>
+              <BreadcrumbPage className="cursor-pointer">Detail</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
       </div>
       <div className="pt-6">
-        {/* Image gallery */}
         <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8">
           {product.images?.map((image, index) => (
             <div
@@ -123,16 +133,12 @@ const ProductDetail = () => {
             </div>
           ))}
         </div>
-
-        {/* Product info */}
         <div className="mx-auto max-w-2xl px-4 pb-16 pt-10 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pb-24 lg:pt-16">
           <div className="lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
             <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
               {product.name}
             </h1>
           </div>
-
-          {/* Options */}
           <div className="mt-4 lg:row-span-3 lg:mt-0">
             <h2 className="sr-only">Product information</h2>
             <p className="text-3xl tracking-tight text-gray-900">
@@ -146,7 +152,6 @@ const ProductDetail = () => {
             )}
 
             <form className="mt-10">
-              {/* Sizes */}
               <div className="mt-10">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-medium text-gray-900">Size</h3>
@@ -169,7 +174,7 @@ const ProductDetail = () => {
                         <span>{size.sizeName}</span>
                         <span
                           aria-hidden="true"
-                          className="pointer-events-none absolute -inset-px rounded-md border-2 border-transparent group-data-[focus]:border group-data-[checked]:border-indigo-500"
+                          className="pointer-events-none absolute -inset-px rounded-md border-2 border-transparent group-data-[focus]:border group-data-[checked]:border-gray-500"
                         />
                       </Radio>
                     ))}
@@ -183,12 +188,12 @@ const ProductDetail = () => {
                   max={inventory}
                   value={quantity}
                   onChange={(e) => setQuantity(e.target.value)}
-                  className="bg-white block w-40 rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="bg-white block w-40 rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
                 />
                 <button
                   type="submit"
                   onClick={handleAddToCart}
-                  className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-black px-8 py-3 text-base font-medium text-white hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-800 focus:ring-offset-2"
                 >
                   Add to cart
                 </button>
@@ -196,7 +201,6 @@ const ProductDetail = () => {
             </form>
           </div>
           <div className="py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pb-16 lg:pr-8 lg:pt-6">
-            {/* Description and details */}
             <div>
               <h3 className="sr-only">Description</h3>
 

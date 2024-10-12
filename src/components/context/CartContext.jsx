@@ -9,33 +9,27 @@ const initialState = {
 const cartReducer = (state, action) => {
   switch (action.type) {
     case "ADD_ITEM": {
-      // Check if item already exists in cart by both id and sizeId
       const existingItem = state.cart.find(
         (item) =>
-          item.id === action.payload.id && item.sizeId === action.payload.sizeId
+          item.productId === action.payload.productId &&
+          item.sizeId.id === action.payload.sizeId.id
       );
-
       let newCart;
-
       if (existingItem) {
-        // If item exists, increase the quantity
         newCart = state.cart.map((item) =>
-          item.id === action.payload.id && item.sizeId === action.payload.sizeId
+          item.productId === action.payload.productId &&
+          item.sizeId.id === action.payload.sizeId.id
             ? { ...item, quantity: item.quantity + action.payload.quantity }
             : item
         );
       } else {
-        // If item doesn't exist, add the new item to the cart
         newCart = [...state.cart, { ...action.payload }];
       }
-
-      // Save updated cart to localStorage
       localStorage.setItem("cart", JSON.stringify(newCart));
       return { ...state, cart: newCart };
     }
 
     case "REMOVE_ITEM": {
-      // Remove item from cart based on id and sizeId
       const newCart = state.cart.filter(
         (item) =>
           !(
@@ -48,7 +42,6 @@ const cartReducer = (state, action) => {
     }
 
     case "INCREASE_ITEM": {
-      // Increase quantity based on id and sizeId
       const newCart = state.cart.map((item) =>
         item.id === action.payload.id && item.sizeId === action.payload.sizeId
           ? { ...item, quantity: item.quantity + 1 }
@@ -59,7 +52,6 @@ const cartReducer = (state, action) => {
     }
 
     case "DECREASE_ITEM": {
-      // Decrease quantity based on id and sizeId
       const newCart = state.cart.map((item) =>
         item.id === action.payload.id && item.sizeId === action.payload.sizeId
           ? { ...item, quantity: item.quantity - 1 }
@@ -70,7 +62,6 @@ const cartReducer = (state, action) => {
     }
 
     case "CLEAR_CART": {
-      // Clear the entire cart
       localStorage.removeItem("cart");
       return { ...state, cart: [] };
     }

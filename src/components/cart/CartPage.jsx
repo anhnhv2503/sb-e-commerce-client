@@ -1,6 +1,6 @@
 import { useDocumentTitle } from "@uidotdev/usehooks";
 import { Slash } from "lucide-react";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import {
@@ -11,13 +11,31 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "../ui/breadcrumb";
-import { Button } from "../ui/button";
-import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { jwtDecode } from "jwt-decode";
+import { useEffect, useState } from "react";
+import { getUserDetail } from "@/components/service/ApiFunctions";
+import { Label } from "@/components/ui/label";
 
 const CartPage = () => {
   useDocumentTitle("My Cart");
   const { cart, dispatch } = useCart();
   const nav = useNavigate();
+  const accessToken = localStorage.getItem("accessToken");
+  const userDecoded = jwtDecode(accessToken) ? jwtDecode(accessToken) : null;
+  const [address, setAddress] = useState("");
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await getUserDetail(userDecoded.id);
+        setAddress(response.data.data?.address);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchUser();
+  }, []);
 
   const removeItem = (item) => {
     dispatch({ type: "REMOVE_ITEM", payload: item });
@@ -36,18 +54,22 @@ const CartPage = () => {
   );
 
   const handleCheckout = () => {
-    //productId, sizeId, quantity, price
-    const orderItems = cart.map((item) => ({
-      productId: item.productId,
-      sizeId: item.sizeId.id,
-      quantity: item.quantity,
-    }));
-    const orderRequest = {
-      totalPrice: totalPrice,
-      items: orderItems,
-    };
-    toast.success("Continue Developement");
-    console.log(orderRequest);
+    if (address.trim() !== "") {
+      const orderItems = cart.map((item) => ({
+        productId: item.productId,
+        sizeId: item.sizeId.id,
+        quantity: item.quantity,
+      }));
+      const orderRequest = {
+        totalPrice: totalPrice,
+        items: orderItems,
+        orderAddress: address,
+      };
+      toast.success("Continue Developement");
+      console.log(orderRequest);
+    } else {
+      toast.error("Please enter your address");
+    }
   };
 
   return (
@@ -55,7 +77,7 @@ const CartPage = () => {
       <Breadcrumb>
         <BreadcrumbList className="flex flex-wrap items-center">
           <BreadcrumbItem>
-            <BreadcrumbLink href="/" className="text-indigo-600">
+            <BreadcrumbLink href="/" className="text-gray-600">
               Home
             </BreadcrumbLink>
           </BreadcrumbItem>
@@ -63,7 +85,7 @@ const CartPage = () => {
             <Slash />
           </BreadcrumbSeparator>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/shop" className="text-indigo-600">
+            <BreadcrumbLink href="/shop" className="text-gray-600">
               Shop
             </BreadcrumbLink>
           </BreadcrumbItem>
@@ -78,7 +100,7 @@ const CartPage = () => {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <h1 className="text-2xl font-bold mb-4 text-center lg:text-left">
+      <h1 className="text-2xl font-bold mb-4 text-center lg:text-left mt-3">
         Shopping Cart
       </h1>
       {cart.length > 0 ? (
@@ -150,10 +172,18 @@ const CartPage = () => {
               ))}
             </tbody>
           </table>
+          <div className="">
+            <Label htmlFor="address">Shipping Address</Label>
+            <Input
+              type="text"
+              id="address"
+              placeholder={address}
+              defaultValue={address}
+              onChange={(e) => setAddress(e.target.value)}
+            />
+          </div>
 
-          {/* Cart Summary and Checkout */}
-          <div className="flex flex-col-reverse lg:flex-row justify-between items-start lg:items-center space-y-4 lg:space-y-0">
-            {/* Continue Shopping Button */}
+          <div className="flex flex-col-reverse lg:flex-row justify-between items-start lg:items-center space-y-4 lg:space-y-0 mt-3">
             <div>
               <button
                 onClick={() => nav("/shop")}
@@ -162,8 +192,6 @@ const CartPage = () => {
                 Continue Shopping
               </button>
             </div>
-
-            {/* Total and Checkout Section */}
             <div className="bg-gray-100 p-4 rounded-md shadow-md w-full lg:w-1/3">
               <div className="flex justify-between mb-2">
                 <span className="font-semibold">Subtotal</span>
@@ -186,8 +214,8 @@ const CartPage = () => {
         <div className="bg-white shadow-md rounded-lg p-4 text-center">
           <p className="text-gray-700">No items in the cart</p>
           <a
-            href="/shop"
-            className="mt-4 inline-block bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700"
+            onClick={() => nav("/shop")}
+            className="mt-4 inline-block bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-600 cursor-pointer"
           >
             Go Shopping
           </a>
