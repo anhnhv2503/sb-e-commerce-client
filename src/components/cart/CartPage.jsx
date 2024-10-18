@@ -36,11 +36,14 @@ const CartPage = () => {
   const { cart, dispatch } = useCart();
   const nav = useNavigate();
   const accessToken = localStorage.getItem("accessToken");
-  const userDecoded = jwtDecode(accessToken) ? jwtDecode(accessToken) : null;
+  let userDecoded = null;
   const [address, setAddress] = useState("");
   const [paymentMethod, setPaymentMethod] = useState(paymentMethods[0].name);
 
   useEffect(() => {
+    if (accessToken) {
+      userDecoded = jwtDecode(accessToken);
+    }
     const fetchUser = async () => {
       try {
         const response = await getUserDetail(userDecoded.id);

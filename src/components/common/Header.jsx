@@ -82,76 +82,6 @@ const Header = () => {
           >
             Shop
           </a>
-          <Popover className="relative">
-            <PopoverButton className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900">
-              Categories
-              <ChevronDownIcon
-                aria-hidden="true"
-                className="h-5 w-5 flex-none text-black-400"
-              />
-            </PopoverButton>
-
-            <PopoverPanel
-              transition
-              className="absolute -left-8 top-full z-10 mt-3 overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5 transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150 data-[enter]:ease-out data-[leave]:ease-in"
-            >
-              <div className="p-4">
-                {loadingCategories && (
-                  <div className="flex items-center justify-center">
-                    <span className="loading loading-dots loading-xs"></span>
-                  </div>
-                )}
-                {categories.map((item, index) => (
-                  <div
-                    key={index}
-                    className="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm leading-6 hover:bg-gray-50"
-                  >
-                    <div className="flex-auto">
-                      {item.name}
-                      <span className="absolute inset-0" />
-
-                      <p className="mt-1 text-gray-600">{item.description}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </PopoverPanel>
-          </Popover>
-
-          <Popover className="relative">
-            <PopoverButton className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900">
-              Brands
-              <ChevronDownIcon
-                aria-hidden="true"
-                className="h-5 w-5 flex-none text-black-400"
-              />
-            </PopoverButton>
-
-            <PopoverPanel
-              transition
-              className="absolute -left-8 top-full z-10 mt-3 overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5 transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150 data-[enter]:ease-out data-[leave]:ease-in"
-            >
-              <div className="p-4">
-                {loadingBrands && (
-                  <div className="flex items-center justify-center">
-                    <span className="loading loading-dots loading-xs"></span>
-                  </div>
-                )}
-                {brands.map((item, index) => (
-                  <div
-                    key={index}
-                    className="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm leading-6 hover:bg-gray-50"
-                  >
-                    <div className="flex-auto">
-                      {item}
-                      <span className="absolute inset-0" />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </PopoverPanel>
-          </Popover>
-
           <a
             onClick={() => nav("/about")}
             className="text-sm font-semibold leading-6 text-gray-900 cursor-pointer"
@@ -266,57 +196,6 @@ const Header = () => {
           <div className="mt-6 flow-root">
             <div className="-my-6 divide-y divide-gray-500/10">
               <div className="space-y-2 py-6">
-                <Disclosure as="div" className="-mx-3">
-                  <DisclosureButton className="group flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">
-                    Categories
-                    <ChevronDownIcon
-                      aria-hidden="true"
-                      className="h-5 w-5 flex-none group-data-[open]:rotate-180"
-                    />
-                  </DisclosureButton>
-                  <DisclosurePanel className="mt-2 space-y-2">
-                    {loadingCategories && (
-                      <div className="flex items-center justify-center">
-                        <span className="loading loading-dots loading-xs"></span>
-                      </div>
-                    )}
-                    {[...categories].map((item) => (
-                      <DisclosureButton
-                        key={item.name}
-                        as="a"
-                        className="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                      >
-                        {item.name}
-                      </DisclosureButton>
-                    ))}
-                  </DisclosurePanel>
-                </Disclosure>
-
-                <Disclosure as="div" className="-mx-3">
-                  <DisclosureButton className="group flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">
-                    Brands
-                    <ChevronDownIcon
-                      aria-hidden="true"
-                      className="h-5 w-5 flex-none group-data-[open]:rotate-180"
-                    />
-                  </DisclosureButton>
-                  <DisclosurePanel className="mt-2 space-y-2">
-                    {loadingBrands && (
-                      <div className="flex items-center justify-center">
-                        <span className="loading loading-dots loading-xs"></span>
-                      </div>
-                    )}
-                    {[...brands].map((item, index) => (
-                      <DisclosureButton
-                        key={index}
-                        as="a"
-                        className="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                      >
-                        {item}
-                      </DisclosureButton>
-                    ))}
-                  </DisclosurePanel>
-                </Disclosure>
                 <a
                   onClick={() => nav("/about")}
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
