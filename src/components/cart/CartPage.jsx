@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { jwtDecode } from "jwt-decode";
 import { useEffect, useState } from "react";
-import { getUserDetail } from "@/components/service/ApiFunctions";
+import { getUserDetail, placeOrder } from "@/components/service/ApiFunctions";
 import { Label } from "@/components/ui/label";
 import cod from "@/assets/cod.png";
 import vnpay from "@/assets/vnpay.jpg";
@@ -71,7 +71,7 @@ const CartPage = () => {
     0
   );
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     if (address.trim() !== "" && paymentMethod) {
       const orderItems = cart.map((item) => ({
         productId: item.productId,
@@ -82,11 +82,43 @@ const CartPage = () => {
         totalPrice: totalPrice,
         items: orderItems,
         orderAddress: address,
+        paymentMethod: paymentMethod,
       };
-      toast.success("Continue Developement");
-      console.log(orderRequest);
-      console.log("Payment Method: ", paymentMethod);
-      setPaymentMethod(null);
+      try {
+        const response = await placeOrder(orderRequest);
+        if (response) {
+          toast.success("Order placed successfully");
+          dispatch({ type: "CLEAR_CART" });
+          nav("/order/success");
+        }
+      } catch (error) {
+        toast.error(error.response?.data?.data);
+        nav("/order/fail");
+      }
+    } else if (address.trim() === "") {
+      toast.error("Please enter your address");
+    } else {
+      toast.error("Please select a payment method");
+    }
+  };
+
+  const handleCheckoutVnpay = async () => {
+    if (address.trim() !== "" && paymentMethod) {
+      const orderItems = cart.map((item) => ({
+        productId: item.productId,
+        sizeId: item.sizeId.id,
+        quantity: item.quantity,
+      }));
+      const orderRequest = {
+        totalPrice: totalPrice,
+        items: orderItems,
+        orderAddress: address,
+        paymentMethod: paymentMethod,
+      };
+      try {
+      } catch (error) {
+        nav("/order/fail");
+      }
     } else if (address.trim() === "") {
       toast.error("Please enter your address");
     } else {
@@ -262,7 +294,7 @@ const CartPage = () => {
                     <span className="text-black">NCB</span>
                   </div>
                   <button
-                    onClick={handleCheckout}
+                    onClick={handleCheckoutVnpay}
                     className="w-full bg-black text-white py-2 rounded-md transition ease-in-out delay-50 hover:bg-gray-700"
                   >
                     VNPay Banking

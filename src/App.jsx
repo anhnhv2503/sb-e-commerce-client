@@ -33,6 +33,8 @@ import NotFound from "@/components/error/NotFound";
 import ResetPassword from "@/components/forgot-password/ResetPassword";
 import ManageCategory from "@/components/admin/pages/ManageCategory";
 import { Toaster } from "react-hot-toast";
+import OrderSuccess from "@/components/orders/OrderSuccess";
+import OrderFailed from "@/components/orders/OrderFailed";
 
 function Layout() {
   const user = JSON.parse(localStorage.getItem("accessToken"));
@@ -99,6 +101,14 @@ function App() {
     {
       path: "reset/password",
       element: <ResetPassword />,
+    },
+    {
+      path: "order/success",
+      element: <OrderSuccess />,
+    },
+    {
+      path: "order/fail",
+      element: <OrderFailed />,
     },
     {
       path: "/",

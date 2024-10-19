@@ -101,7 +101,11 @@ const ProductDetail = () => {
   };
 
   if (isLoading || !product) {
-    return <p>Loading...</p>;
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <span className="loading loading-dots loading-xs"></span>
+      </div>
+    );
   }
 
   return (
@@ -141,20 +145,40 @@ const ProductDetail = () => {
       </div>
 
       <div className="pt-6">
-        <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:max-w-7xl lg:grid lg:grid-cols-3 lg:gap-x-8 lg:px-8">
-          {product.images?.map((image, index) => (
-            <div
-              key={index}
-              className="aspect-h-4 aspect-w-3 hidden overflow-hidden rounded-lg lg:block mt-3"
-            >
-              <img
-                alt={"Product image"}
-                src={image.url}
-                loading="lazy"
-                className="h-full w-full object-cover object-center"
-              />
-            </div>
-          ))}
+        <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:max-w-7xl lg:px-8">
+          {/* Horizontal scrolling container for mobile */}
+          <div className="lg:hidden flex space-x-4 overflow-x-auto">
+            {product.images?.map((image, index) => (
+              <div
+                key={index}
+                className="aspect-h-4 aspect-w-3 overflow-hidden rounded-lg flex-shrink-0 w-64"
+              >
+                <img
+                  alt={`Product image ${index + 1}`}
+                  src={image.url}
+                  loading="lazy"
+                  className="h-full w-full object-cover object-center"
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Grid layout for larger screens */}
+          <div className="hidden lg:grid lg:grid-cols-3 lg:gap-x-8">
+            {product.images?.map((image, index) => (
+              <div
+                key={index}
+                className="aspect-h-4 aspect-w-3 overflow-hidden rounded-lg"
+              >
+                <img
+                  alt={`Product image ${index + 1}`}
+                  src={image.url}
+                  loading="lazy"
+                  className="h-full w-full object-cover object-center"
+                />
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="mx-auto max-w-2xl px-4 pb-16 pt-10 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pb-24 lg:pt-16">
@@ -197,8 +221,8 @@ const ProductDetail = () => {
                         <span>{size.sizeName}</span>
                         <span
                           aria-hidden="true"
-                          className="pointer-events-none absolute -inset-px rounded-md border-2 border-transparent group-focus:border-gray-500"
-                        ></span>
+                          className="pointer-events-none absolute -inset-px rounded-md border-2 border-transparent group-data-[focus]:border group-data-[checked]:border-indigo-700"
+                        />
                       </Radio>
                     ))}
                   </RadioGroup>
@@ -226,7 +250,6 @@ const ProductDetail = () => {
 
           <div className="py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pb-16 lg:pr-8 lg:pt-6">
             <div>
-              <h3 className="sr-only">Description</h3>
               <div className="space-y-6">
                 <p className="text-base text-gray-900">{product.description}</p>
               </div>

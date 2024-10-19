@@ -145,3 +145,12 @@ export const forgotPassword = async (email) => {
 export const resetPassword = async (token, newPassword) => {
   return axios.post("/api/user/reset-password", { token, newPassword });
 };
+
+export const placeOrder = async (data) => {
+  const token = JSON.parse(localStorage.getItem("accessToken"));
+  return axios.post("/api/order/place-order", data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};

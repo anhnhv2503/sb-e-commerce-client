@@ -135,11 +135,7 @@ const Header = () => {
           <div className="flex items-center justify-between">
             <a onClick={() => nav("`/")} className="-m-1.5 p-1.5">
               <span className="sr-only">Your Company</span>
-              <img
-                alt=""
-                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                className="h-8 w-auto"
-              />
+              <img alt="" src={newLogo} className="h-8 w-auto" />
             </a>
             <button
               type="button"
@@ -154,6 +150,14 @@ const Header = () => {
             <div className="-my-6 divide-y divide-gray-500/10">
               <div className="space-y-2 py-6">
                 <a
+                  onClick={() => nav("/shop")}
+                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                >
+                  Shop
+                </a>
+              </div>
+              <div className="space-y-2 py-6">
+                <a
                   onClick={() => nav("/about")}
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
@@ -161,18 +165,40 @@ const Header = () => {
                 </a>
               </div>
               {token ? (
-                <div className="py-6">
-                  <Logout />
-                </div>
+                <ul tabIndex={0} className="z-[1] mt-3 w-52 p-2">
+                  <li>
+                    <a
+                      className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                      onClick={() => nav("/user/profile")}
+                    >
+                      Profile
+                    </a>
+                  </li>
+                  <hr />
+                  <li>
+                    <Logout />
+                  </li>
+                </ul>
               ) : (
-                <div className="py-6">
-                  <a
-                    onClick={() => nav("/login")}
-                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                  >
-                    Log in
-                  </a>
-                </div>
+                <ul tabIndex={0} className=" z-[1] mt-3 w-52 p-2 ">
+                  <li>
+                    <a
+                      className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                      onClick={() => nav("/login")}
+                    >
+                      Sign In
+                    </a>
+                  </li>
+                  <hr />
+                  <li>
+                    <a
+                      className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                      onClick={() => nav("/register")}
+                    >
+                      Sign Up
+                    </a>
+                  </li>
+                </ul>
               )}
             </div>
           </div>
