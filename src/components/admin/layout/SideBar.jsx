@@ -1,6 +1,7 @@
 import Logout from "@/components/logout/Logout";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import newLogo from "../../../assets/logo.png";
 
 const SideBar = () => {
   const [isProductDropdownOpen, setIsProductDropdownOpen] = useState(false);
@@ -14,16 +15,13 @@ const SideBar = () => {
     <>
       {/* Sidebar */}
       <div
-        className={`w-64 bg-gray-800 text-white transition-all duration-300 h-full`}
+        className={`w-64 bg-purple-500 text-white transition-all duration-300 h-full`}
       >
-        <div className="flex items-center justify-between px-4 py-3">
-          <label className={`block text-lg font-semibold text-gray-200`}>
-            ADMIN PANEL
-          </label>
-          <button className="text-gray-200 focus:outline-none">☰</button>
+        <div className="flex items-center justify-center px-4 py-3">
+          <img alt="" src={newLogo} className="h-10 w-auto cursor-pointer" />
         </div>
         <ul className="mt-6">
-          <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer">
+          <li className="px-4 py-2 hover:bg-purple-700 cursor-pointer">
             <a onClick={() => nav("/admin")}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -41,12 +39,16 @@ const SideBar = () => {
               </svg>
             </a>
           </li>
-          <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer">
+          <li className="px-4 py-2 hover:bg-purple-700 cursor-pointer">
             <a onClick={() => nav("/admin/dashboard")}>Dashboard</a>
           </li>
 
+          <li className="px-4 py-2 hover:bg-purple-700 cursor-pointer">
+            <a onClick={() => nav("/admin/manage/category")}>Category</a>
+          </li>
+
           {/* Products Dropdown */}
-          <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer">
+          <li className="px-4 py-2 cursor-pointer">
             <div
               className="flex items-center justify-between"
               onClick={toggleProductDropdown}
@@ -71,10 +73,10 @@ const SideBar = () => {
             {/* Dropdown Menu */}
             {isProductDropdownOpen && (
               <ul className="ml-4 mt-2">
-                <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer">
+                <li className="px-4 py-2 hover:bg-purple-700 cursor-pointer">
                   <a onClick={() => nav("/admin/product/add")}>Add Product</a>
                 </li>
-                <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer">
+                <li className="px-4 py-2 hover:bg-purple-700 cursor-pointer">
                   <a onClick={() => nav("/admin/product/list")}>
                     View Products
                   </a>
@@ -83,7 +85,7 @@ const SideBar = () => {
             )}
           </li>
 
-          <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer">
+          <li className="px-4 py-2 hover:bg-purple-700 cursor-pointer">
             <a onClick={() => nav("/admin/manage/user")}>User</a>
           </li>
         </ul>

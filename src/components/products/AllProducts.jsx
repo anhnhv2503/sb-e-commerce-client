@@ -1,5 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { getProducts } from "../service/ApiFunctions";
+import Paginator from "@/components/common/Paginator";
+import { useDocumentTitle } from "@uidotdev/usehooks";
+import { Slash } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  getAllCategories,
+  getBrands,
+  getProducts,
+} from "../service/ApiFunctions";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,30 +16,73 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "../ui/breadcrumb";
-import { Slash } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { useDocumentTitle } from "@uidotdev/usehooks";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const AllProducts = () => {
   useDocumentTitle("Shopping");
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const nav = useNavigate();
+  const [totalPages, setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [categories, setCategories] = useState([]);
+  const [loadingCategories, setLoadingCategories] = useState(false);
+  const [brands, setBrands] = useState([]);
+  const [loadingBrands, setLoadingBrands] = useState(false);
+  const size = 9;
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setIsLoading(true);
-        const response = await getProducts();
-        setProducts(response.data?.data);
-        setIsLoading(false);
-      } catch (error) {
-        setIsLoading(true);
-        console.log(error);
-      }
-    };
-    fetchProducts();
+    fetchCategories();
+    fetchBrands();
   }, []);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [currentPage]);
+
+  const fetchCategories = async () => {
+    try {
+      setLoadingCategories(true);
+      const response = await getAllCategories();
+      setCategories(response.data?.data);
+      setLoadingCategories(false);
+    } catch (error) {
+      console.error("Error loading categories", error);
+      setLoadingCategories(true);
+    }
+  };
+  const fetchBrands = async () => {
+    try {
+      setLoadingBrands(true);
+      const response = await getBrands();
+      setBrands(response.data?.data);
+      setLoadingBrands(false);
+    } catch (error) {
+      console.error("Error loading brands", error);
+      setLoadingBrands(true);
+    }
+  };
+  const fetchProducts = async () => {
+    try {
+      setIsLoading(true);
+      const response = await getProducts(currentPage, size);
+      setProducts(response.data?.content);
+      setTotalPages(response.data?.page?.totalPages);
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(true);
+      console.log(error);
+    }
+  };
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
 
   return (
     <div className="bg-white">
@@ -63,26 +114,64 @@ const AllProducts = () => {
           </div>
         )}
 
-        <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-          {products.map((product) => (
-            <a
-              key={product.id}
-              onClick={() => nav(`/product/${product.id}`)}
-              className="group"
-            >
-              <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
-                <img
-                  alt={product.name + " image"}
-                  src={product.images[0].url}
-                  className="h-96 w-96 object-cover object-center group-hover:opacity-75"
-                />
-              </div>
-              <h3 className="mt-4 text-sm text-gray-700">{product.name}</h3>
-              <p className="mt-1 text-lg font-medium text-gray-900">
-                ${product.price}
-              </p>
-            </a>
-          ))}
+        <div className="grid grid-cols-5 grid-rows-5 gap-4">
+          <div className="row-span-5">
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="item-1">
+                <AccordionTrigger>Brands</AccordionTrigger>
+                {brands.map((brand) => (
+                  <AccordionContent
+                    key={brand}
+                    className="cursor-pointer hover:bg-slate-200 px-6 py-3"
+                  >
+                    {brand}
+                  </AccordionContent>
+                ))}
+              </AccordionItem>
+
+              <AccordionItem value="item-2">
+                <AccordionTrigger>Categories</AccordionTrigger>
+                {categories.map((category) => (
+                  <AccordionContent
+                    key={category.id}
+                    className="cursor-pointer hover:bg-slate-200 px-6 py-3"
+                  >
+                    {category.name}
+                  </AccordionContent>
+                ))}
+              </AccordionItem>
+            </Accordion>
+          </div>
+          <div className="col-span-4 row-span-5">
+            <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 xl:gap-x-8">
+              {products.map((product) => (
+                <a
+                  key={product.id}
+                  onClick={() => nav(`/product/${product.id}`)}
+                  className="group"
+                >
+                  <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
+                    <img
+                      alt={product.name + " image"}
+                      src={product.images[0].url}
+                      className="h-96 w-96 object-cover object-center group-hover:opacity-75"
+                    />
+                  </div>
+                  <h3 className="mt-4 text-sm text-gray-700">{product.name}</h3>
+                  <p className="mt-1 text-lg font-medium text-gray-900">
+                    ${product.price}
+                  </p>
+                </a>
+              ))}
+            </div>
+            <div className="mt-9">
+              <Paginator
+                totalPages={totalPages}
+                currentPage={currentPage}
+                onPageChange={handlePageChange}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>

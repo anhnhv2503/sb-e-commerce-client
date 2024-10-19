@@ -31,6 +31,8 @@ import VerifyEmailFailed from "./components/verify/VerifyEmailFailed";
 import ForgotPassword from "@/components/forgot-password/ForgotPassword";
 import NotFound from "@/components/error/NotFound";
 import ResetPassword from "@/components/forgot-password/ResetPassword";
+import ManageCategory from "@/components/admin/pages/ManageCategory";
+import { Toaster } from "react-hot-toast";
 
 function Layout() {
   const user = JSON.parse(localStorage.getItem("accessToken"));
@@ -170,6 +172,10 @@ function App() {
           path: "manage/user",
           element: <ManageUser />,
         },
+        {
+          path: "manage/category",
+          element: <ManageCategory />,
+        },
       ],
     },
     {
@@ -180,6 +186,7 @@ function App() {
 
   return (
     <CartProvider>
+      <Toaster />
       <RouterProvider router={router}></RouterProvider>
     </CartProvider>
   );

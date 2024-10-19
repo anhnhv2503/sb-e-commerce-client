@@ -1,57 +1,14 @@
-import {
-  Dialog,
-  DialogPanel,
-  Disclosure,
-  DisclosureButton,
-  DisclosurePanel,
-  Popover,
-  PopoverButton,
-  PopoverGroup,
-  PopoverPanel,
-} from "@headlessui/react";
-import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import { Dialog, DialogPanel, PopoverGroup } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import newLogo from "../../assets/logo.png";
 import Logout from "../logout/Logout";
-import { getAllCategories, getBrands } from "../service/ApiFunctions";
-import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const token = localStorage.getItem("accessToken");
-  const [categories, setCategories] = useState([]);
-  const [loadingCategories, setLoadingCategories] = useState(false);
-  const [brands, setBrands] = useState([]);
-  const [loadingBrands, setLoadingBrands] = useState(false);
   const nav = useNavigate();
-  const fetchCategories = async () => {
-    try {
-      setLoadingCategories(true);
-      const response = await getAllCategories();
-      setCategories(response.data?.data);
-      setLoadingCategories(false);
-    } catch (error) {
-      console.error("Error loading categories", error);
-      setLoadingCategories(true);
-    }
-  };
-  const fetchBrands = async () => {
-    try {
-      setLoadingBrands(true);
-      const response = await getBrands();
-      setBrands(response.data?.data);
-      setLoadingBrands(false);
-    } catch (error) {
-      console.error("Error loading brands", error);
-      setLoadingBrands(true);
-    }
-  };
-
-  useEffect(() => {
-    fetchCategories();
-    fetchBrands();
-  }, []);
 
   return (
     <header className="bg-gray-300">

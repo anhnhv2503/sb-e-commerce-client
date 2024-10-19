@@ -16,8 +16,8 @@ const NotFound = () => {
         <p className="mt-2 text-gray-500">
           It looks like the page you are trying to access is not available.
         </p>
-        <Button className="mt-6" onClick={() => nav("/")}>
-          Go Back Home
+        <Button className="mt-6" onClick={() => nav(-1)}>
+          Go Back
         </Button>
       </div>
     </div>

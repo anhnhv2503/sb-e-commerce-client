@@ -28,22 +28,27 @@ const AddMoreSize = ({ productId }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleAddMoreSize = async () => {
-    try {
-      const response = await addMoreSizeForProduct(
-        productId,
-        sizeName,
-        quantity
-      );
-      if (response.status === 200) {
-        toast.success("Size Added!");
-        setIsLoading(true);
-        setTimeout(() => {
-          setIsLoading(false);
-          location.reload();
-        }, 3000);
+    if (!sizeName || !quantity) {
+      toast.error("Please fill all fields!");
+    } else {
+      try {
+        const response = await addMoreSizeForProduct(
+          productId,
+          sizeName,
+          quantity
+        );
+        if (response.status === 200) {
+          toast.success("Size Added!");
+          setIsLoading(true);
+          setTimeout(() => {
+            setIsLoading(false);
+            setSizeName("");
+            setQuantity("");
+          }, 3000);
+        }
+      } catch (error) {
+        toast.error(error.response.data.message);
       }
-    } catch (error) {
-      toast.error(error.response.data.message);
     }
   };
 
@@ -83,6 +88,7 @@ const AddMoreSize = ({ productId }) => {
             </Label>
             <Input
               id="quantity"
+              type="number"
               placeholder="Quantity"
               className="col-span-3"
               onChange={(e) => setQuantity(e.target.value)}

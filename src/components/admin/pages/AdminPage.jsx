@@ -2,7 +2,7 @@ import { useDocumentTitle } from "@uidotdev/usehooks";
 import React from "react";
 
 const AdminPage = () => {
-  useDocumentTitle("Admin Panel");
+  useDocumentTitle("Admin Home");
   return (
     <div className="p-8 bg-white shadow-lg rounded-lg">
       <h1 className="text-3xl font-bold text-gray-800 mb-6">

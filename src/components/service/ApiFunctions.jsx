@@ -4,12 +4,37 @@ export const loginUser = async (data) => {
   return axios.post("/api/auth/login", data);
 };
 
-export const getProducts = async () => {
-  return axios.get("/api/products/all");
+export const getProducts = async (page, size) => {
+  return axios.get("/api/products", {
+    params: {
+      page: page,
+      size: size,
+    },
+  });
 };
 
 export const getAllCategories = async () => {
   return axios.get("/api/categories/all");
+};
+
+export const addCategory = async (categoryName) => {
+  const token = JSON.parse(localStorage.getItem("accessToken"));
+  const formData = new FormData();
+  formData.append("name", categoryName);
+  return axios.post("/api/categories/add", formData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const deleteCategory = async (id) => {
+  const token = JSON.parse(localStorage.getItem("accessToken"));
+  return axios.delete(`/api/categories/${id}/delete`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };
 
 export const getProductById = async (id) => {

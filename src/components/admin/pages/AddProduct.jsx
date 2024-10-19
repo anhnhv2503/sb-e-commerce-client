@@ -52,7 +52,7 @@ const AddProduct = () => {
       formData.append("price", price);
       formData.append("brand", brand);
       formData.append("inventory", inventory);
-      formData.append("categoryId", category);
+      formData.append("categoryName", category);
       formData.append("sizeName", sizename);
       images.forEach((image) => {
         formData.append("images", image);
@@ -68,11 +68,29 @@ const AddProduct = () => {
           });
           setIsLoading(false);
         }
-        setTimeout(() => {
-          window.location.reload();
-        }, 3000);
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 3000);
+        setBrand("");
+        setName("");
+        setDescription("");
+        setPrice("");
+        setInventory(null);
+        setCategory(null);
+        setSizeName(null);
+        setImages(null);
+        setPreviewImages(null);
       } catch (error) {
         console.error("Error adding product", error);
+        setBrand("");
+        setName("");
+        setDescription("");
+        setPrice("");
+        setInventory(null);
+        setCategory(null);
+        setSizeName(null);
+        setImages(null);
+        setPreviewImages(null);
       }
     }
   };
@@ -223,7 +241,7 @@ const AddProduct = () => {
             </SelectTrigger>
             <SelectContent>
               {categories.map((category) => (
-                <SelectItem key={category.id} value={category.id}>
+                <SelectItem key={category.id} value={category.name}>
                   {category.name}
                 </SelectItem>
               ))}
