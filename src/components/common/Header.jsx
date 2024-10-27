@@ -37,13 +37,13 @@ const Header = () => {
             onClick={() => nav("/shop")}
             className="text-sm font-semibold leading-6 text-gray-900 cursor-pointer"
           >
-            Shop
+            Cửa Hàng
           </a>
           <a
             onClick={() => nav("/about")}
             className="text-sm font-semibold leading-6 text-gray-900 cursor-pointer"
           >
-            About Us
+            Về Chúng Tôi
           </a>
         </PopoverGroup>
 
@@ -97,10 +97,18 @@ const Header = () => {
               >
                 <li>
                   <a
-                    className="justify-between my-4"
+                    className="justify-between my-1"
                     onClick={() => nav("/user/profile")}
                   >
-                    Profile
+                    Thông Tin
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="justify-between my-4"
+                    onClick={() => nav("/user/my-orders")}
+                  >
+                    Đơn Hàng của Tôi
                   </a>
                 </li>
                 <hr />
@@ -114,11 +122,11 @@ const Header = () => {
                 className="menu menu-sm dropdown-content bg-white rounded-box z-[1] mt-3 w-52 p-2 shadow"
               >
                 <li>
-                  <a onClick={() => nav("/login")}>Sign In</a>
+                  <a onClick={() => nav("/login")}>Đăng Nhập</a>
                 </li>
                 <hr />
                 <li>
-                  <a onClick={() => nav("/register")}>Sign Up</a>
+                  <a onClick={() => nav("/register")}>Đăng Kí</a>
                 </li>
               </ul>
             )}
@@ -153,7 +161,7 @@ const Header = () => {
                   onClick={() => nav("/shop")}
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
-                  Shop
+                  Cửa Hàng
                 </a>
               </div>
               <div className="space-y-2 py-6">
@@ -161,7 +169,7 @@ const Header = () => {
                   onClick={() => nav("/about")}
                   className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
-                  About Us
+                  Về Chúng Tôi
                 </a>
               </div>
               {token ? (
@@ -171,7 +179,15 @@ const Header = () => {
                       className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                       onClick={() => nav("/user/profile")}
                     >
-                      Profile
+                      Thông Tin
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                      onClick={() => nav("/user/my-orders")}
+                    >
+                      Đơn Hàng Của Tôi
                     </a>
                   </li>
                   <hr />
@@ -186,7 +202,7 @@ const Header = () => {
                       className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                       onClick={() => nav("/login")}
                     >
-                      Sign In
+                      Đăng Nhập
                     </a>
                   </li>
                   <hr />
@@ -195,7 +211,7 @@ const Header = () => {
                       className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                       onClick={() => nav("/register")}
                     >
-                      Sign Up
+                      Đăng Kí
                     </a>
                   </li>
                 </ul>

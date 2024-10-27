@@ -9,7 +9,6 @@ const HomePage = () => {
     <div>
       <Carousel />
 
-      <h1 className="text-3xl font-bold text-center pt-10">New Arrivals</h1>
       <NewArrivals />
     </div>
   );

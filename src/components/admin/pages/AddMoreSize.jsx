@@ -29,7 +29,7 @@ const AddMoreSize = ({ productId }) => {
 
   const handleAddMoreSize = async () => {
     if (!sizeName || !quantity) {
-      toast.error("Please fill all fields!");
+      toast.error("Vui lòng điền đầy đủ thông tin");
     } else {
       try {
         const response = await addMoreSizeForProduct(
@@ -38,7 +38,7 @@ const AddMoreSize = ({ productId }) => {
           quantity
         );
         if (response.status === 200) {
-          toast.success("Size Added!");
+          toast.success("Thêm thành công!");
           setIsLoading(true);
           setTimeout(() => {
             setIsLoading(false);
@@ -55,23 +55,23 @@ const AddMoreSize = ({ productId }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Add More Size</Button>
+        <Button variant="outline">Thêm Size</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add more size for product {productId}</DialogTitle>
+          <DialogTitle>Thêm size cho sản phẩm {productId}</DialogTitle>
           <DialogDescription>
-            Please insert the size and quantity for the product
+            Vui lòng chọn size và số lượng cần thêm
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="name" className="text-right">
-              Size Name
+              Tên size
             </Label>
             <Select onValueChange={(value) => setSizeName(value)}>
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select Size" />
+                <SelectValue placeholder="Chọn size" />
               </SelectTrigger>
               <SelectContent>
                 {sizeOptions.map((size) => (
@@ -84,12 +84,12 @@ const AddMoreSize = ({ productId }) => {
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="username" className="text-right">
-              Quantity
+              Số lượng
             </Label>
             <Input
               id="quantity"
               type="number"
-              placeholder="Quantity"
+              placeholder="Số lượng"
               className="col-span-3"
               onChange={(e) => setQuantity(e.target.value)}
             />
@@ -102,7 +102,7 @@ const AddMoreSize = ({ productId }) => {
             </center>
           ) : (
             <Button type="submit" onClick={handleAddMoreSize}>
-              Add
+              Thêm
             </Button>
           )}
         </DialogFooter>

@@ -14,11 +14,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { jwtDecode } from "jwt-decode";
 import { useEffect, useState } from "react";
-import { getUserDetail, placeOrder } from "@/components/service/ApiFunctions";
+import {
+  getUserDetail,
+  placeOrder,
+  vnPayOrder,
+} from "@/components/service/ApiFunctions";
 import { Label } from "@/components/ui/label";
 import cod from "@/assets/cod.png";
 import vnpay from "@/assets/vnpay.jpg";
 import { Radio, RadioGroup } from "@headlessui/react";
+import useCurrencyFormat from "@/components/hooks/useCurrencyFormat";
 
 const paymentMethods = [
   {
@@ -32,13 +37,18 @@ const paymentMethods = [
 ];
 
 const CartPage = () => {
-  useDocumentTitle("My Cart");
+  useDocumentTitle("Giỏ Hàng");
   const { cart, dispatch } = useCart();
   const nav = useNavigate();
   const accessToken = localStorage.getItem("accessToken");
   let userDecoded = null;
   const [address, setAddress] = useState("");
   const [paymentMethod, setPaymentMethod] = useState(paymentMethods[0].name);
+  const currency = useCurrencyFormat();
+
+  if (sessionStorage.getItem("vnpayRequest")) {
+    sessionStorage.removeItem("vnpayRequest");
+  }
 
   useEffect(() => {
     if (accessToken) {
@@ -116,6 +126,11 @@ const CartPage = () => {
         paymentMethod: paymentMethod,
       };
       try {
+        const response = await vnPayOrder(orderRequest);
+        sessionStorage.setItem("vnpayRequest", JSON.stringify(orderRequest));
+        if (response.data.data?.paymentUrl) {
+          window.location.href = response.data.data.paymentUrl;
+        }
       } catch (error) {
         nav("/order/fail");
       }
@@ -131,31 +146,37 @@ const CartPage = () => {
       <Breadcrumb>
         <BreadcrumbList className="flex flex-wrap items-center">
           <BreadcrumbItem>
-            <BreadcrumbLink href="/" className="text-gray-600">
-              Home
+            <BreadcrumbLink
+              onClick={() => nav("/")}
+              className="text-gray-600 cursor-pointer"
+            >
+              Trang Chủ
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator>
             <Slash />
           </BreadcrumbSeparator>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/shop" className="text-gray-600">
-              Shop
+            <BreadcrumbLink
+              onClick={() => nav("/shop")}
+              className="text-gray-600 cursor-pointer"
+            >
+              Cửa Hàng
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator>
             <Slash />
           </BreadcrumbSeparator>
           <BreadcrumbItem>
-            <BreadcrumbPage className="font-semibold">
-              Shopping Cart
+            <BreadcrumbPage className="font-semibold cursor-pointer">
+              Giỏ Hàng
             </BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
 
       <h1 className="text-2xl font-bold mb-4 text-center lg:text-left mt-3">
-        Shopping Cart
+        Giỏ Hàng
       </h1>
       {cart.length > 0 ? (
         <>
@@ -188,7 +209,7 @@ const CartPage = () => {
                         {product.sizeId.sizeName}
                       </p>
                       <p className="text-gray-500 text-sm">
-                        ${product.price.toFixed(2)}
+                        {currency.format(product.price)}
                       </p>
                     </div>
                   </td>
@@ -212,7 +233,7 @@ const CartPage = () => {
                     </div>
                   </td>
                   <td className="py-4">
-                    ${(product.price * product.quantity).toFixed(2)}
+                    {currency.format(product.price * product.quantity)}
                   </td>
                   <td className="py-4">
                     <button
@@ -272,32 +293,30 @@ const CartPage = () => {
               </button>
             </div>
             <div className="bg-gray-100 p-4 rounded-md shadow-md w-full lg:w-1/3">
-              <div className="flex justify-between mb-2">
-                <span className="font-semibold">Subtotal</span>
-                <span className="text-red-500">${totalPrice.toFixed(2)}</span>
-              </div>
               <div className="flex justify-between mb-4">
-                <span className="font-semibold">Total</span>
-                <span className="text-red-500">${totalPrice.toFixed(2)}</span>
+                <span className="font-semibold">Tổng</span>
+                <span className="text-red-500">
+                  {currency.format(totalPrice)}
+                </span>
               </div>
               {paymentMethod === "cod" ? (
                 <button
                   onClick={handleCheckout}
                   className="w-full bg-black text-white py-2 rounded-md transition ease-in-out delay-50 hover:bg-gray-700"
                 >
-                  Proceed to Checkout
+                  Thanh Toán
                 </button>
               ) : (
                 <>
                   <div className="flex justify-between mb-4">
-                    <span className="font-semibold">Bank Name</span>
-                    <span className="text-black">NCB</span>
+                    <span className="font-semibold">Ngân Hàng</span>
+                    <span className="text-red-500">NCB Bank</span>
                   </div>
                   <button
                     onClick={handleCheckoutVnpay}
                     className="w-full bg-black text-white py-2 rounded-md transition ease-in-out delay-50 hover:bg-gray-700"
                   >
-                    VNPay Banking
+                    Thanh Toán qua VN Pay
                   </button>
                 </>
               )}
@@ -306,12 +325,12 @@ const CartPage = () => {
         </>
       ) : (
         <div className="bg-white shadow-md rounded-lg p-4 text-center">
-          <p className="text-gray-700">No items in the cart</p>
+          <p className="text-gray-700">Không có sản phẩm</p>
           <a
             onClick={() => nav("/shop")}
             className="mt-4 inline-block bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-600 cursor-pointer"
           >
-            Go Shopping
+            Mua Sắm
           </a>
         </div>
       )}

@@ -146,7 +146,7 @@ const Register = () => {
         setLoading(true);
         const response = await registerUser(formData, fullAddress);
         if (response.status === 200) {
-          toast.success("User registered successfully", {
+          toast.success("Đăng kí thành công. Vui lòng kiểm tra Email của bạn", {
             duration: 3000,
             icon: "🚀",
           });
@@ -156,7 +156,7 @@ const Register = () => {
           }, 3000);
         } else {
           setLoading(false);
-          toast.error("Eror Sign up", {
+          toast.error("Đăng kí lỗi", {
             duration: 4000,
             icon: "🔐",
           });
@@ -172,7 +172,7 @@ const Register = () => {
     <div className="flex pt-4 pb-32 items-center justify-center bg-gray-100">
       <div className="w-full max-w-3xl p-8 space-y-6 bg-white rounded-lg shadow-md">
         <h2 className="text-center text-3xl font-extrabold text-gray-900">
-          Sign Up
+          ĐĂNG KÍ
         </h2>
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
@@ -180,7 +180,7 @@ const Register = () => {
               htmlFor="fullName"
               className="block text-sm font-medium text-gray-700"
             >
-              Full Name
+              Họ Tên
             </label>
             <div className="mt-1">
               <input
@@ -199,7 +199,7 @@ const Register = () => {
               htmlFor="phone"
               className="block text-sm font-medium text-gray-700"
             >
-              Phone
+              Số điện thoại
             </label>
             <div className="mt-1">
               <input
@@ -218,7 +218,7 @@ const Register = () => {
               htmlFor="address"
               className="block text-sm font-medium text-gray-700"
             >
-              Address
+              Địa chỉ
             </label>
             <div className="mt-1 flex">
               <div className="">
@@ -301,7 +301,7 @@ const Register = () => {
               htmlFor="password"
               className="block text-sm font-medium text-gray-700"
             >
-              Password
+              Mật khẩu
             </label>
             <div className="mt-1">
               <input
@@ -320,7 +320,7 @@ const Register = () => {
               htmlFor="confirmPassword"
               className="block text-sm font-medium text-gray-700"
             >
-              Confirm Password
+              Nhập lại mật khẩu
             </label>
             <div className="mt-1">
               <input
@@ -360,7 +360,7 @@ const Register = () => {
                 type="submit"
                 className="w-full flex justify-center px-4 py-2 font-medium text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
-                Sign Up
+                Đăng kí
               </button>
             </div>
           )}

@@ -14,6 +14,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "../ui/breadcrumb";
+import useCurrencyFormat from "@/components/hooks/useCurrencyFormat";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -21,7 +22,7 @@ function classNames(...classes) {
 
 const ProductDetail = () => {
   const { id } = useParams();
-  const [product, setProduct] = useState(null); // Initialize with null
+  const [product, setProduct] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const [inventory, setInventory] = useState(null);
   const [quantity, setQuantity] = useState(0);
@@ -30,7 +31,8 @@ const ProductDetail = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  useDocumentTitle(product?.name || "Product Detail");
+  useDocumentTitle(product?.name || "Chi tiết sản phẩm");
+  const currency = useCurrencyFormat();
 
   const fetchProduct = async () => {
     setIsLoading(true);
@@ -120,7 +122,7 @@ const ProductDetail = () => {
                 onClick={() => navigate("/")}
                 className="cursor-pointer text-gray-500"
               >
-                Home
+                Trang Chủ
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>
@@ -131,14 +133,16 @@ const ProductDetail = () => {
                 onClick={() => navigate("/shop")}
                 className="cursor-pointer text-gray-500"
               >
-                Shop
+                Cửa Hàng
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>
               <Slash />
             </BreadcrumbSeparator>
             <BreadcrumbItem>
-              <BreadcrumbPage className="cursor-pointer">Detail</BreadcrumbPage>
+              <BreadcrumbPage className="cursor-pointer">
+                Chi Tiết Sản Phẩm
+              </BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
@@ -146,7 +150,6 @@ const ProductDetail = () => {
 
       <div className="pt-6">
         <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:max-w-7xl lg:px-8">
-          {/* Horizontal scrolling container for mobile */}
           <div className="lg:hidden flex space-x-4 overflow-x-auto">
             {product.images?.map((image, index) => (
               <div
@@ -163,7 +166,6 @@ const ProductDetail = () => {
             ))}
           </div>
 
-          {/* Grid layout for larger screens */}
           <div className="hidden lg:grid lg:grid-cols-3 lg:gap-x-8">
             {product.images?.map((image, index) => (
               <div
@@ -189,14 +191,14 @@ const ProductDetail = () => {
           </div>
 
           <div className="mt-4 lg:row-span-3 lg:mt-0">
-            <h2 className="sr-only">Product information</h2>
+            <h2 className="sr-only">Thông tin sản phẩm</h2>
             <p className="text-3xl tracking-tight text-gray-900">
-              ${product.price}
+              {currency.format(product.price)}
             </p>
 
             {inventory !== null && (
               <p className="text-sm tracking-tight text-green-600">
-                In-stock: {inventory}
+                Còn {inventory} sản phẩm
               </p>
             )}
 
@@ -240,9 +242,9 @@ const ProductDetail = () => {
                 />
                 <button
                   type="submit"
-                  className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-black px-8 py-3 text-base font-medium text-white hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-800 focus:ring-offset-2"
+                  className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-gray-600 px-8 py-3 text-base font-medium text-white hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-800 focus:ring-offset-2"
                 >
-                  Add to cart
+                  Thêm vào giỏ hàng
                 </button>
               </div>
             </form>

@@ -18,7 +18,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 const ManageCategory = () => {
-  useDocumentTitle("Manage Category");
+  useDocumentTitle("Quản lý danh mục sản phẩm");
   const [categories, setCategories] = useState([]);
   const [loadingCategories, setLoadingCategories] = useState(false);
 

@@ -13,9 +13,8 @@ const SideBar = () => {
 
   return (
     <>
-      {/* Sidebar */}
       <div
-        className={`w-64 bg-purple-500 text-white transition-all duration-300 h-full`}
+        className={`w-64 bg-indigo-500 text-white transition-all duration-300 h-full`}
       >
         <div className="flex items-center justify-center px-4 py-3">
           <img alt="" src={newLogo} className="h-10 w-auto cursor-pointer" />
@@ -40,20 +39,24 @@ const SideBar = () => {
             </a>
           </li>
           <li className="px-4 py-2 hover:bg-purple-700 cursor-pointer">
-            <a onClick={() => nav("/admin/dashboard")}>Dashboard</a>
+            <a onClick={() => nav("/admin/dashboard")}>Thống kê</a>
+          </li>
+          <li className="px-4 py-2 hover:bg-purple-700 cursor-pointer">
+            <a onClick={() => nav("/admin/manage/orders")}>Quản lí đơn hàng</a>
           </li>
 
           <li className="px-4 py-2 hover:bg-purple-700 cursor-pointer">
-            <a onClick={() => nav("/admin/manage/category")}>Category</a>
+            <a onClick={() => nav("/admin/manage/category")}>
+              Quản lí danh mục sản phẩm
+            </a>
           </li>
 
-          {/* Products Dropdown */}
           <li className="px-4 py-2 cursor-pointer">
             <div
               className="flex items-center justify-between"
               onClick={toggleProductDropdown}
             >
-              <a>Products</a>
+              <a>Quản lí sản phẩm</a>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -70,15 +73,14 @@ const SideBar = () => {
               </svg>
             </div>
 
-            {/* Dropdown Menu */}
             {isProductDropdownOpen && (
               <ul className="ml-4 mt-2">
                 <li className="px-4 py-2 hover:bg-purple-700 cursor-pointer">
-                  <a onClick={() => nav("/admin/product/add")}>Add Product</a>
+                  <a onClick={() => nav("/admin/product/add")}>Thêm sản phẩm</a>
                 </li>
                 <li className="px-4 py-2 hover:bg-purple-700 cursor-pointer">
                   <a onClick={() => nav("/admin/product/list")}>
-                    View Products
+                    Tất cả sản phẩm
                   </a>
                 </li>
               </ul>
@@ -86,7 +88,7 @@ const SideBar = () => {
           </li>
 
           <li className="px-4 py-2 hover:bg-purple-700 cursor-pointer">
-            <a onClick={() => nav("/admin/manage/user")}>User</a>
+            <a onClick={() => nav("/admin/manage/user")}>Quản lí người dùng</a>
           </li>
         </ul>
         <div className="flex items-center justify-between px-4 py-3">

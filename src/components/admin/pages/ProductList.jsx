@@ -1,11 +1,11 @@
-import { getProducts } from "@/components/service/ApiFunctions";
-import React, { useEffect, useState } from "react";
-import AddMoreSize from "./AddMoreSize";
-import { useDocumentTitle } from "@uidotdev/usehooks";
 import Paginator from "@/components/common/Paginator";
+import { getProducts } from "@/components/service/ApiFunctions";
+import { useDocumentTitle } from "@uidotdev/usehooks";
+import { useEffect, useState } from "react";
+import AddMoreSize from "./AddMoreSize";
 
 const ProductList = () => {
-  useDocumentTitle("Products");
+  useDocumentTitle("Quản lý sản phẩm");
   const [products, setProducts] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);

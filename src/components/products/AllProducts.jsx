@@ -22,9 +22,10 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import useCurrencyFormat from "@/components/hooks/useCurrencyFormat";
 
 const AllProducts = () => {
-  useDocumentTitle("Shopping");
+  useDocumentTitle("Mua Sắm");
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const nav = useNavigate();
@@ -35,6 +36,7 @@ const AllProducts = () => {
   const [brands, setBrands] = useState([]);
   const [loadingBrands, setLoadingBrands] = useState(false);
   const size = 9;
+  const currency = useCurrencyFormat();
 
   useEffect(() => {
     fetchCategories();
@@ -94,14 +96,16 @@ const AllProducts = () => {
                 onClick={() => nav("/")}
                 className="cursor-pointer text-gray-500"
               >
-                Home
+                Trang Chủ
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>
               <Slash />
             </BreadcrumbSeparator>
             <BreadcrumbItem>
-              <BreadcrumbPage className="cursor-pointer">Shop</BreadcrumbPage>
+              <BreadcrumbPage className="cursor-pointer">
+                Cửa Hàng
+              </BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
@@ -118,7 +122,7 @@ const AllProducts = () => {
           <div className="row-span-5">
             <Accordion type="single" collapsible className="w-full">
               <AccordionItem value="item-1">
-                <AccordionTrigger>Brands</AccordionTrigger>
+                <AccordionTrigger>Thương Hiệu</AccordionTrigger>
                 {brands.map((brand) => (
                   <AccordionContent
                     key={brand}
@@ -130,7 +134,7 @@ const AllProducts = () => {
               </AccordionItem>
 
               <AccordionItem value="item-2">
-                <AccordionTrigger>Categories</AccordionTrigger>
+                <AccordionTrigger>Thể Loại</AccordionTrigger>
                 {categories.map((category) => (
                   <AccordionContent
                     key={category.id}
@@ -159,7 +163,7 @@ const AllProducts = () => {
                   </div>
                   <h3 className="mt-4 text-sm text-gray-700">{product.name}</h3>
                   <p className="mt-1 text-lg font-medium text-gray-900">
-                    ${product.price}
+                    {currency.format(product.price)}
                   </p>
                 </a>
               ))}

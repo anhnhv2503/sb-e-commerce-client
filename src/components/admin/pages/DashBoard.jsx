@@ -2,7 +2,7 @@ import { useDocumentTitle } from "@uidotdev/usehooks";
 import React from "react";
 
 const DashBoard = () => {
-  useDocumentTitle("Dashboard");
+  useDocumentTitle("Thống kê");
   return (
     <>
       <h1 className="text-2xl font-bold mb-4">Dashboard Area</h1>

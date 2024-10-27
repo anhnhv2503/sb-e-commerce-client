@@ -154,3 +154,61 @@ export const placeOrder = async (data) => {
     },
   });
 };
+
+export const vnPayOrder = async (data) => {
+  const token = JSON.parse(localStorage.getItem("accessToken"));
+  return axios.post("/api/order/vnpay", data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const vnPayCallback = async (data, vnp_ResponseCode) => {
+  const token = JSON.parse(localStorage.getItem("accessToken"));
+  return axios.post(
+    `/api/order/vnpay-callback?vnp_ResponseCode=${vnp_ResponseCode}`,
+    {
+      ...data, // Data in the request body
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+};
+
+export const getOrdersByUserAndStatus = async (status) => {
+  const token = JSON.parse(localStorage.getItem("accessToken"));
+  return axios.get(`/api/order/my-orders`, {
+    params: {
+      status: status,
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const cancelOrder = async (orderId) => {
+  const token = JSON.parse(localStorage.getItem("accessToken"));
+  return axios.put(`/api/order/cancel-order/${orderId}`, null, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const getOrdersByStatus = async (page, status) => {
+  const token = JSON.parse(localStorage.getItem("accessToken"));
+  return axios.get(`/api/order/all`, {
+    params: {
+      page: page,
+      status: status,
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};

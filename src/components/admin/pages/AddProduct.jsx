@@ -17,7 +17,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { useDocumentTitle } from "@uidotdev/usehooks";
 
 const AddProduct = () => {
-  useDocumentTitle("Add Product");
+  useDocumentTitle("Quản lý sản phẩm");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -128,17 +128,16 @@ const AddProduct = () => {
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-md">
       <h2 className="text-2xl font-bold mb-6 text-center text-slate-700">
-        Add New Product
+        Thêm sản phẩm
       </h2>
 
       <form>
-        {/* Name */}
         <div className="mb-4">
           <label
             htmlFor="name"
             className="block text-sm font-medium text-gray-700"
           >
-            Product Name
+            Tên sản phẩm
           </label>
           <input
             required
@@ -148,17 +147,16 @@ const AddProduct = () => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="w-full mt-1 p-2 input input-bordered bg-white text-black border-gray-300"
-            placeholder="Enter product name"
+            placeholder="Nhập tên sản phẩm"
           />
         </div>
 
-        {/* Description */}
         <div className="mb-4">
           <label
             htmlFor="description"
             className="block text-sm font-medium text-gray-700"
           >
-            Description
+            Mô tả sản phẩm
           </label>
           <textarea
             required
@@ -167,18 +165,17 @@ const AddProduct = () => {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="w-full mt-1 p-2 input input-bordered bg-white text-black border-gray-300"
-            placeholder="Enter product description"
+            placeholder="Nhập mô tả sản phẩm"
             rows="4"
           />
         </div>
 
-        {/* Price */}
         <div className="mb-4">
           <label
             htmlFor="price"
             className="block text-sm font-medium text-gray-700"
           >
-            Price
+            Giá tiền
           </label>
           <input
             required
@@ -188,7 +185,7 @@ const AddProduct = () => {
             value={price}
             onChange={(e) => setPrice(e.target.value)}
             className="w-full mt-1 p-2 input input-bordered bg-white text-black border-gray-300"
-            placeholder="Enter price"
+            placeholder="Nhập giá tiền"
           />
         </div>
 
@@ -198,7 +195,7 @@ const AddProduct = () => {
             htmlFor="brand"
             className="block text-sm font-medium text-gray-700"
           >
-            Brand
+            Thương hiệu
           </label>
           <input
             required
@@ -208,22 +205,21 @@ const AddProduct = () => {
             value={brand}
             onChange={(e) => setBrand(e.target.value)}
             className="w-full mt-1 p-2 input input-bordered bg-white text-black border-gray-300"
-            placeholder="Enter brand name"
+            placeholder="Nhập thương hiệu"
           />
         </div>
 
-        {/* Inventory */}
         <div className="mb-4 flex">
           <label
             htmlFor="inventory"
             className="block text-sm font-medium text-gray-700 mx-3"
           >
-            Quantity
+            Số lượng nhập
           </label>
           <Input
             required
             type="number"
-            placeholder="Quantity"
+            placeholder="Nhập số lượng"
             max="100"
             className="w-40"
             onChange={(e) => setInventory(e.target.value)}
@@ -233,11 +229,11 @@ const AddProduct = () => {
             htmlFor="category"
             className="block text-sm font-medium text-gray-700 mx-3"
           >
-            Category
+            Thể loại
           </label>
           <Select onValueChange={(value) => setCategory(value)}>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select Category" />
+              <SelectValue placeholder="Chọn thể loại" />
             </SelectTrigger>
             <SelectContent>
               {categories.map((category) => (
@@ -252,11 +248,11 @@ const AddProduct = () => {
             htmlFor="sizename"
             className="block text-sm font-medium text-gray-700 mx-3"
           >
-            Size Name
+            Tên size
           </label>
           <Select onValueChange={(value) => setSizeName(value)}>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select Size" />
+              <SelectValue placeholder="Chọn size" />
             </SelectTrigger>
             <SelectContent>
               {sizeOptions.map((size) => (
@@ -268,13 +264,12 @@ const AddProduct = () => {
           </Select>
         </div>
 
-        {/* Images */}
-        <div className="mb-4">
+        <div className="mb-6">
           <label
             htmlFor="images"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-semibold text-gray-800"
           >
-            Product Images
+            Ảnh sản phẩm
           </label>
           <input
             type="file"
@@ -282,20 +277,34 @@ const AddProduct = () => {
             id="images"
             multiple
             onChange={handleImageChange}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+            className="hidden w-full px-4 py-2 border border-gray-300 rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-700"
           />
-          <div className="mt-2 flex space-x-2 overflow-y-auto">
-            {previewImages.map((url) => (
-              <img
-                key={url}
-                src={url}
-                alt="Product photo"
-                className="w-40 h-40 object-cover rounded-md"
-                onClick={handleShowImage}
-              />
-            ))}
+          <div className="mt-4">
+            <label
+              htmlFor="images"
+              className="cursor-pointer px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition duration-200"
+            >
+              Choose File
+            </label>
+          </div>
+
+          <div className="mt-4 flex space-x-4 overflow-x-auto p-2 border border-gray-200 rounded-lg shadow-inner">
+            {previewImages.length > 0 ? (
+              previewImages.map((url) => (
+                <img
+                  key={url}
+                  src={url}
+                  alt="Product preview"
+                  className="w-32 h-32 object-cover rounded-lg border border-gray-300 shadow-sm hover:shadow-md transition-shadow duration-200 ease-in-out cursor-pointer"
+                  onClick={handleShowImage}
+                />
+              ))
+            ) : (
+              <p className="text-gray-500 italic">No images selected</p>
+            )}
           </div>
         </div>
+
         <div className="">
           <PreviewImages
             imageUrls={previewImages}
@@ -304,7 +313,6 @@ const AddProduct = () => {
           />
         </div>
 
-        {/* Submit Button */}
         <div className="mt-6">
           {isLoading ? (
             <center>
@@ -316,7 +324,7 @@ const AddProduct = () => {
               className="w-full bg-slate-800 text-white p-2 rounded-md hover:bg-indigo-700 transition duration-200"
               onClick={handleSubmit}
             >
-              Add Product
+              Thêm
             </button>
           )}
         </div>

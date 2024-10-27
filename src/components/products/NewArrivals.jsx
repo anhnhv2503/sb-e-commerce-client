@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { getNewArrivals } from "../service/ApiFunctions";
 import { useNavigate } from "react-router-dom";
+import useCurrencyFormat from "@/components/hooks/useCurrencyFormat";
 
 const NewArrivals = () => {
   const [newProducts, setNewProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const nav = useNavigate();
+  const currency = useCurrencyFormat();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -24,6 +26,7 @@ const NewArrivals = () => {
 
   return (
     <div className="bg-white">
+      <h1 className="text-3xl font-bold text-center pt-10">Sản Phẩm Mới</h1>
       <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
         <h2 className="sr-only">Products</h2>
         {isLoading && (
@@ -48,7 +51,7 @@ const NewArrivals = () => {
               </div>
               <h3 className="mt-4 text-sm text-gray-700">{product.name}</h3>
               <p className="mt-1 text-lg font-medium text-gray-900">
-                ${product.price}
+                {currency.format(product.price)}
               </p>
             </a>
           ))}

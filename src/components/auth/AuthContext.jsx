@@ -29,12 +29,11 @@ export const AuthProvider = ({ children }) => {
         navigate(location.state?.from ? location.state.from : "/");
       }
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error("Email hoặc mật khẩu không đúng");
     }
   };
 
   const logout = () => {
-    // Add your logout logic here
     localStorage.removeItem("accessToken");
     setUser(null);
     navigate("/");

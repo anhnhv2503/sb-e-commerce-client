@@ -35,6 +35,9 @@ import ManageCategory from "@/components/admin/pages/ManageCategory";
 import { Toaster } from "react-hot-toast";
 import OrderSuccess from "@/components/orders/OrderSuccess";
 import OrderFailed from "@/components/orders/OrderFailed";
+import VnPayCallback from "@/components/orders/VnPayCallback";
+import MyOrder from "@/components/user/MyOrder";
+import ManageOrder from "@/components/admin/pages/ManageOrder";
 
 function Layout() {
   const user = JSON.parse(localStorage.getItem("accessToken"));
@@ -111,6 +114,10 @@ function App() {
       element: <OrderFailed />,
     },
     {
+      path: "payment-callback",
+      element: <VnPayCallback />,
+    },
+    {
       path: "/",
       element: <Layout />, // The layout wraps the content with Header and Footer
       children: [
@@ -154,6 +161,10 @@ function App() {
               path: "cart",
               element: <CartPage />,
             },
+            {
+              path: "my-orders",
+              element: <MyOrder />,
+            },
           ],
         },
       ],
@@ -185,6 +196,10 @@ function App() {
         {
           path: "manage/category",
           element: <ManageCategory />,
+        },
+        {
+          path: "manage/orders",
+          element: <ManageOrder />,
         },
       ],
     },

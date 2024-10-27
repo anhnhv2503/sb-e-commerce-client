@@ -2,7 +2,7 @@ import { useDocumentTitle } from "@uidotdev/usehooks";
 import React from "react";
 
 const ManageUser = () => {
-  useDocumentTitle("Manage User");
+  useDocumentTitle("Quản lý người dùng");
   return (
     <>
       <h1 className="text-2xl font-bold mb-4">Manage User Area</h1>
