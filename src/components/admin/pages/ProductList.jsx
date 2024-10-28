@@ -3,12 +3,14 @@ import { getProducts } from "@/components/service/ApiFunctions";
 import { useDocumentTitle } from "@uidotdev/usehooks";
 import { useEffect, useState } from "react";
 import AddMoreSize from "./AddMoreSize";
+import useCurrencyFormat from "@/components/hooks/useCurrencyFormat";
 
 const ProductList = () => {
   useDocumentTitle("Quản lý sản phẩm");
   const [products, setProducts] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
+  const currency = useCurrencyFormat();
   const size = 5;
 
   useEffect(() => {
@@ -61,8 +63,8 @@ const ProductList = () => {
                 </div>
               </div>
               <div className="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
-                <p className="text-sm leading-6 text-white badge">
-                  ${product.price}
+                <p className="text-sm leading-6 text-white badge badge-primary">
+                  {currency.format(product.price)}
                 </p>
                 <div className="mt-3">
                   <AddMoreSize productId={product.id} />

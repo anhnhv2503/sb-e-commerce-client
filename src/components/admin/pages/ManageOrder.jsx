@@ -1,9 +1,9 @@
 import OrdersTable from "@/components/admin/pages/OrdersTable";
+import Paginator from "@/components/common/Paginator";
 import { getOrdersByStatus } from "@/components/service/ApiFunctions";
 import { Button } from "@/components/ui/button";
 import { useDocumentTitle } from "@uidotdev/usehooks";
-import React, { useEffect, useState } from "react";
-import Paginator from "@/components/common/Paginator";
+import { useEffect, useState } from "react";
 
 const initStatus = [
   "PENDING",
@@ -25,7 +25,6 @@ const ManageOrder = () => {
       const response = await getOrdersByStatus(currentPage, status);
       setOrders(response.data?.content);
       setTotalPages(response.data?.page?.totalPages);
-      console.log("hehehe");
     } catch (error) {
       console.error("Error fetching orders: ", error);
     }
@@ -40,17 +39,17 @@ const ManageOrder = () => {
   };
 
   return (
-    <div className="grid grid-cols-5 grid-rows-5 gap-4">
-      <div className="col-span-5 bg-slate-200 border rounded-md">
-        <div className="flex flex-wrap gap-2 mx-5 my-5">
+    <div className="">
+      <div className="mb-5">
+        <div className="">
           {initStatus.map((item) => (
             <Button
               key={item}
               onClick={() => setStatus(item)}
-              className={`transition-colors duration-200 ${
+              className={`transition-colors duration-200 mx-1 ${
                 status === item
-                  ? "bg-orange-600 text-white hover:bg-orange-400"
-                  : "bg-gray-100 text-black hover:bg-orange-400 hover:text-white"
+                  ? "bg-slate-900 text-white hover:bg-slate-400"
+                  : "bg-gray-100 text-black hover:bg-slate-600 hover:text-white"
               }`}
             >
               {item.replace("_", " ")}
@@ -61,7 +60,7 @@ const ManageOrder = () => {
       <div className="col-span-5 row-span-3 row-start-2 bg-slate-200 border rounded-md">
         <OrdersTable data={orders} status={status} />
       </div>
-      <div className="col-span-5 row-start-5">
+      <div className="col-span-5 row-start-5 mt-5">
         <Paginator
           totalPages={totalPages}
           currentPage={currentPage}

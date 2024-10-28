@@ -212,3 +212,21 @@ export const getOrdersByStatus = async (page, status) => {
     },
   });
 };
+
+export const updateOrderStatus = async (orderId) => {
+  const token = JSON.parse(localStorage.getItem("accessToken"));
+  return axios.put(`/api/order/update-order-status/${orderId}`, null, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const confirmDelivery = async (orderId) => {
+  const token = JSON.parse(localStorage.getItem("accessToken"));
+  return axios.put(`/api/order/confirm-delivered/${orderId}`, null, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
