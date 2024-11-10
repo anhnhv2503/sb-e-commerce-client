@@ -1,7 +1,16 @@
+import useCurrencyFormat from "@/components/hooks/useCurrencyFormat";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import { Radio, RadioGroup } from "@headlessui/react";
 import { useDocumentTitle } from "@uidotdev/usehooks";
 import { Slash } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useCart } from "../context/CartContext";
@@ -14,7 +23,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "../ui/breadcrumb";
-import useCurrencyFormat from "@/components/hooks/useCurrencyFormat";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -61,9 +69,9 @@ const ProductDetail = () => {
     fetchProduct();
   }, [id]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (selectedSize) {
-      fetchInventory(selectedSize.id); // Fetch inventory when a size is selected
+      fetchInventory(selectedSize.id);
     }
   }, [selectedSize]);
 
@@ -151,35 +159,51 @@ const ProductDetail = () => {
       <div className="pt-6">
         <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:max-w-7xl lg:px-8">
           <div className="lg:hidden flex space-x-4 overflow-x-auto">
-            {product.images?.map((image, index) => (
-              <div
-                key={index}
-                className="aspect-h-4 aspect-w-3 overflow-hidden rounded-lg flex-shrink-0 w-64"
-              >
-                <img
-                  alt={`Product image ${index + 1}`}
-                  src={image.url}
-                  loading="lazy"
-                  className="h-full w-full object-cover object-center"
-                />
-              </div>
-            ))}
+            <Carousel className="w-full max-w-xl">
+              <CarouselContent>
+                {product.images.map((image, index) => (
+                  <CarouselItem key={index}>
+                    <div className="">
+                      <Card>
+                        <CardContent className="flex aspect-square items-center justify-center">
+                          <img
+                            src={image.url}
+                            alt={product.name}
+                            className="object-cover object-center w-full h-full"
+                          />
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
           </div>
 
-          <div className="hidden lg:grid lg:grid-cols-3 lg:gap-x-8">
-            {product.images?.map((image, index) => (
-              <div
-                key={index}
-                className="aspect-h-4 aspect-w-3 overflow-hidden rounded-lg"
-              >
-                <img
-                  alt={`Product image ${index + 1}`}
-                  src={image.url}
-                  loading="lazy"
-                  className="h-full w-full object-cover object-center"
-                />
-              </div>
-            ))}
+          <div className="hidden lg:grid lg:grid-cols-2 lg:gap-x-8">
+            <Carousel className="w-full max-w-xl">
+              <CarouselContent>
+                {product.images.map((image, index) => (
+                  <CarouselItem key={index}>
+                    <div className="">
+                      <Card>
+                        <CardContent className="flex aspect-square items-center justify-center">
+                          <img
+                            src={image.url}
+                            alt={product.name}
+                            className="object-cover object-center w-full h-full"
+                          />
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
           </div>
         </div>
 
@@ -242,7 +266,7 @@ const ProductDetail = () => {
                 />
                 <button
                   type="submit"
-                  className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-gray-600 px-8 py-3 text-base font-medium text-white hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-800 focus:ring-offset-2"
+                  className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-gradient-to-r from-cyan-600 to-indigo-600 hover:from-indigo-600 hover:to-cyan-600 px-8 py-3 text-base font-medium text-white "
                 >
                   Thêm vào giỏ hàng
                 </button>

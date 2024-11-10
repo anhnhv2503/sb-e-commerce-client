@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import OrdersTable from "@/components/user/OrdersTable";
 import { useDocumentTitle } from "@uidotdev/usehooks";
-import React, { useState } from "react";
+import { useState } from "react";
 
 const initStatus = [
   "PENDING",
@@ -15,7 +15,7 @@ const MyOrder = () => {
   useDocumentTitle("Đơn hàng của tôi");
   const [status, setStatus] = useState("PENDING");
   return (
-    <div className=" my-10 flex justify-center px-4 md:px-0">
+    <div className=" my-10 flex justify-center px-4 md:px-0 pb-44">
       <div className="w-full max-w-7xl shadow-md rounded-lg">
         <div className="flex flex-col p-6 space-y-6">
           <div className="flex flex-wrap gap-2">

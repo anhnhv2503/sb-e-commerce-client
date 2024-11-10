@@ -1,7 +1,8 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useDocumentTitle } from "@uidotdev/usehooks";
 import { jwtDecode } from "jwt-decode";
 import { useEffect, useState } from "react";
 import { getUserDetail } from "../service/ApiFunctions";
-import { useDocumentTitle } from "@uidotdev/usehooks";
 import ChangePassword from "./ChangePassword";
 
 const Profile = () => {
@@ -21,6 +22,7 @@ const Profile = () => {
       } catch (error) {
         console.error(error);
       }
+      s;
     };
     fetchUser();
   }, []);
@@ -29,12 +31,10 @@ const Profile = () => {
     <div className="pt-32 pb-32 bg-gray-100 flex items-center justify-center">
       <div className="w-full max-w-3xl p-6 bg-white shadow-md rounded-lg">
         <div className="flex flex-col items-center space-y-6">
-          {/* Profile Picture */}
-          <img
-            className="w-32 h-32 rounded-full shadow-lg"
-            src="https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png"
-            alt={user.fullName + " profile picture"}
-          />
+          <Avatar className="w-40 h-40 rounded-full shadow-lg">
+            <AvatarImage src="https://github.com/shadcn.png" alt="@VAShop" />
+            <AvatarFallback>{user.fullName}</AvatarFallback>
+          </Avatar>
 
           {/* Name and Email */}
           <div className="text-center">

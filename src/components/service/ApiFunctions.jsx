@@ -230,3 +230,12 @@ export const confirmDelivery = async (orderId) => {
     },
   });
 };
+
+export const getDashboardData = async () => {
+  const token = JSON.parse(localStorage.getItem("accessToken"));
+  return axios.get(`/api/dashboard/data`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
