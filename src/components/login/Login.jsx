@@ -25,7 +25,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-96 p-8 pb-44">
+    <div className="flex items-center justify-center min-h-96 p-8 pb-96">
       <div className="w-full max-w-md p-8 space-y-4 bg-white shadow-md rounded-lg">
         <h2 className="text-center text-3xl font-extrabold text-gray-900">
           ĐĂNG NHẬP
@@ -70,7 +70,7 @@ const Login = () => {
           <div>
             <button
               type="submit"
-              className="w-full px-4 py-2 text-white bg-slate-500 rounded-md hover:bg-slate-600 focus:ring-2 focus:ring-slate-500"
+              className="w-full px-4 py-2 text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:to-pink-500 rounded-md"
               onClick={handleSubmit}
             >
               Đăng Nhập

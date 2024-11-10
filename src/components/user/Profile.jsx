@@ -22,13 +22,12 @@ const Profile = () => {
       } catch (error) {
         console.error(error);
       }
-      s;
     };
     fetchUser();
   }, []);
 
   return (
-    <div className="pt-32 pb-32 bg-gray-100 flex items-center justify-center">
+    <div className="pt-32 pb-44 bg-gray-100 flex items-center justify-center">
       <div className="w-full max-w-3xl p-6 bg-white shadow-md rounded-lg">
         <div className="flex flex-col items-center space-y-6">
           <Avatar className="w-40 h-40 rounded-full shadow-lg">

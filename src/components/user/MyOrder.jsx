@@ -25,8 +25,8 @@ const MyOrder = () => {
                 onClick={() => setStatus(item)}
                 className={`transition-colors duration-200 ${
                   status === item
-                    ? "bg-indigo-600 text-white hover:bg-indigo-400"
-                    : "bg-gray-100 text-black hover:bg-indigo-400 hover:text-white"
+                    ? "bg-gradient-to-tr text-white from-indigo-500 to-teal-500 hover:from-indigo-400 hover:to-teal-400"
+                    : "bg-gray-100 text-black hover:bg-gradient-to-br hover:from-indigo-400 hover:to-teal-400 hover:text-white"
                 }`}
               >
                 {item.replace("_", " ")}

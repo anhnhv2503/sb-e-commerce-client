@@ -4,7 +4,7 @@ import React from "react";
 const AdminPage = () => {
   useDocumentTitle("Admin Home");
   return (
-    <div className="p-8 bg-white shadow-lg rounded-lg">
+    <div className="p-8 bg-gray-300 shadow-lg rounded-lg">
       <h1 className="text-3xl font-bold text-gray-800 mb-6">
         Welcome to VA Shop Admin Panel
       </h1>
@@ -34,7 +34,7 @@ const AdminPage = () => {
       <p className="text-gray-600">
         If you have any questions or need assistance, feel free to reach out to
         our support team at{" "}
-        <span className="font-semibold">admin@vashop.com</span>.
+        <span className="font-semibold">prjonlineshop@gmail.com</span>.
       </p>
     </div>
   );

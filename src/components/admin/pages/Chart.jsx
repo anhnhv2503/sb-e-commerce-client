@@ -8,13 +8,23 @@ import {
 import { chartData } from "@/data/chartData";
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "#2563eb",
+  "T-Shirt": {
+    label: "T-Shirt",
   },
-  mobile: {
-    label: "Mobile",
-    color: "#60a5fa",
+  Blazer: {
+    label: "Blazer",
+  },
+  Jacket: {
+    label: "Jacket",
+  },
+  Polo: {
+    label: "Polo",
+  },
+  Shirt: {
+    label: "Shirt",
+  },
+  Pants: {
+    label: "Pants",
   },
 };
 
@@ -31,11 +41,15 @@ const Chart = () => {
           tickLine={false}
           tickMargin={10}
           axisLine={false}
-          tickFormatter={(value) => value.slice(0, 3)}
+          tickFormatter={(value) => value}
         />
         <ChartTooltip content={<ChartTooltipContent />} />
-        <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-        <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+        <Bar dataKey="T-Shirt" fill="#FF8000" radius={9} />
+        <Bar dataKey="Blazer" fill="#4C1F7A" radius={9} />
+        <Bar dataKey="Jacket" fill="#219B9D" radius={9} />
+        <Bar dataKey="Polo" fill="#A2D2DF" radius={9} />
+        <Bar dataKey="Shirt" fill="#BC7C7C" radius={9} />
+        <Bar dataKey="Pants" fill="#E4C087" radius={9} />
       </BarChart>
     </ChartContainer>
   );

@@ -1,14 +1,29 @@
-export const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-  { month: "July", desktop: 186, mobile: 80 },
-  { month: "August", desktop: 305, mobile: 200 },
-  { month: "September", desktop: 237, mobile: 120 },
-  { month: "October", desktop: 73, mobile: 190 },
-  { month: "November", desktop: 209, mobile: 130 },
-  { month: "December", desktop: 214, mobile: 140 },
-];
+const generateRandomData = () => {
+  const items = ["T-Shirt", "Blazer", "Jacket", "Shirt", "Pants", "Polo"];
+  const months = [
+    "Tháng 1",
+    "Tháng 2",
+    "Tháng 3",
+    "Tháng 4",
+    "Tháng 5",
+    "Tháng 6",
+    "Tháng 7",
+    "Tháng 8",
+    "Tháng 9",
+    "Tháng 10",
+    "Tháng 11",
+    "Tháng 12",
+  ];
+
+  return months.map((month) => {
+    const monthData = { month };
+    items.forEach((item) => {
+      monthData[item] = Math.floor(Math.random() * 99) + 1; // Random sales from 1 to 20
+    });
+    return monthData;
+  });
+};
+
+const chartData = generateRandomData();
+
+export { chartData };

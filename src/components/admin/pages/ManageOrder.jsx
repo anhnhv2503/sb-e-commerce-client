@@ -48,7 +48,7 @@ const ManageOrder = () => {
               onClick={() => setStatus(item)}
               className={`transition-colors duration-200 mx-1 ${
                 status === item
-                  ? "bg-slate-900 text-white hover:bg-slate-400"
+                  ? "bg-gradient-to-t from-slate-800 to-slate-500 text-white hover:from-slate-900 hover:to-slate-400"
                   : "bg-gray-100 text-black hover:bg-slate-600 hover:text-white"
               }`}
             >

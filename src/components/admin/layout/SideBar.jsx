@@ -14,7 +14,7 @@ const SideBar = () => {
   return (
     <>
       <div
-        className={`w-64 bg-indigo-500 text-white transition-all duration-300 h-full`}
+        className={`w-64 bg-gradient-to-b from-indigo-600 to-teal-400 text-white transition-all duration-300 h-full`}
       >
         <div className="flex items-center justify-center px-4 py-3">
           <img alt="" src={newLogo} className="h-10 w-auto cursor-pointer" />

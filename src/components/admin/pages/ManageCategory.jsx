@@ -55,7 +55,7 @@ const ManageCategory = () => {
       <section className="text-gray-600 body-font">
         <AddCategory />
       </section>
-      <section className="body-font mt-10">
+      <section className="body-font mt-10 font-semibold">
         <Table>
           <TableCaption>A list of your Product Categoris.</TableCaption>
           <TableHeader>
@@ -68,7 +68,7 @@ const ManageCategory = () => {
           <TableBody>
             {categories.map((category, index) => (
               <TableRow key={index}>
-                <TableCell className="font-medium">{category.id}</TableCell>
+                <TableCell className="font-semibold">{category.id}</TableCell>
                 <TableCell>{category.name}</TableCell>
                 <TableCell className="text-right">
                   <Button

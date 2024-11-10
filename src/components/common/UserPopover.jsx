@@ -28,7 +28,7 @@ const UserPopover = () => {
                 <div className="grid grid-cols-1 items-center gap-4">
                   <Button
                     onClick={() => nav("/user/profile")}
-                    className="bg-gradient-to-tr from-indigo-400 to-cyan-400 hover:from-indigo-500 hover:to-cyan-500"
+                    className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-500 hover:to-cyan-500"
                   >
                     Thông tin
                   </Button>

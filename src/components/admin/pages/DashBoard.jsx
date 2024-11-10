@@ -34,35 +34,35 @@ const DashBoard = () => {
       <div className="">
         {data ? (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            <div className="bg-white p-4 rounded-lg shadow">
-              <p className="text-lg font-semibold flex">
+            <div className="bg-white p-4 rounded-lg shadow text-sky-600">
+              <p className="text-lg font-semibold flex ">
                 <TruckIcon className="w-5 h-5 mr-5" />
                 Total Orders
               </p>
               <p className="text-3xl font-bold">{data.totalOrders}</p>
             </div>
-            <div className="bg-white p-4 rounded-lg shadow">
-              <p className="text-lg font-semibold flex">
+            <div className="bg-white p-4 rounded-lg shadow text-rose-600">
+              <p className="text-lg font-semibold flex ">
                 <TagIcon className="w-5 h-5 mr-5" />
                 Total Categories
               </p>
               <p className="text-3xl font-bold">{data.totalCategories}</p>
             </div>
-            <div className="bg-white p-4 rounded-lg shadow">
-              <p className="text-lg font-semibold flex">
+            <div className="bg-white p-4 rounded-lg shadow text-indigo-600">
+              <p className="text-lg font-semibold flex ">
                 <Squares2X2Icon className="w-5 h-5 mr-5" />
                 Total Products
               </p>
               <p className="text-3xl font-bold">{data.totalProducts}</p>
             </div>
-            <div className="bg-white p-4 rounded-lg shadow">
+            <div className="bg-white p-4 rounded-lg shadow text-teal-600">
               <p className="text-lg font-semibold flex">
                 <UserGroupIcon className="w-5 h-5 mr-5" />
                 Total Users
               </p>
               <p className="text-3xl font-bold">{data.totalCustomers}</p>
             </div>
-            <div className="bg-white p-4 rounded-lg shadow">
+            <div className="bg-white p-4 rounded-lg shadow text-fuchsia-700">
               <p className="text-lg font-semibold flex">
                 <BanknotesIcon className="w-5 h-5 mr-5" />
                 Total Revenue

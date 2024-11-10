@@ -1,5 +1,18 @@
+import cod from "@/assets/cod.png";
+import vnpay from "@/assets/vnpay.jpg";
+import useCurrencyFormat from "@/components/hooks/useCurrencyFormat";
+import {
+  getUserDetail,
+  placeOrder,
+  vnPayOrder,
+} from "@/components/service/ApiFunctions";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Radio, RadioGroup } from "@headlessui/react";
 import { useDocumentTitle } from "@uidotdev/usehooks";
+import { jwtDecode } from "jwt-decode";
 import { Slash } from "lucide-react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
@@ -11,19 +24,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "../ui/breadcrumb";
-import { Input } from "@/components/ui/input";
-import { jwtDecode } from "jwt-decode";
-import { useEffect, useState } from "react";
-import {
-  getUserDetail,
-  placeOrder,
-  vnPayOrder,
-} from "@/components/service/ApiFunctions";
-import { Label } from "@/components/ui/label";
-import cod from "@/assets/cod.png";
-import vnpay from "@/assets/vnpay.jpg";
-import { Radio, RadioGroup } from "@headlessui/react";
-import useCurrencyFormat from "@/components/hooks/useCurrencyFormat";
 
 const paymentMethods = [
   {
@@ -302,7 +302,7 @@ const CartPage = () => {
               {paymentMethod === "cod" ? (
                 <button
                   onClick={handleCheckout}
-                  className="w-full bg-black text-white py-2 rounded-md transition ease-in-out delay-50 hover:bg-gray-700"
+                  className="w-full bg-gradient-to-r from-indigo-600 to-cyan-700 text-white py-2 rounded-md transition ease-in-out delay-50 hover:from-indigo-400 hover:to-cyan-400"
                 >
                   Thanh Toán
                 </button>
@@ -314,7 +314,7 @@ const CartPage = () => {
                   </div>
                   <button
                     onClick={handleCheckoutVnpay}
-                    className="w-full bg-black text-white py-2 rounded-md transition ease-in-out delay-50 hover:bg-gray-700"
+                    className="w-full bg-gradient-to-r from-indigo-600 to-cyan-700 hover:from-indigo-400 hover:to-cyan-400 text-white py-2 rounded-md transition ease-in-out delay-50 hover:bg-gray-700"
                   >
                     Thanh Toán qua VN Pay
                   </button>
@@ -328,7 +328,7 @@ const CartPage = () => {
           <p className="text-gray-700">Không có sản phẩm</p>
           <a
             onClick={() => nav("/shop")}
-            className="mt-4 inline-block bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-600 cursor-pointer"
+            className="mt-4 inline-block bg-gradient-to-r from-teal-400 to-blue-500 hover:from-pink-500 hover:to-orange-500 text-white px-4 py-2 rounded-lg cursor-pointer"
           >
             Mua Sắm
           </a>
