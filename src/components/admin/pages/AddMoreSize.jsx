@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/select";
 import { addMoreSizeForProduct } from "@/components/service/ApiFunctions";
 import toast, { Toaster } from "react-hot-toast";
-import { sizeOptions } from "../../../data/data";
+import { sizeOptions } from "../../../data/data.js";
 
 const AddMoreSize = ({ productId }) => {
   const [sizeName, setSizeName] = useState("");

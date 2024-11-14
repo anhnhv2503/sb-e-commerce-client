@@ -186,18 +186,16 @@ const ProductDetail = () => {
             <Carousel className="w-full max-w-xl">
               <CarouselContent>
                 {product.images.map((image, index) => (
-                  <CarouselItem key={index}>
-                    <div className="">
-                      <Card>
-                        <CardContent className="flex aspect-square items-center justify-center">
-                          <img
-                            src={image.url}
-                            alt={product.name}
-                            className="object-cover object-center w-full h-full"
-                          />
-                        </CardContent>
-                      </Card>
-                    </div>
+                  <CarouselItem key={index} className="w-full">
+                    <Card className="w-full h-full">
+                      <CardContent className="w-full h-[75vh] md:h-[60vh] lg:h-[65vh] overflow-hidden">
+                        <img
+                          src={image.url}
+                          alt={product.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </CardContent>
+                    </Card>
                   </CarouselItem>
                 ))}
               </CarouselContent>

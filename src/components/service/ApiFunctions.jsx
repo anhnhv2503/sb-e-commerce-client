@@ -239,3 +239,12 @@ export const getDashboardData = async () => {
     },
   });
 };
+
+export const getChartData = async () => {
+  const token = JSON.parse(localStorage.getItem("accessToken"));
+  return axios.get(`/api/dashboard/chart`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};

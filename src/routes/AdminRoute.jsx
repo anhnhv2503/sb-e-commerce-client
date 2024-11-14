@@ -22,7 +22,7 @@ const AdminRoute = () => {
         <div className="flex-col h-screen">
           <SideBar />
         </div>
-        <div className="flex-1 p-6 bg-gradient-to-b from-gray-300 to-gray-100 overflow-y-auto h-screen">
+        <div className="flex-1 p-6 bg-gradient-to-b from-gray-100 to-gray-100 overflow-y-auto h-screen">
           <Outlet />
         </div>
       </div>

@@ -1,55 +1,47 @@
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
+import { getChartData } from "@/components/service/ApiFunctions";
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { chartData } from "@/data/chartData";
+import { useEffect, useState } from "react";
 
 const chartConfig = {
-  "T-Shirt": {
-    label: "T-Shirt",
-  },
-  Blazer: {
-    label: "Blazer",
-  },
-  Jacket: {
-    label: "Jacket",
-  },
-  Polo: {
-    label: "Polo",
-  },
-  Shirt: {
-    label: "Shirt",
-  },
-  Pants: {
-    label: "Pants",
+  Quantity: {
+    label: "Quantity",
+    format: (value) => value,
   },
 };
 
 const Chart = () => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await getChartData();
+      setData(response.data?.data);
+    };
+    fetchData();
+  }, []);
+
   return (
     <ChartContainer
       config={chartConfig}
       className="min-h-[100px] max-h-96 w-full"
     >
-      <BarChart accessibilityLayer data={chartData}>
+      <BarChart accessibilityLayer data={data}>
         <CartesianGrid vertical={false} />
         <XAxis
-          dataKey="month"
+          dataKey="category"
           tickLine={false}
           tickMargin={10}
           axisLine={false}
           tickFormatter={(value) => value}
         />
         <ChartTooltip content={<ChartTooltipContent />} />
-        <Bar dataKey="T-Shirt" fill="#FF8000" radius={9} />
-        <Bar dataKey="Blazer" fill="#4C1F7A" radius={9} />
-        <Bar dataKey="Jacket" fill="#219B9D" radius={9} />
-        <Bar dataKey="Polo" fill="#A2D2DF" radius={9} />
-        <Bar dataKey="Shirt" fill="#BC7C7C" radius={9} />
-        <Bar dataKey="Pants" fill="#E4C087" radius={9} />
+        <Bar dataKey="quantity" fill="#4A628A" radius={5} />
       </BarChart>
     </ChartContainer>
   );

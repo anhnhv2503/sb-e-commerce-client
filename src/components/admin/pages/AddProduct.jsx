@@ -6,7 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { sizeOptions } from "../../../data/data";
+import { sizeOptions } from "../../../data/data.js";
 import React, { useEffect, useState } from "react";
 import {
   addProduct,
