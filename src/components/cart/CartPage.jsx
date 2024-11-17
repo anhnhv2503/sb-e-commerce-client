@@ -12,7 +12,7 @@ import { Radio, RadioGroup } from "@headlessui/react";
 import { useDocumentTitle } from "@uidotdev/usehooks";
 import { jwtDecode } from "jwt-decode";
 import { Slash } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
@@ -76,10 +76,12 @@ const CartPage = () => {
     dispatch({ type: "DECREASE_ITEM", payload: item });
   };
 
-  const totalPrice = cart.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0
-  );
+  const totalPrice = useMemo(() => {
+    return cart.reduce((total, item) => {
+      console.log("Heeeeeee");
+      return total + item.price * item.quantity;
+    }, 0);
+  }, [cart]);
 
   const handleCheckout = async () => {
     if (address.trim() !== "" && paymentMethod) {
