@@ -10,6 +10,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { useDocumentTitle } from "@uidotdev/usehooks";
 import { useEffect, useState } from "react";
+import CountUp from "react-countup";
 
 const DashBoard = () => {
   useDocumentTitle("Thống kê");
@@ -39,28 +40,36 @@ const DashBoard = () => {
                 <TruckIcon className="w-5 h-5 mr-5" />
                 Total Orders
               </p>
-              <p className="text-3xl font-bold">{data.totalOrders}</p>
+              <p className="text-3xl font-bold">
+                <CountUp end={data.totalOrders} duration={2} />
+              </p>
             </div>
             <div className="bg-white p-4 rounded-lg shadow text-rose-600">
               <p className="text-lg font-semibold flex ">
                 <TagIcon className="w-5 h-5 mr-5" />
                 Total Categories
               </p>
-              <p className="text-3xl font-bold">{data.totalCategories}</p>
+              <p className="text-3xl font-bold">
+                <CountUp end={data.totalCategories} duration={2} />
+              </p>
             </div>
             <div className="bg-white p-4 rounded-lg shadow text-indigo-600">
               <p className="text-lg font-semibold flex ">
                 <Squares2X2Icon className="w-5 h-5 mr-5" />
                 Total Products
               </p>
-              <p className="text-3xl font-bold">{data.totalProducts}</p>
+              <p className="text-3xl font-bold">
+                <CountUp end={data.totalProducts} duration={2} />
+              </p>
             </div>
             <div className="bg-white p-4 rounded-lg shadow text-teal-600">
               <p className="text-lg font-semibold flex">
                 <UserGroupIcon className="w-5 h-5 mr-5" />
                 Total Users
               </p>
-              <p className="text-3xl font-bold">{data.totalCustomers}</p>
+              <p className="text-3xl font-bold">
+                <CountUp end={data.totalCustomers} duration={2} />
+              </p>
             </div>
             <div className="bg-white p-4 rounded-lg shadow text-fuchsia-700">
               <p className="text-lg font-semibold flex">
@@ -68,7 +77,11 @@ const DashBoard = () => {
                 Total Revenue
               </p>
               <p className="text-3xl font-bold">
-                {currency.format(data.totalRevenue)}
+                <CountUp
+                  end={data.totalRevenue}
+                  duration={2.75}
+                  suffix=" VND"
+                />
               </p>
             </div>
           </div>
