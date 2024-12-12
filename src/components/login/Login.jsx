@@ -4,6 +4,7 @@ import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
+import { FaArrowRight, FaFacebook, FaGoogle } from "react-icons/fa";
 
 const Login = () => {
   useDocumentTitle("Login");
@@ -24,6 +25,14 @@ const Login = () => {
     } else {
       login({ email, password });
     }
+  };
+
+  const handleGoogleLogin = () => {
+    toast.success("Đang chuyển hướng đến Google...");
+  };
+
+  const handleFacebookLogin = () => {
+    toast.success("Đang chuyển hướng đến Facebook...");
   };
 
   return (
@@ -79,13 +88,34 @@ const Login = () => {
           <div>
             <button
               type="submit"
-              className="w-full px-4 py-2 text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:to-pink-500 rounded-full"
+              className="w-full px-4 py-2 text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:to-pink-500 rounded-full flex items-center justify-center gap-2"
               onClick={handleSubmit}
             >
+              <FaArrowRight />
               Đăng Nhập
             </button>
           </div>
         </form>
+        <div>
+          <button
+            type="submit"
+            className="w-full px-4 py-2 text-white bg-rose-700 hover:bg-rose-800 rounded-full flex items-center justify-center gap-2"
+            onClick={handleGoogleLogin}
+          >
+            <FaGoogle />
+            Đăng Nhập với Google
+          </button>
+        </div>
+        <div>
+          <button
+            type="submit"
+            className="w-full px-4 py-2 text-white bg-sky-500 hover:bg-sky-600 rounded-full flex items-center justify-center gap-2"
+            onClick={handleFacebookLogin}
+          >
+            <FaFacebook />
+            Đăng Nhập với Facebook
+          </button>
+        </div>
         <p className="text-sm text-center text-gray-500">
           <a
             onClick={() => nav("/forgot/password")}
