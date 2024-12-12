@@ -1,8 +1,9 @@
-import { useState } from "react";
-import { useAuth } from "../auth/AuthContext";
-import toast, { Toaster } from "react-hot-toast";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useDocumentTitle } from "@uidotdev/usehooks";
+import { useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../auth/AuthContext";
 
 const Login = () => {
   useDocumentTitle("Login");
@@ -10,6 +11,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const nav = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -59,7 +61,7 @@ const Login = () => {
             </label>
             <input
               id="password"
-              type="password"
+              type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full mt-1 p-2 input input-bordered bg-white text-black border-gray-300"
@@ -67,10 +69,17 @@ const Login = () => {
               required
             />
           </div>
+          <div className="mt-1">
+            <Checkbox
+              className="mr-2"
+              onCheckedChange={() => setShowPassword(!showPassword)}
+            />
+            Show Password
+          </div>
           <div>
             <button
               type="submit"
-              className="w-full px-4 py-2 text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:to-pink-500 rounded-md"
+              className="w-full px-4 py-2 text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:to-pink-500 rounded-full"
               onClick={handleSubmit}
             >
               Đăng Nhập

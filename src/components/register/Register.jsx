@@ -15,6 +15,7 @@ import {
 } from "../ui/select";
 import { useDocumentTitle } from "@uidotdev/usehooks";
 import { useNavigate } from "react-router-dom";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const Register = () => {
   useDocumentTitle("Register");
@@ -35,6 +36,7 @@ const Register = () => {
   const [homeAddress, setHomeAddress] = useState("");
   const [loading, setLoading] = useState(false);
   const nav = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     const fetchProvinces = async () => {
@@ -307,7 +309,7 @@ const Register = () => {
               <input
                 id="password"
                 name="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 required
                 onChange={handleChange}
                 className="w-full mt-1 p-2 input input-bordered bg-white text-black border-gray-300"
@@ -326,11 +328,18 @@ const Register = () => {
               <input
                 id="confirmPassword"
                 name="confirmPassword"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 required
                 onChange={handleChange}
                 className="w-full mt-1 p-2 input input-bordered bg-white text-black border-gray-300"
               />
+            </div>
+            <div className="mt-1">
+              <Checkbox
+                className="mr-2"
+                onCheckedChange={() => setShowPassword(!showPassword)}
+              />
+              Show Password
             </div>
           </div>
 
@@ -358,7 +367,7 @@ const Register = () => {
             <div>
               <button
                 type="submit"
-                className="w-full flex justify-center px-4 py-2 font-medium text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:to-pink-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="w-full flex justify-center px-4 py-2 font-medium text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:to-pink-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 rounded-full"
               >
                 Đăng kí
               </button>
