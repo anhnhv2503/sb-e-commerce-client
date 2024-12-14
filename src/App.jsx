@@ -29,12 +29,17 @@ import Profile from "./components/user/Profile";
 import VerifyEmail from "./components/verify/VerifyEmail";
 import VerifyEmailFailed from "./components/verify/VerifyEmailFailed";
 import VerifyEmailSuccess from "./components/verify/VerifyEmailSuccess";
+import Auth from "@/components/common/Auth";
 
 function App() {
   const router = createBrowserRouter([
     {
       path: "verify",
       element: <VerifyEmail />,
+    },
+    {
+      path: "auth",
+      element: <Auth />,
     },
     {
       path: "email/verify/success",

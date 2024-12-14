@@ -2,9 +2,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useDocumentTitle } from "@uidotdev/usehooks";
 import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import { FaArrowRight, FaGoogle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
-import { FaArrowRight, FaFacebook, FaGoogle } from "react-icons/fa";
+import { authConfig } from "@/config/authConfig";
 
 const Login = () => {
   useDocumentTitle("Login");
@@ -28,11 +29,14 @@ const Login = () => {
   };
 
   const handleGoogleLogin = () => {
-    toast.success("Đang chuyển hướng đến Google...");
-  };
+    const callbackUrl = authConfig.redirect_uris;
+    const authUrl = authConfig.auth_uri;
+    const googleClientId = authConfig.client_id;
 
-  const handleFacebookLogin = () => {
-    toast.success("Đang chuyển hướng đến Facebook...");
+    const targetUrl = `${authUrl}?redirect_uri=${encodeURIComponent(
+      callbackUrl
+    )}&response_type=code&client_id=${googleClientId}&scope=openid%20email%20profile`;
+    window.location.href = targetUrl;
   };
 
   return (
@@ -104,16 +108,6 @@ const Login = () => {
           >
             <FaGoogle />
             Đăng Nhập với Google
-          </button>
-        </div>
-        <div>
-          <button
-            type="submit"
-            className="w-full px-4 py-2 text-white bg-sky-500 hover:bg-sky-600 rounded-full flex items-center justify-center gap-2"
-            onClick={handleFacebookLogin}
-          >
-            <FaFacebook />
-            Đăng Nhập với Facebook
           </button>
         </div>
         <p className="text-sm text-center text-gray-500">
