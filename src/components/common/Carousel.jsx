@@ -16,10 +16,10 @@ const Carousel = () => {
     <div className="relative w-full mx-auto">
       <div className="w-full h-4/5 bg-gray-300 overflow-hidden">
         <div className="absolute inset-0 flex flex-col items-center justify-center z-10 bg-black bg-opacity-5 text-white p-4 rounded-md">
-          <h1 className="text-3xl font-bold mb-2 text-center text-green-500">
+          <h1 className="text-3xl font-bold mb-2 text-center text-gray-700">
             Welcome to VA Shop
           </h1>
-          <p className="text-lg text-center text-green-700">
+          <p className="text-lg text-center text-gray-800 font-bold">
             Discover amazing products and deals
           </p>
         </div>

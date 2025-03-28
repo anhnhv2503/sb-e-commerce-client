@@ -16,10 +16,7 @@ const Logout = () => {
   };
 
   return (
-    <Button
-      onClick={handleLogout}
-      className="bg-gradient-to-r from-rose-500 to-rose-300 hover:from-rose-400 hover:to-rose-700"
-    >
+    <Button onClick={handleLogout} className="bg-rose-500 hover:bg-rose-600">
       <ArrowLeftStartOnRectangleIcon className="h-7 w-7 mr-2" />
       Thoát
     </Button>

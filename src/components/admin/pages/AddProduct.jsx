@@ -321,7 +321,7 @@ const AddProduct = () => {
           ) : (
             <button
               type="submit"
-              className="w-full bg-gradient-to-br from-indigo-500 via-teal-400 to-indigo-500 text-white p-2 rounded-md hover:from-teal-400 hover:via-indigo-500 hover:to-teal-400 transition duration-200"
+              className="w-full bg-zinc-950 text-white p-2 rounded-md hover:bg-zinc-700 transition duration-200"
               onClick={handleSubmit}
             >
               Thêm

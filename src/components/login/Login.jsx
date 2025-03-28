@@ -92,7 +92,7 @@ const Login = () => {
           <div>
             <button
               type="submit"
-              className="w-full px-4 py-2 text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:to-pink-500 rounded-full flex items-center justify-center gap-2"
+              className="w-full px-4 py-2 text-white bg-black hover:bg-gray-800 rounded-lg flex items-center justify-center gap-2"
               onClick={handleSubmit}
             >
               <FaArrowRight />
@@ -103,7 +103,7 @@ const Login = () => {
         <div>
           <button
             type="submit"
-            className="w-full px-4 py-2 text-white bg-rose-700 hover:bg-rose-800 rounded-full flex items-center justify-center gap-2"
+            className="w-full px-4 py-2 text-white bg-rose-700 hover:bg-rose-800 rounded-lg flex items-center justify-center gap-2"
             onClick={handleGoogleLogin}
           >
             <FaGoogle />

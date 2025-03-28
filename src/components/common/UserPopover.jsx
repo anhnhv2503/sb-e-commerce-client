@@ -28,7 +28,7 @@ const UserPopover = () => {
                 <div className="grid grid-cols-1 items-center gap-4">
                   <Button
                     onClick={() => nav("/user/profile")}
-                    className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-500 hover:to-cyan-500"
+                    className="bg-zinc-800 "
                   >
                     Thông tin
                   </Button>
@@ -36,7 +36,7 @@ const UserPopover = () => {
                 <div className="grid grid-cols-1 items-center gap-4">
                   <Button
                     onClick={() => nav("/user/my-orders")}
-                    className="bg-gradient-to-tr from-indigo-400 to-cyan-400 hover:from-indigo-500 hover:to-cyan-500"
+                    className="bg-neutral-500"
                   >
                     Đơn hàng của Tôi
                   </Button>
@@ -49,7 +49,7 @@ const UserPopover = () => {
               <>
                 <div className="grid grid-cols-1 items-center gap-4">
                   <Button
-                    className="bg-gradient-to-tr from-indigo-400 to-cyan-400 hover:from-indigo-500 hover:to-cyan-500 rounded-full"
+                    className="bg-zinc-500 hover:bg-zinc-700"
                     onClick={() => nav("/login")}
                   >
                     Đăng Nhập
@@ -57,7 +57,7 @@ const UserPopover = () => {
                 </div>
                 <div className="grid grid-cols-1 items-center gap-4">
                   <Button
-                    className="bg-gradient-to-tr rounded-full from-lime-500 via-blue-600 to-cyan-400 hover:from-lime-600 hover:via-blue-700 hover:to-cyan-500"
+                    className="bg-zinc-800 hover:bg-zinc-900"
                     onClick={() => nav("/register")}
                   >
                     Đăng Kí

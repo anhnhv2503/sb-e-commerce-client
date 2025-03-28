@@ -14,13 +14,13 @@ const SideBar = () => {
   return (
     <>
       <div
-        className={`w-64 bg-gradient-to-b from-indigo-600 to-teal-400 text-white transition-all duration-300 h-full`}
+        className={`w-64 bg-zinc-600 text-white transition-all duration-300 h-full`}
       >
         <div className="flex items-center justify-center px-4 py-3">
           <img alt="" src={newLogo} className="h-10 w-auto cursor-pointer" />
         </div>
         <ul className="mt-6">
-          <li className="px-4 py-2 hover:bg-purple-700 cursor-pointer">
+          <li className="px-4 py-2 hover:bg-zinc-700 cursor-pointer">
             <a onClick={() => nav("/admin")}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -38,14 +38,14 @@ const SideBar = () => {
               </svg>
             </a>
           </li>
-          <li className="px-4 py-2 hover:bg-purple-700 cursor-pointer">
+          <li className="px-4 py-2 hover:bg-zinc-700 cursor-pointer">
             <a onClick={() => nav("/admin/dashboard")}>Thống kê</a>
           </li>
-          <li className="px-4 py-2 hover:bg-purple-700 cursor-pointer">
+          <li className="px-4 py-2 hover:bg-zinc-700 cursor-pointer">
             <a onClick={() => nav("/admin/manage/orders")}>Quản lí đơn hàng</a>
           </li>
 
-          <li className="px-4 py-2 hover:bg-purple-700 cursor-pointer">
+          <li className="px-4 py-2 hover:bg-zinc-700 cursor-pointer">
             <a onClick={() => nav("/admin/manage/category")}>
               Quản lí danh mục sản phẩm
             </a>
@@ -75,10 +75,10 @@ const SideBar = () => {
 
             {isProductDropdownOpen && (
               <ul className="ml-4 mt-2">
-                <li className="px-4 py-2 hover:bg-purple-700 cursor-pointer">
+                <li className="px-4 py-2 hover:bg-zinc-700 cursor-pointer">
                   <a onClick={() => nav("/admin/product/add")}>Thêm sản phẩm</a>
                 </li>
-                <li className="px-4 py-2 hover:bg-purple-700 cursor-pointer">
+                <li className="px-4 py-2 hover:bg-zinc-700 cursor-pointer">
                   <a onClick={() => nav("/admin/product/list")}>
                     Tất cả sản phẩm
                   </a>
@@ -87,7 +87,7 @@ const SideBar = () => {
             )}
           </li>
 
-          <li className="px-4 py-2 hover:bg-purple-700 cursor-pointer">
+          <li className="px-4 py-2 hover:bg-zinc-700 cursor-pointer">
             <a onClick={() => nav("/admin/manage/user")}>Quản lí người dùng</a>
           </li>
         </ul>

@@ -17,7 +17,7 @@ const AboutUs = () => {
 
   return (
     <div>
-      <section className="bg-gradient-to-tr from-indigo-500 to-teal-500 text-white py-20">
+      <section className="bg-gradient-to-tr from-gray-100 to-gray-500 text-white py-20">
         <div className="container mx-auto text-center px-4">
           <h1 className="text-4xl font-bold mb-4">About Our Company</h1>
           <p className="text-lg mb-8">

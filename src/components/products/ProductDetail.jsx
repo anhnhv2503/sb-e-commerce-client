@@ -264,7 +264,7 @@ const ProductDetail = () => {
                 />
                 <button
                   type="submit"
-                  className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-indigo-600 hover:to-cyan-600 px-8 py-3 text-base font-medium text-white "
+                  className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-zinc-950 hover:bg-zinc-800 px-8 py-3 text-base font-medium text-white "
                 >
                   Thêm vào giỏ hàng
                 </button>

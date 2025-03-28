@@ -330,7 +330,7 @@ const CartPage = () => {
           <p className="text-gray-700">Không có sản phẩm</p>
           <a
             onClick={() => nav("/shop")}
-            className="mt-4 inline-block bg-gradient-to-r from-teal-400 to-blue-500 hover:from-pink-500 hover:to-orange-500 text-white px-4 py-2 rounded-lg cursor-pointer"
+            className="mt-4 inline-block bg-black text-white px-4 py-2 rounded-lg cursor-pointer"
           >
             Mua Sắm
           </a>

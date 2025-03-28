@@ -16,7 +16,7 @@ const Header = () => {
   const nav = useNavigate();
 
   return (
-    <header className="bg-gradient-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90%">
+    <header className="bg-gray-300">
       <nav
         aria-label="Global"
         className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
