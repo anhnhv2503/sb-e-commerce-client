@@ -11,10 +11,13 @@ import { Radio, RadioGroup } from "@headlessui/react";
 import { useDocumentTitle } from "@uidotdev/usehooks";
 import { Slash } from "lucide-react";
 import { useEffect, useLayoutEffect, useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useCart } from "../context/CartContext";
-import { getInventory, getProductById } from "../service/ApiFunctions";
+import {
+  addItemToCart,
+  getInventory,
+  getProductById,
+} from "../service/ApiFunctions";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -24,18 +27,13 @@ import {
   BreadcrumbSeparator,
 } from "../ui/breadcrumb";
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
-
 const ProductDetail = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const [inventory, setInventory] = useState(null);
-  const [quantity, setQuantity] = useState(0);
+  const [quantity, setQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const { cart, dispatch } = useCart();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -75,7 +73,7 @@ const ProductDetail = () => {
     }
   }, [selectedSize]);
 
-  const handleAddToCart = (e) => {
+  const handleAddToCart = async (e) => {
     e.preventDefault();
     if (!localStorage.getItem("accessToken")) {
       navigate("/login", { state: { from: location.pathname } });
@@ -83,31 +81,29 @@ const ProductDetail = () => {
     }
 
     if (!selectedSize) {
-      toast.error("Please select a size");
+      toast.error("Vui lòng chọn size sản phẩm");
       return;
     }
 
     if (quantity <= 0) {
-      toast.error("Please enter a valid quantity");
+      toast.error("Vui lòng nhập số lượng sản phẩm");
       return;
     }
-
-    const item = {
-      productId: parseInt(id, 10),
-      productName: product.name,
-      sizeId: selectedSize,
-      price: product.price,
-      quantity: parseInt(quantity, 10),
-      image: product.images[0]?.url,
-    };
-
-    dispatch({ type: "ADD_ITEM", payload: item });
-    toast.success("Added to cart");
-
-    // Reset fields after adding to cart
-    setSelectedSize(null);
-    setQuantity(0);
-    setInventory(null);
+    const formData = new FormData();
+    formData.append("quantity", quantity);
+    formData.append("sizeId", selectedSize.id);
+    try {
+      const response = await addItemToCart(formData);
+      if (response) {
+        toast.success("Thêm sản phẩm vào giỏ hàng thành công");
+        setSelectedSize(null);
+        setQuantity(0);
+        setInventory(null);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Thêm sản phẩm vào giỏ hàng thất bại");
+    }
   };
 
   if (isLoading || !product) {
@@ -120,8 +116,6 @@ const ProductDetail = () => {
 
   return (
     <div className="bg-white">
-      <Toaster />
-
       <div className="flex justify-center">
         <Breadcrumb>
           <BreadcrumbList>
@@ -158,22 +152,20 @@ const ProductDetail = () => {
 
       <div className="pt-6">
         <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:max-w-7xl lg:px-8">
-          <div className="lg:hidden flex space-x-4 overflow-x-auto">
+          <div className="lg:hidden flex space-x-4 overflow-x-auto px-4">
             <Carousel className="w-full max-w-xl">
               <CarouselContent>
                 {product.images.map((image, index) => (
                   <CarouselItem key={index}>
-                    <div className="">
-                      <Card>
-                        <CardContent className="flex aspect-square items-center justify-center">
-                          <img
-                            src={image.url}
-                            alt={product.name}
-                            className="object-cover object-center w-full h-full"
-                          />
-                        </CardContent>
-                      </Card>
-                    </div>
+                    <Card className="shadow-md">
+                      <CardContent className="flex aspect-square items-center justify-center">
+                        <img
+                          src={image.url}
+                          alt={product.name}
+                          className="object-cover object-center w-full h-full rounded-md"
+                        />
+                      </CardContent>
+                    </Card>
                   </CarouselItem>
                 ))}
               </CarouselContent>
@@ -217,7 +209,6 @@ const ProductDetail = () => {
             <p className="text-3xl tracking-tight text-gray-900">
               {currency.format(product.price)}
             </p>
-
             {inventory !== null && (
               <p className="text-sm tracking-tight text-green-600">
                 Còn {inventory} sản phẩm
@@ -240,7 +231,7 @@ const ProductDetail = () => {
                       <Radio
                         key={size.id}
                         value={size}
-                        className="cursor-pointer bg-white text-gray-900 shadow-sm group relative flex items-center justify-center rounded-md border px-4 py-3 text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none"
+                        className="cursor-pointer bg-white text-gray-900 shadow-sm group relative flex items-center justify-center rounded-md border px-4 py-3 text-sm font-medium uppercase hover:bg-gray-100 focus:outline-none transition-all"
                       >
                         <span>{size.sizeName}</span>
                         <span
@@ -260,11 +251,12 @@ const ProductDetail = () => {
                   max={inventory || 1}
                   value={quantity}
                   onChange={(e) => setQuantity(e.target.value)}
-                  className="bg-white block w-40 rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6"
+                  className="bg-gray-50 block w-40 rounded-md border border-gray-300 py-2 px-4 text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  placeholder="Số lượng"
                 />
                 <button
                   type="submit"
-                  className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-zinc-950 hover:bg-zinc-800 px-8 py-3 text-base font-medium text-white "
+                  className="mt-10 flex w-full items-center justify-center rounded-md bg-indigo-600 hover:bg-indigo-500 px-8 py-3 text-base font-medium text-white shadow-md transition-all"
                 >
                   Thêm vào giỏ hàng
                 </button>

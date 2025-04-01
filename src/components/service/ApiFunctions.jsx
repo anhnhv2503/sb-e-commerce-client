@@ -1,4 +1,4 @@
-import axios from "../service/axiosConfig";
+import axios from "./axiosConfig";
 
 export const loginUser = async (data) => {
   return axios.post("/api/auth/login", data);
@@ -243,6 +243,24 @@ export const getDashboardData = async () => {
 export const getChartData = async () => {
   const token = JSON.parse(localStorage.getItem("accessToken"));
   return axios.get(`/api/dashboard/chart`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const addItemToCart = async (data) => {
+  const token = JSON.parse(localStorage.getItem("accessToken"));
+  return axios.post("/api/cart-item/item/add", data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const getCart = async () => {
+  const token = JSON.parse(localStorage.getItem("accessToken"));
+  return axios.get("/api/cart/my-cart", {
     headers: {
       Authorization: `Bearer ${token}`,
     },
