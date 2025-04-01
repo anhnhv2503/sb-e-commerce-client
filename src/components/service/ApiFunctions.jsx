@@ -266,3 +266,12 @@ export const getCart = async () => {
     },
   });
 };
+
+export const removeItemFromCart = async (cartItemId) => {
+  const token = JSON.parse(localStorage.getItem("accessToken"));
+  return axios.delete(`/api/cart-item/remove/${cartItemId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};

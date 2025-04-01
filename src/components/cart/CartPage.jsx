@@ -1,10 +1,15 @@
 import cod from "@/assets/cod.png";
 import vnpay from "@/assets/vnpay.jpg";
 import useCurrencyFormat from "@/components/hooks/useCurrencyFormat";
-import { getCart, getUserDetail } from "@/components/service/ApiFunctions";
+import {
+  getCart,
+  getUserDetail,
+  removeItemFromCart,
+} from "@/components/service/ApiFunctions";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Radio, RadioGroup } from "@headlessui/react";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useDocumentTitle } from "@uidotdev/usehooks";
 import { jwtDecode } from "jwt-decode";
 import { Slash } from "lucide-react";
@@ -18,6 +23,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "../ui/breadcrumb";
+import toast from "react-hot-toast";
 
 const paymentMethods = [
   {
@@ -67,6 +73,17 @@ const CartPage = () => {
     fetchCart();
   }, []);
 
+  const handleRemoveItem = async (itemId) => {
+    try {
+      const response = await removeItemFromCart(itemId);
+      if (response) {
+        fetchCart();
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Không thể xóa sản phẩm khỏi giỏ hàng");
+    }
+  };
   return (
     <div className="max-w-4xl mx-auto p-4 min-h-screen">
       <Breadcrumb>
@@ -109,10 +126,9 @@ const CartPage = () => {
           <table className="w-full mb-6">
             <thead>
               <tr className="border-b">
-                <th className="text-left py-4">Product</th>
-                <th className="text-left py-4">Quantity</th>
-                <th className="text-left py-4">Total</th>
-                <th></th>
+                <th className="text-left py-4">Sản Phẩm</th>
+                <th className="text-left py-4">Số Lượng</th>
+                <th className="text-left py-4">Thành Tiền</th>
               </tr>
             </thead>
             <tbody>
@@ -158,8 +174,11 @@ const CartPage = () => {
                     {currency.format(item.productPrice * item.quantity)}
                   </td>
                   <td className="py-4">
-                    <button className="text-red-500 hover:text-red-700">
-                      ×
+                    <button
+                      onClick={() => handleRemoveItem(item.itemId)}
+                      className="text-red-700 hover:text-red-700 bg-red-200 rounded-full p-1"
+                    >
+                      <XMarkIcon className="h-4 w-4" />
                     </button>
                   </td>
                 </tr>
