@@ -288,3 +288,16 @@ export const updateCartItemQuantity = async (cartItemId, quantity) => {
     }
   );
 };
+
+export const createPayOSPayment = async () => {
+  const token = JSON.parse(localStorage.getItem("accessToken"));
+  return axios.post(
+    "/api/order/payos/create-link",
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+};

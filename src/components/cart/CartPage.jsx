@@ -1,48 +1,50 @@
-import cod from "@/assets/cod.png";
+// import cod from "@/assets/cod.png";
 import payos from "@/assets/payos.png";
-import vnpay from "@/assets/vnpay.jpg";
+// import vnpay from "@/assets/vnpay.jpg";
 import CartBreadcrumb from "@/components/cart/CartBreadcrumb";
 import EmtyCart from "@/components/cart/EmtyCart";
+import Loading from "@/components/common/Loading";
 import useCurrencyFormat from "@/components/hooks/useCurrencyFormat";
 import {
+  createPayOSPayment,
   getCart,
   getUserDetail,
   removeItemFromCart,
   updateCartItemQuantity,
 } from "@/components/service/ApiFunctions";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useDocumentTitle } from "@uidotdev/usehooks";
+import { motion } from "framer-motion";
+import { jwtDecode } from "jwt-decode";
 import {
-  ShoppingBag,
+  ArrowRight,
   MinusCircle,
   PlusCircle,
+  ShoppingBag,
   XCircle,
-  ArrowRight,
 } from "lucide-react";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useDocumentTitle } from "@uidotdev/usehooks";
-import { jwtDecode } from "jwt-decode";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Navigate, useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
-import { Skeleton } from "@/components/ui/skeleton";
 
 const paymentMethods = [
-  {
-    id: "cod",
-    name: "Thanh toán khi nhận hàng",
-    icon: cod,
-  },
-  {
-    id: "vnpay",
-    name: "VNPay",
-    icon: vnpay,
-  },
+  // {
+  //   id: "cod",
+  //   name: "Thanh toán khi nhận hàng",
+  //   icon: cod,
+  // },
+  // {
+  //   id: "vnpay",
+  //   name: "VNPay",
+  //   icon: vnpay,
+  // },
   {
     id: "payos",
     name: "PayOS",
@@ -59,8 +61,9 @@ const CartPage = () => {
   const [paymentMethod, setPaymentMethod] = useState(paymentMethods[0].id);
   const currency = useCurrencyFormat();
   const [cart, setCart] = useState();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [updatingItemId, setUpdatingItemId] = useState(null);
+  const [paymentLoading, setPaymentLoading] = useState(false);
 
   const fetchUser = async () => {
     if (!accessToken) <Navigate to="/login" />;
@@ -79,8 +82,10 @@ const CartPage = () => {
     try {
       const response = await getCart();
       setCart(response.data?.data);
+      setLoading(false);
     } catch (error) {
       console.error("Failed to fetch cart:", error);
+      setLoading(false);
     }
   };
 
@@ -118,17 +123,26 @@ const CartPage = () => {
     }
   };
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     if (!address.trim()) {
       toast.error("Vui lòng nhập địa chỉ nhận hàng");
       return;
     }
-
-    toast.success("Đang chuyển hướng đến trang thanh toán");
-    // Implement checkout logic here
+    setPaymentLoading(true);
+    try {
+      const response = await createPayOSPayment();
+      if (response) {
+        window.location.href = response.data.data?.paymentUrl;
+      }
+      setPaymentLoading(false);
+    } catch (error) {
+      console.log(error);
+      toast.error("Có lỗi xảy ra trong quá trình thanh toán");
+      setPaymentLoading(false);
+    }
   };
 
-  // Loading UI
+  // // Loading UI
   if (loading) {
     return (
       <div className="max-w-4xl mx-auto p-4 min-h-screen">
@@ -369,14 +383,18 @@ const CartPage = () => {
               </div>
             </CardContent>
             <CardFooter>
-              <Button
-                className="w-full gap-2"
-                onClick={handleCheckout}
-                disabled={!address.trim()}
-              >
-                Thanh toán ngay
-                <ArrowRight size={16} />
-              </Button>
+              {paymentLoading ? (
+                <Loading />
+              ) : (
+                <Button
+                  className="w-full gap-2"
+                  onClick={handleCheckout}
+                  disabled={!address.trim()}
+                >
+                  Thanh toán ngay
+                  <ArrowRight size={16} />
+                </Button>
+              )}
             </CardFooter>
           </Card>
         </div>
