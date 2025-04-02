@@ -30,6 +30,7 @@ import VerifyEmail from "./components/verify/VerifyEmail";
 import VerifyEmailFailed from "./components/verify/VerifyEmailFailed";
 import VerifyEmailSuccess from "./components/verify/VerifyEmailSuccess";
 import Auth from "@/components/common/Auth";
+import PayOSCallback from "@/components/orders/PayOS/PayOSCallback";
 
 function App() {
   const router = createBrowserRouter([
@@ -64,6 +65,10 @@ function App() {
     {
       path: "payment-callback",
       element: <VnPayCallback />,
+    },
+    {
+      path: "payos/callback",
+      element: <PayOSCallback />,
     },
     {
       path: "/",

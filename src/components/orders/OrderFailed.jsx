@@ -10,24 +10,25 @@ const OrderFailed = () => {
       <div className="max-w-md p-6 bg-white rounded-lg shadow-md text-center">
         <XCircle className="w-16 h-16 text-red-600 mx-auto mb-4" />
         <h1 className="text-2xl font-semibold text-red-700 mb-2">
-          Order Failed!
+          Đơn hàng không thành công
         </h1>
         <p className="text-gray-600">
-          We encountered an issue while processing your order. Please try again.
+          Chúng tôi không thể xử lý đơn hàng của bạn tại thời điểm này. Vui lòng
+          kiểm tra lại thông tin thanh toán hoặc thử lại sau.
         </p>
 
         <button
           onClick={() => navigate("/shop")}
           className="mt-6 w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
         >
-          Go Back to Shop
+          Quay lại cửa hàng
         </button>
 
         <button
           onClick={() => navigate("/about")}
           className="mt-4 w-full bg-gray-600 text-white py-2 px-4 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
         >
-          Contact Support
+          Tìm hiểu thêm về chúng tôi
         </button>
       </div>
     </div>

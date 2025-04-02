@@ -53,7 +53,7 @@ const paymentMethods = [
 ];
 
 const CartPage = () => {
-  useDocumentTitle("Giỏ Hàng | Fashion Store");
+  useDocumentTitle("Giỏ Hàng");
 
   const nav = useNavigate();
   const accessToken = localStorage.getItem("accessToken");
@@ -317,6 +317,7 @@ const CartPage = () => {
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
                     className="mt-1"
+                    readOnly={true}
                   />
                 </div>
 
