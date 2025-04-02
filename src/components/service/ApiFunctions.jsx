@@ -275,3 +275,16 @@ export const removeItemFromCart = async (cartItemId) => {
     },
   });
 };
+
+export const updateCartItemQuantity = async (cartItemId, quantity) => {
+  const token = JSON.parse(localStorage.getItem("accessToken"));
+  return axios.put(
+    `/api/cart-item/update/${cartItemId}/${quantity}`,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+};

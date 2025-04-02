@@ -67,7 +67,10 @@ const ProductList = () => {
                   {currency.format(product.price)}
                 </p>
                 <div className="mt-3">
-                  <AddMoreSize productId={product.id} />
+                  <AddMoreSize
+                    productId={product.id}
+                    fetchProduct={fetchProducts}
+                  />
                 </div>
               </div>
             </li>

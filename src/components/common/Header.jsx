@@ -1,112 +1,221 @@
 import UserAccordion from "@/components/common/UserAccordion";
 import UserPopover from "@/components/common/UserPopover";
-import { Dialog, DialogPanel, PopoverGroup } from "@headlessui/react";
+import { Transition } from "@headlessui/react";
+import { motion } from "framer-motion";
 import {
-  Bars3Icon,
-  ShoppingCartIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+  Home,
+  Info,
+  Menu as MenuIcon,
+  ShoppingBag,
+  Store,
+  X,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import newLogo from "../../assets/logo.png";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const nav = useNavigate();
+  // Handle scroll effect for sticky header
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Check if link is active
+  const isActive = (path) => {
+    return location.pathname === path;
+  };
 
   return (
-    <header className="bg-gray-300">
-      <nav
-        aria-label="Global"
-        className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
-      >
-        <div className="flex lg:flex-1">
-          <a onClick={() => nav("/")} className="-m-1.5 p-1.5">
-            <span className="sr-only">Your Company</span>
-            <img alt="" src={newLogo} className="h-8 w-auto cursor-pointer" />
-          </a>
-        </div>
-        <div className="flex lg:hidden">
-          <button
-            type="button"
-            onClick={() => setMobileMenuOpen(true)}
-            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+    <header
+      className={`sticky top-0 z-50 w-full transition-all duration-300 ${
+        scrolled ? "bg-white shadow-md" : "bg-gray-100"
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <nav className="flex items-center justify-between h-16 md:h-20">
+          {/* Logo */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="flex-shrink-0"
           >
-            <span className="sr-only">Open main menu</span>
-            <Bars3Icon aria-hidden="true" className="h-6 w-6" />
-          </button>
-        </div>
-        <PopoverGroup className="hidden lg:flex lg:gap-x-12">
-          <a
-            onClick={() => nav("/shop")}
-            className="text-sm font-semibold leading-6 text-gray-900 cursor-pointer"
-          >
-            Cửa Hàng
-          </a>
-          <a
-            onClick={() => nav("/about")}
-            className="text-sm font-semibold leading-6 text-gray-900 cursor-pointer"
-          >
-            Về Chúng Tôi
-          </a>
-        </PopoverGroup>
-
-        <div className="hidden lg:flex lg:flex-1 lg:justify-end cursor-pointer">
-          <a onClick={() => nav("/user/cart")}>
-            <ShoppingCartIcon className="h-7 w-7 text-gray-900" />
-          </a>
-        </div>
-
-        <div className="hidden lg:flex lg:justify-end ml-12">
-          <UserPopover />
-        </div>
-      </nav>
-      <Dialog
-        open={mobileMenuOpen}
-        onClose={setMobileMenuOpen}
-        className="lg:hidden"
-      >
-        <div className="fixed inset-0 z-10" />
-        <DialogPanel className="fixed inset-y-0 right-0 z-10 w-52 overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
-          <div className="flex items-center justify-between">
-            <a onClick={() => nav("/")} className="-m-1.5 p-1.5">
-              <span className="sr-only">Your Company</span>
-              <img alt="" src={newLogo} className="h-8 w-auto" />
-            </a>
             <button
-              type="button"
-              onClick={() => setMobileMenuOpen(false)}
-              className="-m-2.5 rounded-md p-2.5 text-gray-700"
+              onClick={() => navigate("/")}
+              className="flex items-center focus:outline-none"
+              aria-label="Home"
             >
-              <span className="sr-only">Close menu</span>
-              <XMarkIcon aria-hidden="true" className="h-6 w-6" />
+              <img
+                src={newLogo}
+                alt="Company Logo"
+                className="h-8 md:h-10 w-auto"
+              />
+            </button>
+          </motion.div>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex md:items-center md:space-x-8">
+            <button
+              onClick={() => navigate("/")}
+              className={`px-3 py-2 text-sm font-medium transition-colors hover:text-indigo-600 ${
+                isActive("/") ? "text-indigo-600" : "text-gray-700"
+              }`}
+            >
+              Trang Chủ
+            </button>
+            <button
+              onClick={() => navigate("/shop")}
+              className={`px-3 py-2 text-sm font-medium transition-colors hover:text-indigo-600 ${
+                isActive("/shop") ? "text-indigo-600" : "text-gray-700"
+              }`}
+            >
+              Cửa Hàng
+            </button>
+            <button
+              onClick={() => navigate("/about")}
+              className={`px-3 py-2 text-sm font-medium transition-colors hover:text-indigo-600 ${
+                isActive("/about") ? "text-indigo-600" : "text-gray-700"
+              }`}
+            >
+              Về Chúng Tôi
             </button>
           </div>
-          <div className="mt-6 flow-root">
-            <div className="-my-6 divide-y divide-gray-500/10">
-              <div className="space-y-2 py-6">
-                <a
-                  onClick={() => nav("/shop")}
-                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                >
-                  Cửa Hàng
-                </a>
-              </div>
-              <div className="space-y-2 py-6">
-                <a
-                  onClick={() => nav("/about")}
-                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                >
-                  Về Chúng Tôi
-                </a>
-              </div>
 
-              <UserAccordion />
+          {/* Right Section: Cart and User */}
+          <div className="flex items-center space-x-4">
+            {/* Cart Button */}
+            <button
+              onClick={() => navigate("/user/cart")}
+              className="relative p-2 text-gray-700 hover:text-indigo-600 transition-colors"
+              aria-label="Cart"
+            >
+              <ShoppingBag size={22} />
+              <span className="absolute top-0 right-0 h-4 w-4 rounded-full bg-indigo-600 flex items-center justify-center text-xs text-white"></span>
+            </button>
+
+            {/* User Menu - Desktop */}
+            <div className="hidden md:block">
+              <UserPopover />
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setMobileMenuOpen(true)}
+              className="md:hidden p-2 rounded-md text-gray-700 hover:text-indigo-600 transition-colors"
+              aria-label="Open menu"
+            >
+              <MenuIcon size={24} />
+            </button>
+          </div>
+        </nav>
+      </div>
+
+      {/* Mobile Menu Overlay */}
+      <Transition
+        show={mobileMenuOpen}
+        enter="transition-opacity duration-300"
+        enterFrom="opacity-0"
+        enterTo="opacity-100"
+        leave="transition-opacity duration-300"
+        leaveFrom="opacity-100"
+        leaveTo="opacity-0"
+      >
+        <div
+          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      </Transition>
+
+      {/* Mobile Menu Panel */}
+      <Transition
+        show={mobileMenuOpen}
+        enter="transition-transform duration-300"
+        enterFrom="translate-x-full"
+        enterTo="translate-x-0"
+        leave="transition-transform duration-300"
+        leaveFrom="translate-x-0"
+        leaveTo="translate-x-full"
+      >
+        <div className="fixed inset-y-0 right-0 z-50 w-full max-w-xs bg-white shadow-lg">
+          <div className="flex items-center justify-between p-4 border-b">
+            <button
+              onClick={() => navigate("/")}
+              className="focus:outline-none"
+            >
+              <img src={newLogo} alt="Company Logo" className="h-8 w-auto" />
+            </button>
+            <button
+              onClick={() => setMobileMenuOpen(false)}
+              className="p-2 text-gray-500 hover:text-gray-700 transition-colors"
+              aria-label="Close menu"
+            >
+              <X size={24} />
+            </button>
+          </div>
+
+          <div className="p-4 overflow-y-auto">
+            <div className="space-y-1">
+              <button
+                onClick={() => {
+                  navigate("/");
+                  setMobileMenuOpen(false);
+                }}
+                className="flex items-center w-full px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+              >
+                <Home size={18} className="mr-3" />
+                <span>Trang Chủ</span>
+              </button>
+              <button
+                onClick={() => {
+                  navigate("/shop");
+                  setMobileMenuOpen(false);
+                }}
+                className="flex items-center w-full px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+              >
+                <Store size={18} className="mr-3" />
+                <span>Cửa Hàng</span>
+              </button>
+              <button
+                onClick={() => {
+                  navigate("/about");
+                  setMobileMenuOpen(false);
+                }}
+                className="flex items-center w-full px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+              >
+                <Info size={18} className="mr-3" />
+                <span>Về Chúng Tôi</span>
+              </button>
+            </div>
+
+            <div className="mt-6 border-t pt-4">
+              <button
+                onClick={() => {
+                  navigate("/user/cart");
+                  setMobileMenuOpen(false);
+                }}
+                className="flex items-center w-full px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+              >
+                <ShoppingBag size={18} className="mr-3" />
+                <span>Giỏ Hàng</span>
+              </button>
+
+              <div className="mt-4">
+                <UserAccordion />
+              </div>
             </div>
           </div>
-        </DialogPanel>
-      </Dialog>
+        </div>
+      </Transition>
     </header>
   );
 };

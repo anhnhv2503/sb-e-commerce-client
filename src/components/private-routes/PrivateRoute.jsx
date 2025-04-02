@@ -1,9 +1,8 @@
-import React, { useEffect } from "react";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 
 const PrivateRoute = () => {
   const navigate = useNavigate();
-  const location = useLocation();
 
   useEffect(() => {
     //check user is logged in or not

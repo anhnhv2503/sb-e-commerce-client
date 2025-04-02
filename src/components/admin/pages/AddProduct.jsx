@@ -15,6 +15,7 @@ import {
 import PreviewImages from "@/components/common/PreviewImages";
 import toast, { Toaster } from "react-hot-toast";
 import { useDocumentTitle } from "@uidotdev/usehooks";
+import Loading from "@/components/common/Loading.jsx";
 
 const AddProduct = () => {
   useDocumentTitle("Quản lý sản phẩm");
@@ -315,9 +316,7 @@ const AddProduct = () => {
 
         <div className="mt-6">
           {isLoading ? (
-            <center>
-              <span className="loading loading-ring loading-lg"></span>
-            </center>
+            <Loading />
           ) : (
             <button
               type="submit"
@@ -329,7 +328,6 @@ const AddProduct = () => {
           )}
         </div>
       </form>
-      <Toaster />
     </div>
   );
 };

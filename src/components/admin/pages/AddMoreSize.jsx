@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { addMoreSizeForProduct } from "@/components/service/ApiFunctions";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -18,14 +18,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { addMoreSizeForProduct } from "@/components/service/ApiFunctions";
+import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { sizeOptions } from "../../../data/data.js";
+import Loading from "@/components/common/Loading.jsx";
 
-const AddMoreSize = ({ productId }) => {
+const AddMoreSize = ({ productId, fetchProduct }) => {
   const [sizeName, setSizeName] = useState("");
   const [quantity, setQuantity] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setOpen(true);
+  };
 
   const handleAddMoreSize = async () => {
     if (!sizeName || !quantity) {
@@ -44,7 +50,9 @@ const AddMoreSize = ({ productId }) => {
             setIsLoading(false);
             setSizeName("");
             setQuantity("");
-          }, 3000);
+          }, 1000);
+          fetchProduct();
+          setOpen(false);
         }
       } catch (error) {
         toast.error(error.response.data.message);
@@ -53,9 +61,11 @@ const AddMoreSize = ({ productId }) => {
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Thêm Size</Button>
+        <Button variant="outline" onClick={handleOpenModal}>
+          Thêm Size
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -97,9 +107,7 @@ const AddMoreSize = ({ productId }) => {
         </div>
         <DialogFooter>
           {isLoading ? (
-            <center>
-              <span className="loading loading-ring loading-lg"></span>
-            </center>
+            <Loading />
           ) : (
             <Button type="submit" onClick={handleAddMoreSize}>
               Thêm

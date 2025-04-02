@@ -1,16 +1,9 @@
 import useCurrencyFormat from "@/components/hooks/useCurrencyFormat";
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
-import { Radio, RadioGroup } from "@headlessui/react";
+import ProductBreadcrumb from "@/components/products/ProductBreadcrumb";
 import { useDocumentTitle } from "@uidotdev/usehooks";
-import { Slash } from "lucide-react";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { Minus, Plus, ShoppingBag } from "lucide-react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
@@ -18,14 +11,6 @@ import {
   getInventory,
   getProductById,
 } from "../service/ApiFunctions";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "../ui/breadcrumb";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -34,6 +19,7 @@ const ProductDetail = () => {
   const [inventory, setInventory] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -67,7 +53,7 @@ const ProductDetail = () => {
     fetchProduct();
   }, [id]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (selectedSize) {
       fetchInventory(selectedSize.id);
     }
@@ -89,16 +75,16 @@ const ProductDetail = () => {
       toast.error("Vui lòng nhập số lượng sản phẩm");
       return;
     }
+
     const formData = new FormData();
     formData.append("quantity", quantity);
     formData.append("sizeId", selectedSize.id);
+
     try {
       const response = await addItemToCart(formData);
       if (response) {
         toast.success("Thêm sản phẩm vào giỏ hàng thành công");
-        setSelectedSize(null);
-        setQuantity(0);
-        setInventory(null);
+        setQuantity(1);
       }
     } catch (error) {
       console.log(error);
@@ -106,170 +92,179 @@ const ProductDetail = () => {
     }
   };
 
+  const incrementQuantity = () => {
+    if (inventory && quantity < inventory) {
+      setQuantity((prev) => prev + 1);
+    }
+  };
+
+  const decrementQuantity = () => {
+    if (quantity > 1) {
+      setQuantity((prev) => prev - 1);
+    }
+  };
+
   if (isLoading || !product) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <span className="loading loading-dots loading-xs"></span>
+        <div className="w-12 h-12 rounded-full border-4 border-t-indigo-600 border-r-transparent border-l-transparent border-b-indigo-300 animate-spin"></div>
       </div>
     );
   }
 
   return (
-    <div className="bg-white">
-      <div className="flex justify-center">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink
-                onClick={() => navigate("/")}
-                className="cursor-pointer text-gray-500"
-              >
-                Trang Chủ
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator>
-              <Slash />
-            </BreadcrumbSeparator>
-            <BreadcrumbItem>
-              <BreadcrumbLink
-                onClick={() => navigate("/shop")}
-                className="cursor-pointer text-gray-500"
-              >
-                Cửa Hàng
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator>
-              <Slash />
-            </BreadcrumbSeparator>
-            <BreadcrumbItem>
-              <BreadcrumbPage className="cursor-pointer">
-                Chi Tiết Sản Phẩm
-              </BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      </div>
+    <div className="bg-white min-h-screen">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <ProductBreadcrumb />
 
-      <div className="pt-6">
-        <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:max-w-7xl lg:px-8">
-          <div className="lg:hidden flex space-x-4 overflow-x-auto px-4">
-            <Carousel className="w-full max-w-xl">
-              <CarouselContent>
-                {product.images.map((image, index) => (
-                  <CarouselItem key={index}>
-                    <Card className="shadow-md">
-                      <CardContent className="flex aspect-square items-center justify-center">
-                        <img
-                          src={image.url}
-                          alt={product.name}
-                          className="object-cover object-center w-full h-full rounded-md"
-                        />
-                      </CardContent>
-                    </Card>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious />
-              <CarouselNext />
-            </Carousel>
-          </div>
-
-          <div className="hidden lg:grid lg:grid-cols-2 lg:gap-x-8">
-            <Carousel className="w-full max-w-xl">
-              <CarouselContent>
-                {product.images.map((image, index) => (
-                  <CarouselItem key={index} className="w-full">
-                    <Card className="w-full h-full">
-                      <CardContent className="w-full h-[75vh] md:h-[60vh] lg:h-[65vh] overflow-hidden">
-                        <img
-                          src={image.url}
-                          alt={product.name}
-                          className="w-full h-full object-cover"
-                        />
-                      </CardContent>
-                    </Card>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious />
-              <CarouselNext />
-            </Carousel>
-          </div>
-        </div>
-
-        <div className="mx-auto max-w-2xl px-4 pb-16 pt-10 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pb-24 lg:pt-16">
-          <div className="lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
-            <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
-              {product.name}
-            </h1>
-          </div>
-
-          <div className="mt-4 lg:row-span-3 lg:mt-0">
-            <h2 className="sr-only">Thông tin sản phẩm</h2>
-            <p className="text-3xl tracking-tight text-gray-900">
-              {currency.format(product.price)}
-            </p>
-            {inventory !== null && (
-              <p className="text-sm tracking-tight text-green-600">
-                Còn {inventory} sản phẩm
-              </p>
-            )}
-
-            <form className="mt-10" onSubmit={handleAddToCart}>
-              <div className="mt-10">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-medium text-gray-900">Size</h3>
-                </div>
-
-                <fieldset aria-label="Choose a size" className="mt-4">
-                  <RadioGroup
-                    value={selectedSize}
-                    onChange={setSelectedSize}
-                    className="grid grid-cols-4 gap-4 sm:grid-cols-8 lg:grid-cols-4"
-                  >
-                    {product.size?.map((size) => (
-                      <Radio
-                        key={size.id}
-                        value={size}
-                        className="cursor-pointer bg-white text-gray-900 shadow-sm group relative flex items-center justify-center rounded-md border px-4 py-3 text-sm font-medium uppercase hover:bg-gray-100 focus:outline-none transition-all"
-                      >
-                        <span>{size.sizeName}</span>
-                        <span
-                          aria-hidden="true"
-                          className="pointer-events-none absolute -inset-px rounded-md border-2 border-transparent group-data-[focus]:border group-data-[checked]:border-indigo-700"
-                        />
-                      </Radio>
-                    ))}
-                  </RadioGroup>
-                </fieldset>
-              </div>
-
-              <div className="mt-4">
-                <input
-                  type="number"
-                  min={1}
-                  max={inventory || 1}
-                  value={quantity}
-                  onChange={(e) => setQuantity(e.target.value)}
-                  className="bg-gray-50 block w-40 rounded-md border border-gray-300 py-2 px-4 text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  placeholder="Số lượng"
+        <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-8">
+          {/* Image Gallery */}
+          <div className="space-y-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              className="aspect-square overflow-hidden rounded-2xl bg-gray-50"
+            >
+              {product.images && product.images.length > 0 && (
+                <img
+                  src={product.images[activeImageIndex]?.url}
+                  alt={product.name}
+                  className="w-full h-full object-cover object-center"
                 />
-                <button
-                  type="submit"
-                  className="mt-10 flex w-full items-center justify-center rounded-md bg-indigo-600 hover:bg-indigo-500 px-8 py-3 text-base font-medium text-white shadow-md transition-all"
-                >
-                  Thêm vào giỏ hàng
-                </button>
+              )}
+            </motion.div>
+
+            {/* Thumbnail Gallery */}
+            {product.images && product.images.length > 1 && (
+              <div className="flex gap-2 overflow-x-auto pb-2 px-3 py-3">
+                {product.images.map((image, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setActiveImageIndex(index)}
+                    className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden ${
+                      activeImageIndex === index
+                        ? "ring-2 ring-offset-2 ring-indigo-600"
+                        : "opacity-70 hover:opacity-100"
+                    }`}
+                  >
+                    <img
+                      src={image.url}
+                      alt={`${product.name} thumbnail ${index + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </button>
+                ))}
               </div>
-            </form>
+            )}
           </div>
 
-          <div className="py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pb-16 lg:pr-8 lg:pt-6">
+          {/* Product Info */}
+          <div className="flex flex-col">
             <div>
-              <div className="space-y-6">
-                <p className="text-base text-gray-900">{product.description}</p>
+              <h1 className="text-3xl font-bold text-gray-900">
+                {product.name}
+              </h1>
+              <div className="mt-3">
+                <p className="text-3xl font-semibold text-indigo-600">
+                  {currency.format(product.price)}
+                </p>
               </div>
             </div>
+
+            <div className="mt-8">
+              <div className="prose prose-indigo max-w-none">
+                <p>{product.description}</p>
+              </div>
+            </div>
+
+            <form className="mt-8 space-y-8" onSubmit={handleAddToCart}>
+              {/* Size Selector */}
+              <div>
+                <h3 className="text-sm font-medium text-gray-900 mb-4">Size</h3>
+                <div className="grid grid-cols-4 gap-3">
+                  {product.size?.map((size) => (
+                    <button
+                      key={size.id}
+                      type="button"
+                      onClick={() => setSelectedSize(size)}
+                      className={`
+                        flex items-center justify-center rounded-md py-3 text-sm font-medium uppercase
+                        ${
+                          selectedSize?.id === size.id
+                            ? "bg-indigo-600 text-white"
+                            : "bg-white text-gray-900 border border-gray-300 hover:bg-gray-50"
+                        }
+                      `}
+                    >
+                      {size.sizeName}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Inventory Status */}
+              {inventory !== null && (
+                <p
+                  className={`text-sm ${
+                    inventory > 10
+                      ? "text-green-600"
+                      : inventory > 0
+                      ? "text-orange-500"
+                      : "text-red-600"
+                  }`}
+                >
+                  {inventory > 10
+                    ? `Còn ${inventory} sản phẩm`
+                    : inventory > 0
+                    ? `Chỉ còn ${inventory} sản phẩm trong kho`
+                    : "Hết hàng"}
+                </p>
+              )}
+
+              {/* Quantity Selector */}
+              <div>
+                <h3 className="text-sm font-medium text-gray-900 mb-4">
+                  Số lượng
+                </h3>
+                <div className="flex items-center space-x-3">
+                  <button
+                    type="button"
+                    onClick={decrementQuantity}
+                    disabled={quantity <= 1}
+                    className="rounded-md bg-gray-100 p-2 text-gray-600 hover:bg-gray-200 disabled:opacity-50"
+                  >
+                    <Minus size={18} />
+                  </button>
+                  <input
+                    type="number"
+                    min={1}
+                    max={inventory || 1}
+                    value={quantity}
+                    onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
+                    className="w-16 text-center border-gray-300 rounded-md py-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  />
+                  <button
+                    type="button"
+                    onClick={incrementQuantity}
+                    disabled={inventory && quantity >= inventory}
+                    className="rounded-md bg-gray-100 p-2 text-gray-600 hover:bg-gray-200 disabled:opacity-50"
+                  >
+                    <Plus size={18} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Add to Cart Button */}
+              <button
+                type="submit"
+                disabled={!selectedSize || !inventory || inventory <= 0}
+                className="mt-8 w-full flex items-center justify-center gap-2 rounded-md bg-indigo-600 px-8 py-4 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-gray-300 disabled:cursor-not-allowed"
+              >
+                <ShoppingBag size={20} />
+                Thêm vào giỏ hàng
+              </button>
+            </form>
           </div>
         </div>
       </div>
