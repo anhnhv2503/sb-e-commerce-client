@@ -301,3 +301,12 @@ export const createPayOSPayment = async () => {
     }
   );
 };
+
+export const executePayOSPayment = async (data) => {
+  const token = JSON.parse(localStorage.getItem("accessToken"));
+  return axios.post("/api/order/payos/execute", data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};

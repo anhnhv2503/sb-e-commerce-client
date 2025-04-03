@@ -16,7 +16,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Archive, PencilLine, XCircle } from "lucide-react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
@@ -32,6 +32,7 @@ const OrdersTable = ({ status }) => {
         setIsLoading(true);
         const response = await getOrdersByUserAndStatus(status);
         setOrders(response.data?.data);
+        console.log(response.data?.data);
       } catch (error) {
         console.error(error);
       } finally {
@@ -101,33 +102,36 @@ const OrdersTable = ({ status }) => {
             </TableRow>
           )}
 
-          {orders.map((order) => (
+          {orders.map((order, index) => (
             <TableRow
-              key={order.id}
+              key={index}
               className="hover:bg-gray-100 transition-colors"
             >
               <TableCell>
-                {order.orderItems.map((item) => (
-                  <img
-                    src={item.product?.images[0]?.url}
-                    alt={item.product?.name}
-                    width={50}
-                    height={50}
-                    onClick={() => nav(`/product/${item.product?.id}`)}
-                    className="cursor-pointer rounded-md shadow-md hover:scale-105 transition-transform"
-                    key={item.product?.id}
-                  />
+                {order.orderItems.map((item, index) => (
+                  <React.Fragment key={index}>
+                    <img
+                      src={item.product?.images[0]?.url}
+                      alt={item.product?.name}
+                      width={50}
+                      height={50}
+                      onClick={() => nav(`/product/${item.product?.id}`)}
+                      className="cursor-pointer rounded-md shadow-md hover:scale-105 transition-transform"
+                    />
+                  </React.Fragment>
                 ))}
               </TableCell>
               <TableCell>
-                {order.orderItems.map((item) => (
-                  <div
-                    className="font-semibold text-indigo-600 hover:underline cursor-pointer"
-                    onClick={() => nav(`/product/${item.product?.id}`)}
-                    key={item.product?.id}
-                  >
-                    {item.product?.name}
-                  </div>
+                {order.orderItems.map((item, index) => (
+                  <React.Fragment key={index}>
+                    <div
+                      className="font-semibold text-indigo-600 hover:underline cursor-pointer"
+                      onClick={() => nav(`/product/${item.product?.id}`)}
+                      key={item.product?.id}
+                    >
+                      {item.product?.name}
+                    </div>
+                  </React.Fragment>
                 ))}
               </TableCell>
               <TableCell>
