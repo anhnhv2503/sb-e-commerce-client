@@ -1,22 +1,21 @@
-import React from "react";
-import { Button } from "../ui/button";
-import { useAuth } from "../auth/AuthContext";
-import { useCart } from "../context/CartContext";
+import LogoutToast from "@/components/logout/LogoutToast";
 import { ArrowLeftStartOnRectangleIcon } from "@heroicons/react/24/outline";
+import toast from "react-hot-toast";
+import { useAuth } from "../auth/AuthContext";
+import { Button } from "../ui/button";
 
 const Logout = () => {
   const { logout } = useAuth();
-  const { cart, dispatch } = useCart();
 
   const handleLogout = () => {
-    // Add your logout logic here
-    dispatch({ type: "CLEAR_CART" });
     logout();
-    sessionStorage.removeItem("vnpayRequest");
+    toast.custom((t) => <LogoutToast t={t} />, {
+      position: "bottom-left",
+    });
   };
 
   return (
-    <Button onClick={handleLogout} className="bg-rose-500 hover:bg-rose-600">
+    <Button onClick={handleLogout} className="bg-red-500 hover:bg-rose-600">
       <ArrowLeftStartOnRectangleIcon className="h-7 w-7 mr-2" />
       Thoát
     </Button>

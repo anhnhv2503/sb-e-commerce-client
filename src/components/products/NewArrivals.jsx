@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { getNewArrivals } from "../service/ApiFunctions";
-import { useNavigate } from "react-router-dom";
-import useCurrencyFormat from "@/components/hooks/useCurrencyFormat";
 import DotsLoading from "@/components/common/DotsLoading";
+import useCurrencyFormat from "@/components/hooks/useCurrencyFormat";
+import ProductItem from "@/components/products/ProductItem";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { getNewArrivals } from "../service/ApiFunctions";
 
 const NewArrivals = () => {
   const [newProducts, setNewProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const nav = useNavigate();
+  const navigate = useNavigate();
   const currency = useCurrencyFormat();
 
   useEffect(() => {
@@ -35,23 +36,7 @@ const NewArrivals = () => {
         ) : (
           <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
             {newProducts.map((product) => (
-              <a
-                key={product.id}
-                onClick={() => nav(`/product/${product.id}`)}
-                className="group"
-              >
-                <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
-                  <img
-                    alt={product.name + " image"}
-                    src={product.images[0].url}
-                    className="h-96 w-96 object-cover object-center group-hover:opacity-75"
-                  />
-                </div>
-                <h3 className="mt-4 text-sm text-gray-700">{product.name}</h3>
-                <p className="mt-1 text-lg font-medium text-gray-900">
-                  {currency.format(product.price)}
-                </p>
-              </a>
+              <ProductItem key={product.id} product={product} />
             ))}
           </div>
         )}
