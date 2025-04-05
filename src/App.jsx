@@ -31,8 +31,21 @@ import VerifyEmailFailed from "./components/verify/VerifyEmailFailed";
 import VerifyEmailSuccess from "./components/verify/VerifyEmailSuccess";
 import Auth from "@/components/common/Auth";
 import PayOSCallback from "@/components/orders/PayOS/PayOSCallback";
+import { useEffect, useState } from "react";
+import AppLoading from "@/components/common/AppLoading";
 
 function App() {
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+  }, []);
+
+  if (isLoading) {
+    return <AppLoading />;
+  }
+
   const router = createBrowserRouter([
     {
       path: "verify",
