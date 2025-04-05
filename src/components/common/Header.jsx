@@ -1,3 +1,4 @@
+import CartIcon from "@/components/common/CartIcon";
 import UserAccordion from "@/components/common/UserAccordion";
 import UserPopover from "@/components/common/UserPopover";
 import { Transition } from "@headlessui/react";
@@ -34,6 +35,8 @@ const Header = () => {
   const isActive = (path) => {
     return location.pathname === path;
   };
+
+  const token = localStorage.getItem("accessToken");
 
   return (
     <header
@@ -94,14 +97,7 @@ const Header = () => {
           {/* Right Section: Cart and User */}
           <div className="flex items-center space-x-4">
             {/* Cart Button */}
-            <button
-              onClick={() => navigate("/user/cart")}
-              className="relative p-2 text-gray-700 hover:text-indigo-600 transition-colors"
-              aria-label="Cart"
-            >
-              <ShoppingBag size={22} />
-              <span className="absolute top-0 right-0 h-4 w-4 rounded-full bg-indigo-600 flex items-center justify-center text-xs text-white"></span>
-            </button>
+            {token && <CartIcon />}
 
             {/* User Menu - Desktop */}
             <div className="hidden md:block">
@@ -198,16 +194,18 @@ const Header = () => {
             </div>
 
             <div className="mt-6 border-t pt-4">
-              <button
-                onClick={() => {
-                  navigate("/user/cart");
-                  setMobileMenuOpen(false);
-                }}
-                className="flex items-center w-full px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
-              >
-                <ShoppingBag size={18} className="mr-3" />
-                <span>Giỏ Hàng</span>
-              </button>
+              {token && (
+                <button
+                  onClick={() => {
+                    navigate("/user/cart");
+                    setMobileMenuOpen(false);
+                  }}
+                  className="flex items-center w-full px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                >
+                  <ShoppingBag size={18} className="mr-3" />
+                  <span>Giỏ Hàng</span>
+                </button>
+              )}
 
               <div className="mt-4">
                 <UserAccordion />
