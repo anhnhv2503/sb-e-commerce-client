@@ -58,7 +58,7 @@ const ManageOrder = () => {
         </div>
       </div>
       <div className="col-span-5 row-span-3 row-start-2 bg-slate-200 border rounded-md">
-        <OrdersTable data={orders} status={status} />
+        <OrdersTable data={orders} status={status} fetchOrders={fetchOrders} />
       </div>
       <div className="col-span-5 row-start-5 mt-5">
         <Paginator

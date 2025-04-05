@@ -32,7 +32,6 @@ const OrdersTable = ({ status }) => {
         setIsLoading(true);
         const response = await getOrdersByUserAndStatus(status);
         setOrders(response.data?.data);
-        console.log(response.data?.data);
       } catch (error) {
         console.error(error);
       } finally {
@@ -108,64 +107,67 @@ const OrdersTable = ({ status }) => {
               className="hover:bg-gray-100 transition-colors"
             >
               <TableCell>
-                {order.orderItems.map((item, index) => (
-                  <React.Fragment key={index}>
-                    <img
-                      src={item.product?.images[0]?.url}
-                      alt={item.product?.name}
-                      width={50}
-                      height={50}
-                      onClick={() => nav(`/product/${item.product?.id}`)}
-                      className="cursor-pointer rounded-md shadow-md hover:scale-105 transition-transform"
-                    />
-                  </React.Fragment>
+                {order.items.map((item, idx) => (
+                  <img
+                    key={idx}
+                    src={item.sizeDTO.product?.images?.[0]?.url}
+                    alt={item.sizeDTO.product?.name}
+                    width={50}
+                    height={50}
+                    onClick={() => nav(`/product/${item.sizeDTO.product?.id}`)}
+                    className="cursor-pointer rounded-md shadow-md hover:scale-105 transition-transform"
+                  />
                 ))}
               </TableCell>
+
               <TableCell>
-                {order.orderItems.map((item, index) => (
-                  <React.Fragment key={index}>
-                    <div
-                      className="font-semibold text-indigo-600 hover:underline cursor-pointer"
-                      onClick={() => nav(`/product/${item.product?.id}`)}
-                      key={item.product?.id}
-                    >
-                      {item.product?.name}
-                    </div>
-                  </React.Fragment>
+                {order.items.map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="font-semibold text-indigo-600 hover:underline cursor-pointer"
+                    onClick={() => nav(`/product/${item.sizeDTO.product?.id}`)}
+                  >
+                    {item.sizeDTO.product?.name}
+                  </div>
                 ))}
               </TableCell>
+
               <TableCell>
                 <Badge variant="outline">{order.orderDate}</Badge>
               </TableCell>
+
               <TableCell>
                 <Badge
                   className={`${
-                    order.status === "PENDING"
+                    order.orderStatus === "PENDING"
                       ? "bg-yellow-500 text-white"
-                      : order.status === "IN_PROGRESS"
+                      : order.orderStatus === "IN_PROGRESS"
                       ? "bg-blue-500 text-white"
-                      : order.status === "SHIPPING"
+                      : order.orderStatus === "SHIPPING"
                       ? "bg-orange-500 text-white"
-                      : order.status === "DELIVERED"
+                      : order.orderStatus === "DELIVERED"
                       ? "bg-green-500 text-white"
                       : "bg-red-500 text-white"
                   }`}
                 >
-                  {(order.status === "PENDING" && "Đang Chờ") ||
-                    (order.status === "IN_PROGRESS" && "Đang Xử Lí") ||
-                    (order.status === "SHIPPING" && "Đang vận chuyển") ||
-                    (order.status === "DELIVERED" && "Đã Giao") ||
-                    (order.status === "CANCELLED" && "Đã Hủy")}
+                  {(order.orderStatus === "PENDING" && "Đang Chờ") ||
+                    (order.orderStatus === "IN_PROGRESS" && "Đang Xử Lí") ||
+                    (order.orderStatus === "SHIPPING" && "Đang vận chuyển") ||
+                    (order.orderStatus === "DELIVERED" && "Đã Giao") ||
+                    (order.orderStatus === "CANCELLED" && "Đã Hủy")}
                 </Badge>
               </TableCell>
+
               <TableCell className="whitespace-normal break-words max-w-xs">
                 {order.orderAddress}
               </TableCell>
+
               <TableCell className="text-right">
                 <Badge variant="secondary">
                   {currency.format(order.totalAmount)}
                 </Badge>
               </TableCell>
+
               <TableCell className="text-center">
                 <Badge variant="secondary">
                   {order.paymentType === "CASH_ON_DELIVERY"
@@ -173,8 +175,9 @@ const OrdersTable = ({ status }) => {
                     : order.paymentType}
                 </Badge>
               </TableCell>
+
               <TableCell>
-                {status === "PENDING" && (
+                {order.orderStatus === "PENDING" && (
                   <Button
                     variant="destructive"
                     onClick={() => handleCancelOrder(order.id)}
@@ -183,7 +186,7 @@ const OrdersTable = ({ status }) => {
                     <XCircle className="w-4 h-4" />
                   </Button>
                 )}
-                {status === "SHIPPING" && (
+                {order.orderStatus === "SHIPPING" && (
                   <Button
                     className="bg-green-600 hover:bg-green-700 transition-colors"
                     onClick={() => handleConfirmDelivered(order.id)}

@@ -16,9 +16,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Fragment } from "react";
 import { toast, Toaster } from "sonner";
 
-const OrdersTable = ({ data, status }) => {
+const OrdersTable = ({ data, status, fetchOrders }) => {
   const currency = useCurrencyFormat();
 
   const handlePendingUpdate = async (id) => {
@@ -38,6 +39,7 @@ const OrdersTable = ({ data, status }) => {
       if (response) {
         toast.success("Đã hoàn tất đóng gói đơn hàng. Chuẩn bị giao hàng");
       }
+      fetchOrders();
     } catch (error) {
       console.error("Error updating order: ", error);
     }
@@ -82,20 +84,20 @@ const OrdersTable = ({ data, status }) => {
           </TableHeader>
           <TableBody>
             {data.length === 0 && (
-              <TableRow key={data.id}>
+              <TableRow>
                 <TableCell colSpan={7} className="text-center">
                   Không có đơn hàng nào
                 </TableCell>
               </TableRow>
             )}
             {data.map((order, index) => (
-              <>
-                <TableRow key={index}>
+              <Fragment key={order.id}>
+                <TableRow>
                   <TableCell>
                     <Badge>{order.id}</Badge>
                   </TableCell>
                   <TableCell>
-                    <Badge variant={`outline`}>{order.orderDate}</Badge>
+                    <Badge variant="outline">{order.orderDate}</Badge>
                   </TableCell>
                   <TableCell>
                     <Badge variant="secondary">
@@ -103,17 +105,41 @@ const OrdersTable = ({ data, status }) => {
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <Badge>{order.status}</Badge>
+                    <Badge
+                      className={`${
+                        order.status === "PENDING"
+                          ? "bg-yellow-500"
+                          : order.status === "IN_PROGRESS"
+                          ? "bg-blue-500"
+                          : order.status === "SHIPPING"
+                          ? "bg-orange-500"
+                          : order.status === "DELIVERED"
+                          ? "bg-green-600"
+                          : "bg-red-500"
+                      } text-white`}
+                    >
+                      {order.status === "PENDING"
+                        ? "Đang chờ"
+                        : order.status === "IN_PROGRESS"
+                        ? "Đang xử lý"
+                        : order.status === "SHIPPING"
+                        ? "Đang vận chuyển"
+                        : order.status === "DELIVERED"
+                        ? "Đã giao"
+                        : "Đã hủy"}
+                    </Badge>
                   </TableCell>
                   <TableCell>
                     <Badge variant="secondary">
-                      {order.paymentType.replaceAll("_", " ")}
+                      {order.paymentType === "CASH_ON_DELIVERY"
+                        ? "COD"
+                        : order.paymentType.replaceAll("_", " ")}
                     </Badge>
                   </TableCell>
                   <TableCell>
                     {status === "PENDING" && (
                       <Button
-                        className={`bg-blue-500 hover:bg-blue-400`}
+                        className="bg-blue-500 hover:bg-blue-400"
                         onClick={() => handlePendingUpdate(order.id)}
                       >
                         Xét duyệt
@@ -121,7 +147,7 @@ const OrdersTable = ({ data, status }) => {
                     )}
                     {status === "IN_PROGRESS" && (
                       <Button
-                        className={`bg-green-600 hover:bg-green-500`}
+                        className="bg-green-600 hover:bg-green-500"
                         onClick={() => handleInProgressUpdate(order.id)}
                       >
                         Hoàn tất
@@ -129,7 +155,7 @@ const OrdersTable = ({ data, status }) => {
                     )}
                     {status === "SHIPPING" && (
                       <Button
-                        className={`bg-yellow-600 hover:bg-yellow-500 disabled cursor-default`}
+                        className="bg-yellow-600 hover:bg-yellow-500 cursor-not-allowed"
                         disabled
                       >
                         Đang vận chuyển
@@ -137,22 +163,25 @@ const OrdersTable = ({ data, status }) => {
                     )}
                     {status === "DELIVERED" && (
                       <Button
-                        className={`bg-green-600 hover:bg-green-500 disabled cursor-default`}
+                        className="bg-green-600 hover:bg-green-500 cursor-not-allowed"
                         disabled
                       >
-                        Giao Hàng thành công
+                        Giao hàng thành công
                       </Button>
                     )}
                     {status === "CANCELLED" && (
                       <Button
                         variant="destructive"
-                        className="disabled cursor-default"
+                        disabled
+                        className="cursor-not-allowed"
                       >
                         Đã hủy
                       </Button>
                     )}
                   </TableCell>
                 </TableRow>
+
+                {/* Detail Row with Accordion */}
                 <TableRow>
                   <TableCell colSpan={6} className="p-2">
                     <Accordion type="single" collapsible>
@@ -166,30 +195,34 @@ const OrdersTable = ({ data, status }) => {
                               Chi tiết đơn hàng
                             </h3>
                             <div className="space-y-4">
-                              {order.orderItems.map((item, index) => (
+                              {order?.items.map((item, idx) => (
                                 <div
-                                  key={index}
+                                  key={idx}
                                   className="p-4 border rounded-lg"
                                 >
                                   <div className="flex gap-4 items-center">
                                     <img
-                                      src={item.product.images[0].url}
-                                      alt={item.product.name}
-                                      className="w-24 h-24 rounded-md"
+                                      src={
+                                        item?.sizeDTO?.product?.images[0]
+                                          ?.url ||
+                                        "https://via.placeholder.com/100"
+                                      }
+                                      alt={item?.product?.name}
+                                      className="w-24 h-24 rounded-md object-cover"
                                     />
                                     <div>
                                       <p className="font-medium">
-                                        {item.product.name}
+                                        {item?.product?.name}
                                       </p>
                                       <p className="text-sm text-gray-500">
-                                        Thương hiệu: {item.product.brand} |
-                                        Size: {item.size.sizeName}
+                                        Thương hiệu: {item?.product?.brand} |
+                                        Size: {item?.sizeDTO?.sizeName}
                                       </p>
                                       <p className="text-sm">
-                                        Số lượng: {item.quantity}
+                                        Số lượng: {item?.quantity}
                                       </p>
                                       <p className="text-sm text-gray-600">
-                                        Giá: {currency.format(item.price)}
+                                        Giá: {currency.format(item?.price)}
                                       </p>
                                     </div>
                                   </div>
@@ -202,12 +235,12 @@ const OrdersTable = ({ data, status }) => {
                     </Accordion>
                   </TableCell>
                 </TableRow>
-              </>
+              </Fragment>
             ))}
           </TableBody>
         </Table>
       </div>
-      <Toaster richColors="true" position="top-right" />
+      <Toaster />
     </div>
   );
 };

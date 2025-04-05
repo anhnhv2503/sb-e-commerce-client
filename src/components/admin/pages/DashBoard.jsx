@@ -1,4 +1,4 @@
-import Chart from "@/components/admin/pages/Chart";
+import DotsLoading from "@/components/common/DotsLoading";
 import useCurrencyFormat from "@/components/hooks/useCurrencyFormat";
 import { getDashboardData } from "@/components/service/ApiFunctions";
 import {
@@ -86,12 +86,11 @@ const DashBoard = () => {
             </div>
           </div>
         ) : (
-          <p>Loading...</p>
+          <DotsLoading />
         )}
       </div>
       <div className="">
         <h2 className="text-xl font-bold mt-8 mb-4">Biểu Đồ</h2>
-        <Chart />
       </div>
     </>
   );

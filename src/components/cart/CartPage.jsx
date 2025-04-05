@@ -116,8 +116,11 @@ const CartPage = () => {
       await updateCartItemQuantity(itemId, quantity);
       fetchCart();
     } catch (error) {
-      console.error("Failed to update item quantity:", error);
-      toast.error("Không thể cập nhật số lượng");
+      if (error.response?.data?.status === 409) {
+        toast.error(error.response?.data?.data);
+      } else {
+        toast.error("Không thể cập nhật số lượng");
+      }
     } finally {
       setUpdatingItemId(null);
     }
