@@ -310,3 +310,7 @@ export const executePayOSPayment = async (data) => {
     },
   });
 };
+
+export const getProductsByCategory = async (categoryId) => {
+  return axios.get(`/api/products/category?categoryId=${categoryId}`);
+};
