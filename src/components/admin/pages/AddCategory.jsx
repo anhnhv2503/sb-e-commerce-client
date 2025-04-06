@@ -14,9 +14,8 @@ import { Label } from "@/components/ui/label";
 import toast from "react-hot-toast";
 import { addCategory } from "@/components/service/ApiFunctions";
 
-const AddCategory = () => {
+const AddCategory = ({ open, onOpenChange, onSuccess }) => {
   const [categoryName, setCategoryName] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
 
   const handleAddCategory = async () => {
     if (categoryName.trim() === "") {
@@ -27,7 +26,8 @@ const AddCategory = () => {
         if (response) {
           toast.success("Category added successfully");
           setCategoryName("");
-          setIsOpen(false);
+          onSuccess();
+          onOpenChange(false); // Close the dialog after success
         }
       } catch (error) {
         console.error("Error adding category: ", error);
@@ -36,7 +36,7 @@ const AddCategory = () => {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
         <Button variant="outline">+ Category</Button>
       </DialogTrigger>

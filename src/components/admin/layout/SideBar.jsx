@@ -1,101 +1,204 @@
-import Logout from "@/components/logout/Logout";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import Logout from "@/components/logout/Logout";
 import newLogo from "../../../assets/logo.png";
+import {
+  ChevronRight,
+  Home,
+  BarChart3,
+  Package,
+  ShoppingBag,
+  Users,
+  Layers,
+  PlusCircle,
+  List,
+} from "lucide-react";
 
 const SideBar = () => {
   const [isProductDropdownOpen, setIsProductDropdownOpen] = useState(false);
-  const nav = useNavigate();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const toggleProductDropdown = () => {
-    setIsProductDropdownOpen(!isProductDropdownOpen);
-  };
+  const isActive = (path) => location.pathname === path;
+
+  const menuItems = [
+    {
+      id: "home",
+      path: "/admin",
+      label: "Dashboard",
+      icon: <Home size={20} />,
+    },
+    {
+      id: "stats",
+      path: "/admin/dashboard",
+      label: "Thống kê",
+      icon: <BarChart3 size={20} />,
+    },
+    {
+      id: "orders",
+      path: "/admin/manage/orders",
+      label: "Quản lí đơn hàng",
+      icon: <ShoppingBag size={20} />,
+    },
+    {
+      id: "categories",
+      path: "/admin/manage/category",
+      label: "Quản lí danh mục",
+      icon: <Layers size={20} />,
+    },
+    {
+      id: "users",
+      path: "/admin/manage/user",
+      label: "Quản lí người dùng",
+      icon: <Users size={20} />,
+    },
+  ];
+
+  const productSubMenu = [
+    {
+      id: "add-product",
+      path: "/admin/product/add",
+      label: "Thêm sản phẩm",
+      icon: <PlusCircle size={18} />,
+    },
+    {
+      id: "all-products",
+      path: "/admin/product/list",
+      label: "Tất cả sản phẩm",
+      icon: <List size={18} />,
+    },
+  ];
 
   return (
-    <>
-      <div
-        className={`w-64 bg-zinc-600 text-white transition-all duration-300 h-full`}
+    <motion.div
+      initial={{ x: -280 }}
+      animate={{ x: 0 }}
+      transition={{ type: "spring", stiffness: 100 }}
+      className="w-64 bg-gradient-to-b from-zinc-800 to-zinc-900 text-white h-full flex flex-col shadow-xl overflow-hidden"
+    >
+      {/* Logo Section */}
+      <motion.div
+        className="px-6 py-6 flex items-center justify-center"
+        whileHover={{ scale: 1.05 }}
       >
-        <div className="flex items-center justify-center px-4 py-3">
-          <img alt="" src={newLogo} className="h-10 w-auto cursor-pointer" />
-        </div>
-        <ul className="mt-6">
-          <li className="px-4 py-2 hover:bg-zinc-700 cursor-pointer">
-            <a onClick={() => nav("/admin")}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="size-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
-                />
-              </svg>
-            </a>
-          </li>
-          <li className="px-4 py-2 hover:bg-zinc-700 cursor-pointer">
-            <a onClick={() => nav("/admin/dashboard")}>Thống kê</a>
-          </li>
-          <li className="px-4 py-2 hover:bg-zinc-700 cursor-pointer">
-            <a onClick={() => nav("/admin/manage/orders")}>Quản lí đơn hàng</a>
-          </li>
+        <img
+          src={newLogo}
+          alt="Admin Logo"
+          className="h-12 w-auto cursor-pointer"
+          onClick={() => navigate("/admin")}
+        />
+      </motion.div>
 
-          <li className="px-4 py-2 hover:bg-zinc-700 cursor-pointer">
-            <a onClick={() => nav("/admin/manage/category")}>
-              Quản lí danh mục sản phẩm
-            </a>
-          </li>
+      {/* Divider */}
+      <div className="mx-6 h-px bg-gradient-to-r from-transparent via-zinc-600 to-transparent" />
 
-          <li className="px-4 py-2 cursor-pointer">
-            <div
-              className="flex items-center justify-between"
-              onClick={toggleProductDropdown}
+      {/* Menu Items */}
+      <nav className="mt-8 px-4 flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-600">
+        <ul className="space-y-1.5">
+          {menuItems.map((item) => (
+            <motion.li
+              key={item.id}
+              whileHover={{ x: 6 }}
+              whileTap={{ scale: 0.98 }}
             >
-              <a>Quản lí sản phẩm</a>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-5 h-5"
+              <motion.div
+                onClick={() => navigate(item.path)}
+                className={`flex items-center px-4 py-3 rounded-lg cursor-pointer transition-colors ${
+                  isActive(item.path)
+                    ? "bg-indigo-600 text-white"
+                    : "hover:bg-zinc-700/60 text-zinc-300 hover:text-white"
+                }`}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d={isProductDropdownOpen ? "M19 9l-7 7-7-7" : "M9 5l7 7-7 7"}
-                />
-              </svg>
-            </div>
+                <span className="text-lg mr-4">{item.icon}</span>
+                <span className="font-medium text-sm">{item.label}</span>
+                {isActive(item.path) && (
+                  <motion.div
+                    className="absolute left-0 h-full w-1 rounded-r-full"
+                    layoutId="activeIndicator"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.2 }}
+                  />
+                )}
+              </motion.div>
+            </motion.li>
+          ))}
 
-            {isProductDropdownOpen && (
-              <ul className="ml-4 mt-2">
-                <li className="px-4 py-2 hover:bg-zinc-700 cursor-pointer">
-                  <a onClick={() => nav("/admin/product/add")}>Thêm sản phẩm</a>
-                </li>
-                <li className="px-4 py-2 hover:bg-zinc-700 cursor-pointer">
-                  <a onClick={() => nav("/admin/product/list")}>
-                    Tất cả sản phẩm
-                  </a>
-                </li>
-              </ul>
-            )}
-          </li>
+          {/* Products Dropdown */}
+          <motion.li whileHover={{ x: 6 }} whileTap={{ scale: 0.98 }}>
+            <motion.div
+              onClick={() => setIsProductDropdownOpen(!isProductDropdownOpen)}
+              className={`flex items-center justify-between px-4 py-3 rounded-lg cursor-pointer ${
+                isActive("/admin/product/add") ||
+                isActive("/admin/product/list")
+                  ? "bg-indigo-600 text-white"
+                  : "hover:bg-zinc-700/60 text-zinc-300 hover:text-white"
+              }`}
+            >
+              <div className="flex items-center">
+                <Package size={20} className="mr-4" />
+                <span className="font-medium text-sm">Quản lí sản phẩm</span>
+              </div>
+              <motion.div
+                animate={{ rotate: isProductDropdownOpen ? 90 : 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <ChevronRight size={18} />
+              </motion.div>
+            </motion.div>
 
-          <li className="px-4 py-2 hover:bg-zinc-700 cursor-pointer">
-            <a onClick={() => nav("/admin/manage/user")}>Quản lí người dùng</a>
-          </li>
+            <AnimatePresence>
+              {isProductDropdownOpen && (
+                <motion.ul
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="overflow-hidden ml-6 mt-1 space-y-1"
+                >
+                  {productSubMenu.map((subItem) => (
+                    <motion.li
+                      key={subItem.id}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -10 }}
+                      transition={{ duration: 0.2 }}
+                      whileHover={{ x: 4 }}
+                    >
+                      <div
+                        onClick={() => navigate(subItem.path)}
+                        className={`flex items-center px-4 py-2 rounded-md cursor-pointer ${
+                          isActive(subItem.path)
+                            ? "bg-indigo-500/50 text-white"
+                            : "hover:bg-zinc-700/40 text-zinc-400 hover:text-white"
+                        }`}
+                      >
+                        <span className="text-sm mr-3">{subItem.icon}</span>
+                        <span className="text-sm">{subItem.label}</span>
+                      </div>
+                    </motion.li>
+                  ))}
+                </motion.ul>
+              )}
+            </AnimatePresence>
+          </motion.li>
         </ul>
-        <div className="flex items-center justify-between px-4 py-3">
-          <Logout />
+      </nav>
+
+      {/* User Section */}
+      <div className="mt-auto">
+        <div className="mx-6 h-px bg-gradient-to-r from-transparent via-zinc-600 to-transparent mb-4" />
+        <div className="px-6 py-4">
+          <motion.div
+            whileHover={{ backgroundColor: "rgba(79, 70, 229, 0.2)" }}
+            className="flex items-center justify-between rounded-lg px-3 py-2"
+          >
+            <Logout />
+          </motion.div>
         </div>
       </div>
-    </>
+    </motion.div>
   );
 };
 

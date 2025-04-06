@@ -231,24 +231,6 @@ export const confirmDelivery = async (orderId) => {
   });
 };
 
-export const getDashboardData = async () => {
-  const token = JSON.parse(localStorage.getItem("accessToken"));
-  return axios.get(`/api/dashboard/data`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-};
-
-export const getChartData = async () => {
-  const token = JSON.parse(localStorage.getItem("accessToken"));
-  return axios.get(`/api/dashboard/chart`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-};
-
 export const addItemToCart = async (data) => {
   const token = JSON.parse(localStorage.getItem("accessToken"));
   return axios.post("/api/cart-item/item/add", data, {
@@ -313,4 +295,22 @@ export const executePayOSPayment = async (data) => {
 
 export const getProductsByCategory = async (categoryId) => {
   return axios.get(`/api/products/category?categoryId=${categoryId}`);
+};
+
+export const getNewestOrders = async () => {
+  const token = JSON.parse(localStorage.getItem("accessToken"));
+  return axios.get("/api/order/newest", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const getDashboardData = async () => {
+  const token = JSON.parse(localStorage.getItem("accessToken"));
+  return axios.get("/api/dashboard/data", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };

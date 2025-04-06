@@ -14,7 +14,11 @@ const Paginator = ({ totalPages, currentPage, onPageChange }) => {
           {pageNumbers.map((page) => (
             <PaginationItem key={page}>
               <PaginationLink
-                className={`cursor-pointer`}
+                className={`cursor-pointer transition-all ${
+                  page === currentPage
+                    ? "bg-indigo-600 text-white hover:bg-indigo-700"
+                    : "hover:bg-gray-100"
+                }`}
                 onClick={() => onPageChange(page)}
                 disabled={page === currentPage}
                 isActive={page === currentPage}
