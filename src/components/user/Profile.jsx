@@ -17,8 +17,9 @@ import {
   User,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { getUserDetail } from "../service/ApiFunctions";
-import ChangePassword from "./ChangePassword";
+import vietnameseBoy from "@/assets/vietnameseBoy.png";
+import { getUserDetail } from "@/components/service/ApiFunctions";
+import ChangePassword from "@/components/user/ChangePassword";
 
 const Profile = () => {
   useDocumentTitle("Hồ sơ cá nhân");
@@ -71,10 +72,7 @@ const Profile = () => {
           <CardHeader className="pb-0">
             <div className="flex flex-col md:flex-row gap-6 items-center">
               <Avatar className="w-28 h-28 border-4 border-white shadow-md">
-                <AvatarImage
-                  src="https://github.com/shadcn.png"
-                  alt={user.fullName}
-                />
+                <AvatarImage src={vietnameseBoy} alt={user.fullName} />
                 <AvatarFallback className="bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-xl">
                   {getInitials(user.fullName)}
                 </AvatarFallback>

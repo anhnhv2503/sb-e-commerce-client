@@ -1,15 +1,11 @@
 import DotsLoading from "@/components/common/DotsLoading";
-import useCurrencyFormat from "@/components/hooks/useCurrencyFormat";
 import ProductItem from "@/components/products/ProductItem";
+import { getNewArrivals } from "@/components/service/ApiFunctions";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { getNewArrivals } from "../service/ApiFunctions";
 
 const NewArrivals = () => {
   const [newProducts, setNewProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const navigate = useNavigate();
-  const currency = useCurrencyFormat();
 
   useEffect(() => {
     const fetchProducts = async () => {

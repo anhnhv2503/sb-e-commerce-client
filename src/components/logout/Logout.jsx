@@ -1,8 +1,8 @@
-import LogoutToast from "@/components/logout/LogoutToast";
+import { useAuth } from "@/components/auth/AuthContext";
+import LogoutToast from "@/components/common/toasts/LogoutToast";
+import { Button } from "@/components/ui/button";
 import { ArrowLeftStartOnRectangleIcon } from "@heroicons/react/24/outline";
 import toast from "react-hot-toast";
-import { useAuth } from "../auth/AuthContext";
-import { Button } from "../ui/button";
 
 const Logout = () => {
   const { logout } = useAuth();

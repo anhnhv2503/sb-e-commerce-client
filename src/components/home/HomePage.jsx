@@ -1,9 +1,10 @@
 import { useDocumentTitle } from "@uidotdev/usehooks";
 import { useEffect } from "react";
-import Carousel from "../common/Carousel";
-import NewArrivals from "../products/NewArrivals";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import VietnamReunionHero from "@/components/common/VietnamHero";
+import Carousel from "@/components/common/Carousel";
+import NewArrivals from "@/components/products/NewArrivals";
 
 const HomePage = () => {
   useDocumentTitle("VA SHOP");
@@ -14,6 +15,9 @@ const HomePage = () => {
 
   return (
     <div>
+      <div data-aos="fade-down" data-aos-duration="1000">
+        <VietnamReunionHero />
+      </div>
       <div data-aos="fade-down" data-aos-duration="1000">
         <Carousel />
       </div>

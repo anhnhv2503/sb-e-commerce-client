@@ -1,12 +1,16 @@
+import VietnamReunionHero from "@/components/common/VietnamHero";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useDocumentTitle } from "@uidotdev/usehooks";
 import { motion } from "framer-motion";
 import { ArrowRight, Linkedin, Mail } from "lucide-react";
+import { useState } from "react";
 import toast from "react-hot-toast";
+import vneseDev from "@/assets/vneseDev.png";
 
 const AboutUs = () => {
-  useDocumentTitle("About Us");
+  useDocumentTitle("Giới thiệu về công ty chúng tôi | Loving Vietnam");
+  const [hovered, setHovered] = useState(null);
   const handleContactUs = () => {
     toast.success("We'll get back to you soon!");
   };
@@ -31,6 +35,8 @@ const AboutUs = () => {
 
   return (
     <div className="font-sans">
+      <VietnamReunionHero />
+
       {/* Hero Section with Gradient Overlay */}
       <section className="relative h-screen flex items-center">
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 to-purple-800 opacity-90"></div>
@@ -198,9 +204,9 @@ const AboutUs = () => {
               >
                 <Card className="bg-white shadow-lg rounded-xl overflow-hidden h-full">
                   <CardHeader className="p-0">
-                    <div className="relative h-64 overflow-hidden">
+                    <div className="relative h-96 overflow-hidden">
                       <img
-                        src={`https://images.unsplash.com/photo-1515002246390-7bf7e8f87b54?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwxM3x8Y2F0fGVufDB8MHx8fDE3MjE4MjIxNzl8MA&ixlib=rb-4.0.3&q=80&w=1080`}
+                        src={vneseDev}
                         alt={`${member.name}`}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                       />

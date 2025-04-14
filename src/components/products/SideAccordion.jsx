@@ -1,38 +1,37 @@
-import { useEffect, useState } from "react";
-import { getAllCategories, getBrands } from "../service/ApiFunctions";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useEffect, useState } from "react";
+import { getAllCategories, getBrands } from "../service/ApiFunctions";
 
 const SideAccordion = () => {
   const [categories, setCategories] = useState([]);
-  const [loadingCategories, setLoadingCategories] = useState(false);
   const [brands, setBrands] = useState([]);
-  const [loadingBrands, setLoadingBrands] = useState(false);
+  const params = new URLSearchParams(location.search);
+
+  const handleParamsChange = (key, value) => {
+    params.set(key, value);
+    const newParams = params.toString();
+    window.history.replaceState({}, "", `?${newParams}`);
+  };
 
   const fetchCategories = async () => {
     try {
-      setLoadingCategories(true);
       const response = await getAllCategories();
       setCategories(response.data?.data);
-      setLoadingCategories(false);
     } catch (error) {
       console.error("Error loading categories", error);
-      setLoadingCategories(true);
     }
   };
   const fetchBrands = async () => {
     try {
-      setLoadingBrands(true);
       const response = await getBrands();
       setBrands(response.data?.data);
-      setLoadingBrands(false);
     } catch (error) {
       console.error("Error loading brands", error);
-      setLoadingBrands(true);
     }
   };
 
@@ -49,6 +48,7 @@ const SideAccordion = () => {
           <AccordionContent
             key={brand}
             className="cursor-pointer hover:bg-slate-200 px-6 py-3"
+            onClick={() => handleParamsChange("brand", brand)}
           >
             {brand}
           </AccordionContent>
@@ -61,6 +61,7 @@ const SideAccordion = () => {
           <AccordionContent
             key={category.id}
             className="cursor-pointer hover:bg-slate-200 px-6 py-3"
+            onClick={() => handleParamsChange("category", category.name)}
           >
             {category.name}
           </AccordionContent>

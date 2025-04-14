@@ -7,6 +7,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useNavigate } from "react-router-dom";
+import vietnameseBoy from "@/assets/vietnameseBoy.png";
 
 const UserPopover = () => {
   const token = localStorage.getItem("accessToken");
@@ -15,7 +16,7 @@ const UserPopover = () => {
     <Popover>
       <PopoverTrigger asChild>
         <Avatar>
-          <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+          <AvatarImage src={vietnameseBoy} alt="@shadcn" />
           <AvatarFallback>VA</AvatarFallback>
         </Avatar>
       </PopoverTrigger>

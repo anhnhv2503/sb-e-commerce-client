@@ -14,7 +14,6 @@ const AllProducts = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const size = 9;
-
   useEffect(() => {
     fetchProducts();
   }, [currentPage]);
