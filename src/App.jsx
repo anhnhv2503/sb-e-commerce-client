@@ -1,14 +1,18 @@
 import ManageCategory from "@/components/admin/pages/ManageCategory";
 import ManageOrder from "@/components/admin/pages/ManageOrder";
+import AppLoading from "@/components/common/AppLoading";
+import Auth from "@/components/common/Auth";
 import NotFound from "@/components/error/NotFound";
 import ForgotPassword from "@/components/forgot-password/ForgotPassword";
 import ResetPassword from "@/components/forgot-password/ResetPassword";
 import OrderFailed from "@/components/orders/OrderFailed";
 import OrderSuccess from "@/components/orders/OrderSuccess";
+import PayOSCallback from "@/components/orders/PayOS/PayOSCallback";
 import VnPayCallback from "@/components/orders/VnPayCallback";
 import MyOrder from "@/components/user/MyOrder";
 import AdminRoute from "@/routes/AdminRoute";
 import UserRoute from "@/routes/UserRoute";
+import { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AddProduct from "./components/admin/pages/AddProduct";
@@ -17,7 +21,6 @@ import DashBoard from "./components/admin/pages/DashBoard";
 import ManageUser from "./components/admin/pages/ManageUser";
 import ProductList from "./components/admin/pages/ProductList";
 import CartPage from "./components/cart/CartPage";
-import { CartProvider } from "./components/context/CartContext";
 import HomePage from "./components/home/HomePage";
 import Login from "./components/login/Login";
 import PrivateRoute from "./components/private-routes/PrivateRoute";
@@ -29,13 +32,10 @@ import Profile from "./components/user/Profile";
 import VerifyEmail from "./components/verify/VerifyEmail";
 import VerifyEmailFailed from "./components/verify/VerifyEmailFailed";
 import VerifyEmailSuccess from "./components/verify/VerifyEmailSuccess";
-import Auth from "@/components/common/Auth";
-import PayOSCallback from "@/components/orders/PayOS/PayOSCallback";
-import { useEffect, useState } from "react";
-import AppLoading from "@/components/common/AppLoading";
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
@@ -176,10 +176,10 @@ function App() {
   ]);
 
   return (
-    <CartProvider>
+    <>
       <Toaster />
       <RouterProvider router={router}></RouterProvider>
-    </CartProvider>
+    </>
   );
 }
 

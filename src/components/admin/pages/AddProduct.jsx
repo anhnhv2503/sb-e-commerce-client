@@ -11,7 +11,7 @@ import React, { useEffect, useState } from "react";
 import {
   addProduct,
   getAllCategories,
-} from "@/components/service/ApiFunctions";
+} from "@/components/service/ApiFunctions.js";
 import PreviewImages from "@/components/common/PreviewImages";
 import toast, { Toaster } from "react-hot-toast";
 import { useDocumentTitle } from "@uidotdev/usehooks";

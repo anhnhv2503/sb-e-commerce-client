@@ -1,4 +1,4 @@
-import { addMoreSizeForProduct } from "@/components/service/ApiFunctions";
+import { addMoreSizeForProduct } from "@/components/service/ApiFunctions.js";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

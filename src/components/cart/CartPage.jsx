@@ -35,16 +35,6 @@ import toast from "react-hot-toast";
 import { Navigate, useNavigate } from "react-router-dom";
 
 const paymentMethods = [
-  // {
-  //   id: "cod",
-  //   name: "Thanh toán khi nhận hàng",
-  //   icon: cod,
-  // },
-  // {
-  //   id: "vnpay",
-  //   name: "VNPay",
-  //   icon: vnpay,
-  // },
   {
     id: "payos",
     name: "PayOS",

@@ -1,8 +1,59 @@
+import { Client } from "@stomp/stompjs";
 import { ShoppingBag } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const CartIcon = () => {
   const navigate = useNavigate();
+  const [cartCount, setCartCount] = useState(0);
+
+  useEffect(() => {
+    const connectSocket = (callback) => {
+      const client = new Client({
+        brokerURL: "ws://localhost:8080/ws",
+        connectHeaders: {},
+        debug: (str) => {
+          console.log("Debug", str);
+        },
+        reconnectDelay: 5000,
+        onConnect: () => {
+          client.subscribe("/topic/cart", (message) => {
+            try {
+              const data = JSON.parse(message.body);
+
+              callback(data);
+            } catch (error) {
+              console.error("Error parsing message: ", error);
+            }
+          });
+        },
+        onDisconnect: () => {
+          client.deactivate();
+        },
+      });
+      client.activate();
+
+      // Return client for cleanup
+      return client;
+    };
+
+    // Example callback function
+    const handleCartData = (data) => {
+      // Do something with the cart data
+      setCartCount(data);
+    };
+
+    // Connect to socket
+    const client = connectSocket(handleCartData);
+
+    // Cleanup on component unmount
+    return () => {
+      if (client && client.connected) {
+        client.deactivate();
+      }
+    };
+  }, []);
+
   return (
     <>
       <button
@@ -11,7 +62,9 @@ const CartIcon = () => {
         aria-label="Cart"
       >
         <ShoppingBag size={22} />
-        <span className="absolute top-0 right-0 h-4 w-4 rounded-full bg-indigo-600 flex items-center justify-center text-xs text-white"></span>
+        <span className="absolute top-0 right-0 h-4 w-4 rounded-full bg-indigo-600 flex items-center justify-center text-xs text-white">
+          {cartCount}
+        </span>
       </button>
     </>
   );
