@@ -314,3 +314,12 @@ export const getDashboardData = async () => {
     },
   });
 };
+
+export const getCartCount = async () => {
+  const token = JSON.parse(localStorage.getItem("accessToken"));
+  return axios.get("/api/cart/count", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};

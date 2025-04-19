@@ -1,3 +1,4 @@
+import { getCartCount } from "@/components/service/ApiFunctions";
 import { Client } from "@stomp/stompjs";
 import { ShoppingBag } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -7,14 +8,20 @@ const CartIcon = () => {
   const navigate = useNavigate();
   const [cartCount, setCartCount] = useState(0);
 
+  const fetchCartCount = async () => {
+    try {
+      const response = await getCartCount();
+      setCartCount(response.data?.data);
+    } catch (error) {
+      console.error("Error fetching cart count: ", error);
+    }
+  };
+
   useEffect(() => {
     const connectSocket = (callback) => {
       const client = new Client({
         brokerURL: "ws://localhost:8080/ws",
         connectHeaders: {},
-        debug: (str) => {
-          console.log("Debug", str);
-        },
         reconnectDelay: 5000,
         onConnect: () => {
           client.subscribe("/topic/cart", (message) => {
@@ -45,6 +52,8 @@ const CartIcon = () => {
 
     // Connect to socket
     const client = connectSocket(handleCartData);
+
+    fetchCartCount();
 
     // Cleanup on component unmount
     return () => {

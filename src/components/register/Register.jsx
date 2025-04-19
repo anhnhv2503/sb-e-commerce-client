@@ -1,12 +1,15 @@
 import Loading from "@/components/common/Loading";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { registerSchema } from "@/schemas/register.schema";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useDocumentTitle } from "@uidotdev/usehooks";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import {
@@ -24,13 +27,13 @@ import {
 } from "../ui/select";
 
 const Register = () => {
-  useDocumentTitle("Register");
-  const [formData, setFormData] = useState({
-    fullName: "",
-    phone: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+  useDocumentTitle("Đăng Kí");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(registerSchema),
   });
 
   const [provinces, setProvinces] = useState([]);
@@ -85,94 +88,28 @@ const Register = () => {
     }
   }, [selectedDistrict]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  const onSubmit = async (data) => {
+    setLoading(true);
+    const provinceName = provinces.find((p) => p.id === selectedProvince)?.name;
+    const districtName = districts.find((d) => d.id === selectedDistrict)?.name;
+    const wardName = wards.find((w) => w.id === selectedWard)?.name;
+    const fullAddress = `${homeAddress}, ${wardName}, ${districtName}, ${provinceName}`;
 
-  function validatePhone(phoneNumber) {
-    const regex = /^[0-9]{10}$/;
-    if (regex.test(phoneNumber)) {
-      return true; // Phone number is valid
-    } else {
-      return false; // Phone number is invalid
-    }
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      toast.error("Passwords do not match", {
-        duration: 4000,
-        icon: "🔐",
-      });
-    } else if (
-      formData.fullName.trim() === "" ||
-      formData.phone.trim() === "" ||
-      formData.email.trim() === "" ||
-      formData.password.trim() === ""
-    ) {
-      toast.error("Please fill in all fields", {
-        duration: 4000,
-        icon: "🔐",
-      });
-    } else if (formData.password.length < 6) {
-      toast.error("Password should be at least 6 characters", {
-        duration: 4000,
-        icon: "🔐",
-      });
-    } else if (!validatePhone(formData.phone)) {
-      toast.error("Phone number is invalid", {
-        duration: 4000,
-        icon: "🔐",
-      });
-    } else if (!selectedProvince) {
-      toast.error("Please select Province", {
-        duration: 2000,
-        icon: "🔐",
-      });
-    } else if (!selectedProvince) {
-      toast.error("Please select District", {
-        duration: 2000,
-        icon: "🔐",
-      });
-    } else if (!selectedProvince) {
-      toast.error("Please select Ward", {
-        duration: 2000,
-        icon: "🔐",
-      });
-    } else {
-      const provinceName = provinces.find(
-        (p) => p.id === selectedProvince
-      )?.name;
-      const districtName = districts.find(
-        (d) => d.id === selectedDistrict
-      )?.name;
-      const wardName = wards.find((w) => w.id === selectedWard)?.name;
-      const fullAddress = `${homeAddress}, ${wardName}, ${districtName}, ${provinceName}`;
-      try {
-        setLoading(true);
-        const response = await registerUser(formData, fullAddress);
-        if (response.status === 200) {
-          toast.success("Đăng kí thành công. Vui lòng kiểm tra Email của bạn", {
-            duration: 3000,
-            icon: "🚀",
-          });
-          setTimeout(() => {
-            nav("/login");
-            setLoading(false);
-          }, 3000);
-        } else {
-          setLoading(false);
-          toast.error("Đăng kí lỗi", {
-            duration: 4000,
-            icon: "🔐",
-          });
-        }
-      } catch (error) {
-        console.error(error);
-        setLoading(false);
+    try {
+      const res = await registerUser(data, fullAddress);
+      if (res) {
+        toast.success("Đăng ký thành công!");
+        nav("/login");
       }
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      if (error.response) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Đã xảy ra lỗi, vui lòng thử lại sau.");
+      }
+      setLoading(false);
     }
   };
 
@@ -211,7 +148,7 @@ const Register = () => {
             </motion.div>
           </CardHeader>
           <CardContent className="space-y-6 p-8 pt-0">
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <motion.div variants={itemVariants}>
                 <Label htmlFor="fullName" className="text-[#111827]">
                   Họ Tên
@@ -221,9 +158,14 @@ const Register = () => {
                   name="fullName"
                   type="text"
                   required
-                  onChange={handleChange}
+                  {...register("fullName")}
                   className="mt-1 bg-white/70 border-[#D1D5DB] focus:border-[#1E3A8A] focus:ring-[#1E3A8A] text-[#111827] transition-all duration-200"
                 />
+                {errors.fullName && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.fullName.message}
+                  </p>
+                )}
               </motion.div>
 
               <motion.div variants={itemVariants}>
@@ -235,9 +177,14 @@ const Register = () => {
                   name="phone"
                   type="text"
                   required
-                  onChange={handleChange}
+                  {...register("phone")}
                   className="mt-1 bg-white/70 border-[#D1D5DB] focus:border-[#1E3A8A] focus:ring-[#1E3A8A] text-[#111827] transition-all duration-200"
                 />
+                {errors.phone && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.phone.message}
+                  </p>
+                )}
               </motion.div>
 
               <motion.div variants={itemVariants}>
@@ -300,9 +247,14 @@ const Register = () => {
                   name="email"
                   type="email"
                   required
-                  onChange={handleChange}
+                  {...register("email")}
                   className="mt-1 bg-white/70 border-[#D1D5DB] focus:border-[#1E3A8A] focus:ring-[#1E3A8A] text-[#111827] transition-all duration-200"
                 />
+                {errors.email && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.email.message}
+                  </p>
+                )}
               </motion.div>
 
               <motion.div variants={itemVariants}>
@@ -314,9 +266,14 @@ const Register = () => {
                   name="password"
                   type={showPassword ? "text" : "password"}
                   required
-                  onChange={handleChange}
+                  {...register("password")}
                   className="mt-1 bg-white/70 border-[#D1D5DB] focus:border-[#1E3A8A] focus:ring-[#1E3A8A] text-[#111827] transition-all duration-200"
                 />
+                {errors.password && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.password.message}
+                  </p>
+                )}
               </motion.div>
 
               <motion.div variants={itemVariants}>
@@ -328,9 +285,14 @@ const Register = () => {
                   name="confirmPassword"
                   type={showPassword ? "text" : "password"}
                   required
-                  onChange={handleChange}
+                  {...register("confirmPassword")}
                   className="mt-1 bg-white/70 border-[#D1D5DB] focus:border-[#1E3A8A] focus:ring-[#1E3A8A] text-[#111827] transition-all duration-200"
                 />
+                {errors.confirmPassword && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.confirmPassword.message}
+                  </p>
+                )}
                 <div className="mt-2 flex items-center">
                   <Checkbox
                     id="show-password"
@@ -355,6 +317,7 @@ const Register = () => {
                 ) : (
                   <Button
                     type="submit"
+                    disabled={loading}
                     className="w-full bg-indigo-500 hover:bg-[#1E3A8A]/90 text-white transition-all duration-200"
                   >
                     Đăng Kí

@@ -4,33 +4,33 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authConfig } from "@/config/authConfig";
+import { loginSchema } from "@/schemas/auth.schema";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useDocumentTitle } from "@uidotdev/usehooks";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import toast from "react-hot-toast";
+import { useForm } from "react-hook-form";
 import { FaArrowRight, FaGoogle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 
 const Login = () => {
-  useDocumentTitle("Login");
+  useDocumentTitle("Đăng Nhập");
   const { login } = useAuth();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const nav = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState(null);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (email.trim() === "" || !password.trim() === "") {
-      toast.error("Vui lòng điền Email và Mật khẩu", {
-        duration: 4000,
-        position: "top-right",
-        icon: "❌",
-      });
-    } else {
-      login({ email, password });
-    }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(loginSchema),
+  });
+
+  const onSubmit = async (data) => {
+    login(data);
   };
 
   const handleGoogleLogin = () => {
@@ -79,7 +79,7 @@ const Login = () => {
             </motion.div>
           </CardHeader>
           <CardContent className="space-y-6 p-8 pt-0">
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <motion.div variants={itemVariants}>
                 <Label htmlFor="email" className="text-[#111827]">
                   Email
@@ -87,12 +87,16 @@ const Login = () => {
                 <Input
                   id="email"
                   type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  {...register("email")}
                   placeholder="Email của bạn"
                   required
                   className="mt-1 bg-white/70 border-[#D1D5DB] focus:border-[#6366F1] focus:ring-[#6366F1] text-[#111827] transition-all duration-200"
                 />
+                {errors.email && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.email.message}
+                  </p>
+                )}
               </motion.div>
 
               <motion.div variants={itemVariants}>
@@ -102,12 +106,16 @@ const Login = () => {
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  {...register("password")}
                   placeholder="Mật khẩu của bạn"
                   required
                   className="mt-1 bg-white/70 border-[#D1D5DB] focus:border-[#6366F1] focus:ring-[#6366F1] text-[#111827] transition-all duration-200"
                 />
+                {errors.password && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.password.message}
+                  </p>
+                )}
               </motion.div>
 
               <motion.div variants={itemVariants} className="flex items-center">
@@ -126,6 +134,7 @@ const Login = () => {
               </motion.div>
 
               <motion.div variants={itemVariants}>
+                {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
                 <Button
                   type="submit"
                   className="w-full bg-[#6366F1] hover:bg-[#6366F1]/90 text-white transition-all duration-200"

@@ -28,6 +28,11 @@ export const AuthProvider = ({ children }) => {
       } else {
         navigate(location.state?.from ? location.state.from : "/");
       }
+      toast.success("Đăng nhập thành công", {
+        duration: 4000,
+        position: "top-right",
+        icon: "✅",
+      });
     } catch (error) {
       toast.error("Email hoặc mật khẩu không đúng");
     }
