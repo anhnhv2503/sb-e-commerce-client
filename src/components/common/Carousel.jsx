@@ -16,7 +16,7 @@ const Carousel = () => {
     if (isAutoPlaying) {
       interval = setInterval(() => {
         setCurrentIndex((prevIndex) =>
-          prevIndex === images.length - 1 ? 0 : prevIndex + 1
+          prevIndex === images.length - 1 ? 0 : prevIndex + 1,
         );
       }, 5000);
     }
@@ -27,7 +27,7 @@ const Carousel = () => {
   // Navigation handlers
   const goToPrevSlide = useCallback(() => {
     setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? images.length - 1 : prevIndex - 1
+      prevIndex === 0 ? images.length - 1 : prevIndex - 1,
     );
     setIsAutoPlaying(false);
     // Restart autoplay after user interaction
@@ -36,7 +36,7 @@ const Carousel = () => {
 
   const goToNextSlide = useCallback(() => {
     setCurrentIndex((prevIndex) =>
-      prevIndex === images.length - 1 ? 0 : prevIndex + 1
+      prevIndex === images.length - 1 ? 0 : prevIndex + 1,
     );
     setIsAutoPlaying(false);
     // Restart autoplay after user interaction
@@ -83,14 +83,14 @@ const Carousel = () => {
         <h1 className="text-3xl md:text-5xl font-bold mb-4 text-white drop-shadow-lg">
           Welcome to VA Shop
         </h1>
-        <p className="text-lg md:text-xl text-white/90 max-w-lg mb-8 drop-shadow">
+        <p className="text-lg md:text-xl text-gray-300 max-w-lg mb-8 drop-shadow">
           Discover amazing products and exclusive deals
         </p>
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => navigate("/shop")}
-          className="bg-white text-gray-900 hover:bg-gray-100 px-8 py-3 rounded-full font-medium text-lg transition-colors shadow-lg"
+          className="bg-orange-600 text-gray-100 hover:bg-orange-500 px-8 py-3 rounded-full font-medium text-lg transition-colors shadow-lg"
         >
           Shop Now
         </motion.button>

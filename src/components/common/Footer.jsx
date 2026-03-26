@@ -41,7 +41,7 @@ const Footer = () => {
                 <li>
                   <a
                     href="/"
-                    className="hover:text-indigo-600 transition-colors"
+                    className="hover:text-orange-600 transition-colors"
                   >
                     Trang chủ
                   </a>
@@ -49,7 +49,7 @@ const Footer = () => {
                 <li>
                   <a
                     href="/shop"
-                    className="hover:text-indigo-600 transition-colors"
+                    className="hover:text-orange-600 transition-colors"
                   >
                     Cửa hàng
                   </a>
@@ -57,7 +57,7 @@ const Footer = () => {
                 <li>
                   <a
                     href="/about"
-                    className="hover:text-indigo-600 transition-colors"
+                    className="hover:text-orange-600 transition-colors"
                   >
                     Về chúng tôi
                   </a>
@@ -91,7 +91,7 @@ const Footer = () => {
                 href="https://github.com/anhnhv2503"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-indigo-600 hover:text-indigo-800 transition-colors font-medium"
+                className="text-orange-600 hover:text-orange-800 transition-colors font-medium"
               >
                 VietAnh253
               </a>

@@ -318,7 +318,7 @@ const Register = () => {
                   <Button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-indigo-500 hover:bg-[#1E3A8A]/90 text-white transition-all duration-200"
+                    className="w-full bg-orange-500 hover:bg-orange-600 text-white transition-all duration-200"
                   >
                     Đăng Kí
                   </Button>

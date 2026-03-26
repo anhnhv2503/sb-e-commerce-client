@@ -59,7 +59,7 @@ const AppLoading = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-gradient-to-br from-slate-900 to-indigo-900 flex justify-center items-center z-50 overflow-hidden"
+        className="fixed inset-0 bg-gradient-to-br from-amber-200 to-orange-900 flex justify-center items-center z-50 overflow-hidden"
       >
         {/* Animated background particles */}
         {particles.map((particle) => (
@@ -113,7 +113,7 @@ const AppLoading = () => {
               }}
             />
             {/* Glow effect behind logo */}
-            <div className="absolute -inset-4 bg-indigo-500 opacity-20 rounded-full blur-xl -z-10"></div>
+            <div className="absolute -inset-4 bg-orange-500 opacity-20 rounded-full blur-xl -z-10"></div>
           </motion.div>
 
           <div className="w-full max-w-md relative mb-8">

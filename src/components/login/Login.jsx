@@ -39,7 +39,7 @@ const Login = () => {
     const googleClientId = authConfig.client_id;
 
     const targetUrl = `${authUrl}?redirect_uri=${encodeURIComponent(
-      callbackUrl
+      callbackUrl,
     )}&response_type=code&client_id=${googleClientId}&scope=openid%20email%20profile`;
     window.location.href = targetUrl;
   };
@@ -137,7 +137,7 @@ const Login = () => {
                 {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
                 <Button
                   type="submit"
-                  className="w-full bg-[#6366F1] hover:bg-[#6366F1]/90 text-white transition-all duration-200"
+                  className="w-full bg-orange-500 hover:bg-orange-600 text-white transition-all duration-200"
                   onClick={handleSubmit}
                 >
                   <FaArrowRight className="mr-2" />
@@ -149,7 +149,7 @@ const Login = () => {
             <motion.div variants={itemVariants}>
               <Button
                 variant="outline"
-                className="w-full relative overflow-hidden rounded-lg border-none text-white p-3 flex items-center justify-center transition-all duration-300 hover:text-[#FBBC05]"
+                className="w-full relative overflow-hidden rounded-lg border-none text-white p-3 flex items-center justify-center transition-all duration-300 hover:text-gray-200"
                 onClick={handleGoogleLogin}
               >
                 {/* Gradient Background */}
@@ -175,7 +175,7 @@ const Login = () => {
               <p className="text-sm text-center text-[#6B7280]">
                 <a
                   onClick={() => nav("/register")}
-                  className="text-[#6366F1] hover:text-[#6366F1]/80 transition-colors cursor-pointer"
+                  className="text-orange-500 hover:text-orange-600 transition-colors cursor-pointer"
                 >
                   Đăng Kí Tài Khoản
                 </a>

@@ -50,7 +50,7 @@ const UserPopover = () => {
               <>
                 <div className="grid grid-cols-1 items-center gap-4">
                   <Button
-                    className="bg-zinc-500 hover:bg-zinc-700"
+                    className="bg-orange-500 hover:bg-orange-600"
                     onClick={() => nav("/login")}
                   >
                     Đăng Nhập
@@ -58,7 +58,7 @@ const UserPopover = () => {
                 </div>
                 <div className="grid grid-cols-1 items-center gap-4">
                   <Button
-                    className="bg-zinc-800 hover:bg-zinc-900"
+                    className="bg-zinc-500 hover:bg-zinc-600"
                     onClick={() => nav("/register")}
                   >
                     Đăng Kí

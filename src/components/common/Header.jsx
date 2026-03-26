@@ -70,24 +70,24 @@ const Header = () => {
           <div className="hidden md:flex md:items-center md:space-x-8">
             <button
               onClick={() => navigate("/")}
-              className={`px-3 py-2 text-sm font-medium transition-colors hover:text-indigo-600 ${
-                isActive("/") ? "text-indigo-600" : "text-gray-700"
+              className={`px-3 py-2 text-sm font-medium transition-colors hover:text-orange-600 ${
+                isActive("/") ? "text-orange-600" : "text-gray-700"
               }`}
             >
               Trang Chủ
             </button>
             <button
               onClick={() => navigate("/shop")}
-              className={`px-3 py-2 text-sm font-medium transition-colors hover:text-indigo-600 ${
-                isActive("/shop") ? "text-indigo-600" : "text-gray-700"
+              className={`px-3 py-2 text-sm font-medium transition-colors hover:text-orange-600 ${
+                isActive("/shop") ? "text-orange-600" : "text-gray-700"
               }`}
             >
               Cửa Hàng
             </button>
             <button
               onClick={() => navigate("/about")}
-              className={`px-3 py-2 text-sm font-medium transition-colors hover:text-indigo-600 ${
-                isActive("/about") ? "text-indigo-600" : "text-gray-700"
+              className={`px-3 py-2 text-sm font-medium transition-colors hover:text-orange-600 ${
+                isActive("/about") ? "text-orange-600" : "text-gray-700"
               }`}
             >
               Về Chúng Tôi
@@ -107,7 +107,7 @@ const Header = () => {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="md:hidden p-2 rounded-md text-gray-700 hover:text-indigo-600 transition-colors"
+              className="md:hidden p-2 rounded-md text-gray-700 hover:text-orange-600 transition-colors"
               aria-label="Open menu"
             >
               <MenuIcon size={24} />

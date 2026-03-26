@@ -16,9 +16,6 @@ const HomePage = () => {
   return (
     <div>
       <div data-aos="fade-down" data-aos-duration="1000">
-        <VietnamReunionHero />
-      </div>
-      <div data-aos="fade-down" data-aos-duration="1000">
         <Carousel />
       </div>
 

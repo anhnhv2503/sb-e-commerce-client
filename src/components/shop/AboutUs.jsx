@@ -1,4 +1,4 @@
-import VietnamReunionHero from "@/components/common/VietnamHero";
+import vneseDev from "@/assets/vneseDev.png";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useDocumentTitle } from "@uidotdev/usehooks";
@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 import { ArrowRight, Linkedin, Mail } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import vneseDev from "@/assets/vneseDev.png";
 
 const AboutUs = () => {
   useDocumentTitle("Giới thiệu về công ty chúng tôi | Loving Vietnam");
@@ -35,11 +34,9 @@ const AboutUs = () => {
 
   return (
     <div className="font-sans">
-      <VietnamReunionHero />
-
       {/* Hero Section with Gradient Overlay */}
       <section className="relative h-screen flex items-center">
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 to-purple-800 opacity-90"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-600 to-gray-600 opacity-90"></div>
         <div className="absolute inset-0 bg-[url('/api/placeholder/1920/1080')] bg-cover bg-center mix-blend-overlay"></div>
         <div className="container mx-auto px-4 relative z-10 text-white">
           <motion.div
@@ -49,7 +46,7 @@ const AboutUs = () => {
             className="max-w-2xl"
           >
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
-              Giới thiệu về công ty chúng tôi{" "}
+              Giới thiệu về chúng tôi{" "}
             </h1>
             <p className="text-xl mb-8 text-gray-100">
               Chúng tôi đam mê cung cấp các sản phẩm và trải nghiệm đặc biệt
@@ -57,7 +54,7 @@ const AboutUs = () => {
             </p>
             <div className="flex flex-wrap gap-4">
               <Button
-                className="bg-white text-indigo-600 hover:bg-gray-100 font-medium px-6 py-3 rounded-full"
+                className="bg-white text-orange-600 hover:bg-gray-100 font-medium px-6 py-3 rounded-full"
                 onClick={handleContactUs}
               >
                 Liên hệ
@@ -65,7 +62,7 @@ const AboutUs = () => {
               </Button>
               <Button
                 variant="outline"
-                className="bg-transparent border border-white text-white hover:bg-white hover:text-indigo-600 font-medium px-6 py-3 rounded-full"
+                className="bg-transparent border border-white text-white hover:bg-white hover:text-orange-600 font-medium px-6 py-3 rounded-full"
               >
                 Công việc của chúng tôi
               </Button>
@@ -84,13 +81,13 @@ const AboutUs = () => {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <span className="text-indigo-600 font-medium mb-2 block">
+            <span className="text-orange-600 font-medium mb-2 block">
               MỤC ĐÍCH CỦA CHÚNG TÔI
             </span>
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
               Sứ mệnh của chúng tôi
             </h2>
-            <div className="h-1 w-20 bg-indigo-600 mx-auto mb-8"></div>
+            <div className="h-1 w-20 bg-orange-600 mx-auto mb-8"></div>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Chúng tôi mong muốn cung cấp các giải pháp sáng tạo và bền vững
               giúp các tổ chức phát huy hết tiềm năng của mình trong bối cảnh
@@ -104,11 +101,11 @@ const AboutUs = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
-              className="bg-white rounded-xl shadow-lg p-8 border-t-4 border-indigo-600"
+              className="bg-white rounded-xl shadow-lg p-8 border-t-4 border-orange-600"
             >
-              <div className="bg-indigo-100 rounded-full w-16 h-16 flex items-center justify-center mb-6">
+              <div className="bg-orange-100 rounded-full w-16 h-16 flex items-center justify-center mb-6">
                 <svg
-                  className="w-8 h-8 text-indigo-600"
+                  className="w-8 h-8 text-orange-600"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -123,7 +120,7 @@ const AboutUs = () => {
               </p>
               <Button
                 variant="link"
-                className="text-indigo-600 p-0 flex items-center gap-2"
+                className="text-orange-600 p-0 flex items-center gap-2"
               >
                 Tìm hiểu thêm <ArrowRight className="h-4 w-4" />
               </Button>
@@ -177,13 +174,13 @@ const AboutUs = () => {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <span className="text-indigo-600 font-medium mb-2 block">
+            <span className="text-orange-600 font-medium mb-2 block">
               THÀNH VIÊN CỦA CHÚNG TÔI
             </span>
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
               Gặp gỡ đội ngũ của chúng tôi
             </h2>
-            <div className="h-1 w-20 bg-indigo-600 mx-auto mb-8"></div>
+            <div className="h-1 w-20 bg-orange-600 mx-auto mb-8"></div>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Chúng tôi là một nhóm chuyên gia đa dạng, đoàn kết với nhau bởi
               niềm đam mê đổi mới và cam kết hướng đến sự xuất sắc.
@@ -219,14 +216,14 @@ const AboutUs = () => {
                             <Button
                               size="sm"
                               variant="ghost"
-                              className="bg-white/20 backdrop-blur-sm text-white rounded-full p-2 hover:bg-white hover:text-indigo-600"
+                              className="bg-white/20 backdrop-blur-sm text-white rounded-full p-2 hover:bg-white hover:text-orange-600"
                             >
                               <Linkedin className="h-4 w-4" />
                             </Button>
                             <Button
                               size="sm"
                               variant="ghost"
-                              className="bg-white/20 backdrop-blur-sm text-white rounded-full p-2 hover:bg-white hover:text-indigo-600"
+                              className="bg-white/20 backdrop-blur-sm text-white rounded-full p-2 hover:bg-white hover:text-orange-600"
                             >
                               <Mail className="h-4 w-4" />
                             </Button>
@@ -237,35 +234,12 @@ const AboutUs = () => {
                   </CardHeader>
                   <CardContent className="p-6">
                     <h3 className="text-xl font-bold mb-1">{member.name}</h3>
-                    <p className="text-indigo-600">{member.role}</p>
+                    <p className="text-orange-600">{member.role}</p>
                   </CardContent>
                 </Card>
               </motion.div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-r from-indigo-600 to-purple-700 text-white">
-        <div className="container mx-auto px-4 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              Sẵn sàng chuyển đổi doanh nghiệp của bạn?
-            </h2>
-            <p className="text-lg mb-8 max-w-2xl mx-auto">
-              Hãy tham gia cùng hàng trăm công ty đã hợp tác với chúng tôi để
-              đạt được mục tiêu của họ.
-            </p>
-            <Button className="bg-white text-indigo-600 hover:bg-gray-100 font-medium px-8 py-3 rounded-full text-lg">
-              Bắt đầu ngay hôm nay
-            </Button>
-          </motion.div>
         </div>
       </section>
     </div>
