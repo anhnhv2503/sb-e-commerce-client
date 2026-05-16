@@ -4,18 +4,18 @@ import {
   getDashboardData,
   getNewestOrders,
 } from "@/components/service/ApiFunctions";
-import {
-  ArrowTrendingDownIcon,
-  ArrowTrendingUpIcon,
-  BanknotesIcon,
-  ClockIcon,
-  Squares2X2Icon,
-  TagIcon,
-  TruckIcon,
-  UserGroupIcon,
-} from "@heroicons/react/24/outline";
 import { useDocumentTitle } from "@uidotdev/usehooks";
 import { motion } from "framer-motion";
+import {
+  ArrowRight,
+  BarChart3,
+  Box,
+  Clock,
+  DollarSign,
+  Layers,
+  ShoppingBag,
+  Users,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import CountUp from "react-countup";
 import {
@@ -32,15 +32,18 @@ import {
   YAxis,
 } from "recharts";
 
+/**
+ * DashBoard
+ * Redesigned analytics page with SKILL.md design tokens.
+ */
 const DashBoard = () => {
-  useDocumentTitle("Admin Dashboard");
+  useDocumentTitle("Thống Kê — VA Shop Admin");
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const currency = useCurrencyFormat();
   const [newestOrders, setNewestOrders] = useState([]);
   const [dashboardData, setDashboardData] = useState(null);
 
-  // Mock data for charts - replace with real API data
   const mockChartData = [
     { name: "T1", value: 400 },
     { name: "T2", value: 300 },
@@ -57,175 +60,148 @@ const DashBoard = () => {
   ];
 
   const pieData = [
-    { name: "Shoes", value: 540 },
-    { name: "Shirts", value: 370 },
-    { name: "Hats", value: 210 },
-    { name: "Pants", value: 290 },
-    { name: "Accessories", value: 190 },
+    { name: "Giày", value: 540 },
+    { name: "Áo", value: 370 },
+    { name: "Mũ", value: 210 },
+    { name: "Quần", value: 290 },
+    { name: "Phụ kiện", value: 190 },
   ];
+
+  const PIE_COLORS = ["#3B82F6", "#8B5CF6", "#D97706", "#16A34A", "#DC2626"];
+
   const fetchNewestOrders = async () => {
-    setIsLoading(true);
     try {
       const response = await getNewestOrders();
       setNewestOrders(response.data);
-      setIsLoading(false);
     } catch (error) {
       console.error("Error fetching newest orders:", error);
     }
   };
+
   const fetchDashboardData = async () => {
-    setIsLoading(true);
     try {
-      const reponse = await getDashboardData();
-      setDashboardData(reponse.data?.data);
-      setIsLoading(false);
+      const response = await getDashboardData();
+      setDashboardData(response.data?.data);
     } catch (error) {
       console.error("Error fetching dashboard data:", error);
     }
   };
 
-  const fetchDashboardMockData = async () => {
-    setIsLoading(true);
-    try {
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 100);
-    } catch (error) {
-      console.error("Error fetching dashboard data:", error);
-      setIsLoading(false);
-    }
-  };
   useEffect(() => {
-    fetchDashboardData();
-    fetchNewestOrders();
-    fetchDashboardMockData();
+    const load = async () => {
+      setIsLoading(true);
+      await Promise.all([fetchDashboardData(), fetchNewestOrders()]);
+      setIsLoading(false);
+    };
+    load();
   }, []);
 
-  // Helper function for card color variants
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "DELIVERED":
-        return "bg-green-100 text-green-800";
-      case "PENDING":
-        return "bg-yellow-100 text-yellow-800";
-      case "IN_PROGRESS":
-        return "bg-blue-100 text-blue-800";
-      case "CANCELLED":
-        return "bg-red-100 text-red-800";
-      case "SHIPPING":
-        return "bg-indigo-100 text-indigo-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
+  const getStatusLabel = (status) => {
+    const map = {
+      DELIVERED: {
+        label: "Hoàn thành",
+        style: "bg-green-50 text-[#16A34A] border-green-200",
+      },
+      PENDING: {
+        label: "Chờ xử lý",
+        style: "bg-yellow-50 text-[#D97706] border-yellow-200",
+      },
+      IN_PROGRESS: {
+        label: "Đang xử lý",
+        style: "bg-blue-50 text-[#3B82F6] border-blue-200",
+      },
+      SHIPPING: {
+        label: "Đang giao",
+        style: "bg-purple-50 text-[#8B5CF6] border-purple-200",
+      },
+      CANCELLED: {
+        label: "Đã hủy",
+        style: "bg-red-50 text-[#DC2626] border-red-200",
+      },
+    };
+    return (
+      map[status] || {
+        label: status,
+        style: "bg-gray-50 text-gray-600 border-gray-200",
+      }
+    );
   };
 
-  // Array of card items for cleaner JSX
   const statCards = [
     {
       title: "Tổng Đơn Hàng",
       value: dashboardData?.totalOrders || 0,
-      icon: <TruckIcon className="w-5 h-5" />,
-      growth: data?.orderGrowth || 0,
-      color: "from-sky-500 to-blue-600",
-      textColor: "text-blue-600",
-      growthColor: data?.orderGrowth >= 0 ? "text-green-500" : "text-red-500",
-      growthIcon:
-        data?.orderGrowth >= 0 ? (
-          <ArrowTrendingUpIcon className="h-4 w-4" />
-        ) : (
-          <ArrowTrendingDownIcon className="h-4 w-4" />
-        ),
+      icon: <ShoppingBag size={20} />,
+      color: "bg-[#3B82F6]",
     },
     {
       title: "Tổng Danh Mục",
       value: dashboardData?.totalCategories || 0,
-      icon: <TagIcon className="w-5 h-5" />,
-      color: "from-rose-500 to-pink-600",
-      textColor: "text-rose-600",
+      icon: <Layers size={20} />,
+      color: "bg-[#8B5CF6]",
     },
     {
       title: "Tổng Sản Phẩm",
       value: dashboardData?.totalProducts || 0,
-      icon: <Squares2X2Icon className="w-5 h-5" />,
-      growth: data?.productGrowth || 0,
-      color: "from-indigo-500 to-purple-600",
-      textColor: "text-indigo-600",
-      growthColor: data?.productGrowth >= 0 ? "text-green-500" : "text-red-500",
-      growthIcon:
-        data?.productGrowth >= 0 ? (
-          <ArrowTrendingUpIcon className="h-4 w-4" />
-        ) : (
-          <ArrowTrendingDownIcon className="h-4 w-4" />
-        ),
+      icon: <Box size={20} />,
+      color: "bg-[#D97706]",
     },
     {
       title: "Tổng Người Dùng",
       value: dashboardData?.totalUsers || 0,
-      icon: <UserGroupIcon className="w-5 h-5" />,
-      growth: data?.customerGrowth || 0,
-      color: "from-teal-500 to-emerald-600",
-      textColor: "text-teal-600",
-      growthColor:
-        data?.customerGrowth >= 0 ? "text-green-500" : "text-red-500",
-      growthIcon:
-        data?.customerGrowth >= 0 ? (
-          <ArrowTrendingUpIcon className="h-4 w-4" />
-        ) : (
-          <ArrowTrendingDownIcon className="h-4 w-4" />
-        ),
+      icon: <Users size={20} />,
+      color: "bg-[#16A34A]",
     },
     {
       title: "Tổng Doanh Thu",
       value: dashboardData?.totalRevenue || 0,
       formatter: (value) => currency.format(value),
-      icon: <BanknotesIcon className="w-5 h-5" />,
-      growth: data?.revenueGrowth || 0,
-      color: "from-fuchsia-500 to-purple-600",
-      textColor: "text-fuchsia-700",
-      growthColor: data?.revenueGrowth >= 0 ? "text-green-500" : "text-red-500",
-      growthIcon:
-        data?.revenueGrowth >= 0 ? (
-          <ArrowTrendingUpIcon className="h-4 w-4" />
-        ) : (
-          <ArrowTrendingDownIcon className="h-4 w-4" />
-        ),
+      icon: <DollarSign size={20} />,
+      color: "bg-[#DC2626]",
     },
   ];
 
-  const container = {
+  const containerVariants = {
     hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
+    visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
   };
 
-  const item = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0 },
+  const itemVariants = {
+    hidden: { opacity: 0, y: 16 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.35 } },
   };
 
   if (isLoading) {
     return (
-      <div className="h-full w-full flex items-center justify-center">
+      <div className="h-full w-full flex items-center justify-center min-h-[400px]">
         <DotsLoading />
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 pb-8">
+    <div className="space-y-6 max-w-6xl pb-8">
+      {/* ── Header ── */}
       <motion.div
-        initial={{ opacity: 0, y: -20 }}
+        initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex justify-between items-center"
+        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"
       >
-        <h1 className="text-3xl font-bold text-gray-900">Thống Kê</h1>
-        <div className="text-sm text-gray-500 flex items-center">
-          <ClockIcon className="h-4 w-4 mr-1" />
-          Cập nhật lần cuối:{" "}
+        <div>
+          <h1 className="font-display text-3xl font-bold text-[#111827] flex items-center gap-3">
+            <BarChart3
+              size={28}
+              className="text-[#3B82F6]"
+              aria-hidden="true"
+            />
+            Thống Kê
+          </h1>
+          <p className="text-sm text-gray-500 mt-1">
+            Tổng quan hoạt động kinh doanh
+          </p>
+        </div>
+        <div className="flex items-center gap-1.5 text-xs text-gray-400 font-mono">
+          <Clock size={12} aria-hidden="true" />
           {new Date().toLocaleDateString("vi-VN", {
             day: "2-digit",
             month: "2-digit",
@@ -236,89 +212,91 @@ const DashBoard = () => {
         </div>
       </motion.div>
 
-      {/* Stats Cards */}
+      {/* ── Stat cards ── */}
       <motion.div
-        className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5"
-        variants={container}
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4"
+        variants={containerVariants}
         initial="hidden"
-        animate="show"
+        animate="visible"
       >
         {statCards.map((card, index) => (
           <motion.div
             key={index}
-            variants={item}
-            whileHover={{ y: -5, transition: { duration: 0.2 } }}
-            className="relative overflow-hidden rounded-lg bg-white shadow"
+            variants={itemVariants}
+            whileHover={{ y: -3, transition: { duration: 0.15 } }}
+            className="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-md transition-shadow"
           >
-            <div
-              className={`absolute h-1.5 top-0 left-0 right-0 bg-gradient-to-r ${card.color}`}
-            ></div>
-            <div className="p-5">
-              <div className="flex justify-between">
-                <div>
-                  <p className={`text-sm font-medium ${card.textColor}`}>
-                    {card.title}
-                  </p>
-                  <div className="mt-2 flex items-baseline">
-                    <p className="text-2xl font-semibold text-gray-900">
-                      <CountUp
-                        end={card.value}
-                        duration={2}
-                        separator="."
-                        formattingFn={card.formatter}
-                      />
-                    </p>
-                    {card.growth !== undefined && (
-                      <span
-                        className={`ml-2 text-xs flex items-center ${card.growthColor}`}
-                      >
-                        {card.growthIcon}
-                        <span className="ml-0.5">{Math.abs(card.growth)}%</span>
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <div
-                  className={`flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br ${card.color} text-white shadow-lg`}
-                >
-                  {card.icon}
-                </div>
-              </div>
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono">
+                {card.title}
+              </p>
+              <span
+                className={`inline-flex items-center justify-center w-9 h-9 rounded-lg ${card.color} text-white`}
+              >
+                {card.icon}
+              </span>
             </div>
+            <p className="text-2xl font-bold text-[#111827]">
+              <CountUp
+                end={card.value}
+                duration={2}
+                separator=","
+                formattingFn={card.formatter}
+              />
+            </p>
           </motion.div>
         ))}
       </motion.div>
 
-      {/* Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+      {/* ── Charts ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Area chart */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white p-5 rounded-lg shadow"
+          className="bg-white rounded-xl border border-gray-200 p-5"
         >
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-medium text-gray-900">
-              Doanh Thu Theo Tháng
-            </h3>
-          </div>
+          <h3 className="text-sm font-semibold text-[#111827] mb-4">
+            Doanh Thu Theo Tháng
+          </h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={mockChartData}>
                 <defs>
                   <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-                    <stop offset="95%" stopColor="#8884d8" stopOpacity={0.1} />
+                    <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#3B82F6" stopOpacity={0.02} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis dataKey="name" stroke="#888" fontSize={12} />
-                <YAxis stroke="#888" fontSize={12} />
-                <Tooltip />
+                <XAxis
+                  dataKey="name"
+                  stroke="#9CA3AF"
+                  fontSize={11}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <YAxis
+                  stroke="#9CA3AF"
+                  fontSize={11}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#111827",
+                    border: "none",
+                    borderRadius: "8px",
+                    color: "#fff",
+                    fontSize: "12px",
+                  }}
+                />
                 <Area
                   type="monotone"
                   dataKey="value"
-                  stroke="#8884d8"
+                  stroke="#3B82F6"
+                  strokeWidth={2}
                   fillOpacity={1}
                   fill="url(#colorRevenue)"
                 />
@@ -327,17 +305,16 @@ const DashBoard = () => {
           </div>
         </motion.div>
 
+        {/* Pie chart */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-white p-5 rounded-lg shadow"
+          className="bg-white rounded-xl border border-gray-200 p-5"
         >
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-medium text-gray-900">
-              Phân Bổ Sản Phẩm
-            </h3>
-          </div>
+          <h3 className="text-sm font-semibold text-[#111827] mb-4">
+            Phân Bổ Sản Phẩm
+          </h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -345,98 +322,117 @@ const DashBoard = () => {
                   data={pieData}
                   cx="50%"
                   cy="50%"
-                  innerRadius={60}
+                  innerRadius={55}
                   outerRadius={80}
-                  fill="#8884d8"
-                  paddingAngle={5}
+                  paddingAngle={4}
                   dataKey="value"
+                  strokeWidth={0}
                 >
-                  {pieData.map((entry, index) => (
+                  {pieData.map((_, index) => (
                     <Cell
                       key={`cell-${index}`}
-                      fill={
-                        ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#0088FE"][
-                          index % 5
-                        ]
-                      }
+                      fill={PIE_COLORS[index % PIE_COLORS.length]}
                     />
                   ))}
                 </Pie>
-                <Tooltip />
-                <Legend />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#111827",
+                    border: "none",
+                    borderRadius: "8px",
+                    color: "#fff",
+                    fontSize: "12px",
+                  }}
+                />
+                <Legend
+                  wrapperStyle={{ fontSize: "12px" }}
+                  formatter={(value) => (
+                    <span className="text-gray-600">{value}</span>
+                  )}
+                />
               </PieChart>
             </ResponsiveContainer>
           </div>
         </motion.div>
       </div>
 
-      {/* Recent Orders Section */}
+      {/* ── Recent Orders ── */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
-        className="bg-white shadow rounded-lg overflow-hidden"
+        className="bg-white rounded-xl border border-gray-200 overflow-hidden"
       >
-        <div className="p-6 border-b border-gray-200">
-          <h3 className="text-lg font-medium text-gray-900">
+        <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+          <h3 className="text-sm font-semibold text-[#111827]">
             Đơn Hàng Gần Đây
           </h3>
-        </div>
-        <ul className="divide-y divide-gray-200">
-          {newestOrders.map((order, index) => (
-            <motion.li
-              key={index}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 + index * 0.1 }}
-              className="px-6 py-4 flex items-center justify-between hover:bg-gray-50"
-            >
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <div className="h-10 w-10 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 flex items-center justify-center">
-                    <TruckIcon className="h-5 w-5 text-gray-500" />
-                  </div>
-                </div>
-                <div className="ml-4">
-                  <div className="text-sm font-medium text-gray-900">
-                    {order.id}
-                  </div>
-                  <div className="text-sm text-gray-500">
-                    {order.user?.fullName}
-                  </div>
-                </div>
-              </div>
-              <div className="flex items-center">
-                <span
-                  className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(
-                    order.orderStatus
-                  )}`}
-                >
-                  {order.orderStatus === "DELIVERED"
-                    ? "Hoàn thành"
-                    : order.orderStatusv === "PENDING"
-                    ? "Chờ xử lý"
-                    : order.orderStatus === "IN_PROGRESS"
-                    ? "Đang xử lý"
-                    : order.orderStatus === "SHIPPING"
-                    ? "Đang giao hàng"
-                    : "Đã hủy"}
-                </span>
-                <div className="ml-6 text-sm font-medium text-gray-900">
-                  {currency.format(order.totalAmount)}
-                </div>
-              </div>
-            </motion.li>
-          ))}
-        </ul>
-        <div className="border-t border-gray-200 bg-gray-50 px-6 py-3">
           <a
             href="/admin/manage/orders"
-            className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+            className="inline-flex items-center gap-1 text-xs font-semibold text-[#3B82F6] hover:text-[#2563EB] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] rounded"
           >
-            Xem tất cả đơn hàng
-            <span aria-hidden="true"> &rarr;</span>
+            Xem tất cả
+            <ArrowRight size={12} aria-hidden="true" />
           </a>
+        </div>
+
+        {/* Table */}
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm" aria-label="Recent orders">
+            <thead className="bg-gray-50 border-b border-gray-100">
+              <tr>
+                <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono">
+                  Mã đơn
+                </th>
+                <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono">
+                  Khách hàng
+                </th>
+                <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono">
+                  Trạng thái
+                </th>
+                <th className="text-right px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono">
+                  Tổng tiền
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-50">
+              {newestOrders.map((order, index) => {
+                const status = getStatusLabel(order.orderStatus);
+                return (
+                  <motion.tr
+                    key={index}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 + index * 0.05 }}
+                    className="hover:bg-gray-50/50 transition-colors"
+                  >
+                    <td className="px-5 py-3.5">
+                      <span className="font-mono text-xs text-[#111827]">
+                        #{String(order.id).padStart(4, "0")}
+                      </span>
+                    </td>
+                    <td className="px-5 py-3.5">
+                      <span className="text-gray-600">
+                        {order.user?.fullName}
+                      </span>
+                    </td>
+                    <td className="px-5 py-3.5">
+                      <span
+                        className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider border ${status.style}`}
+                      >
+                        {status.label}
+                      </span>
+                    </td>
+                    <td className="px-5 py-3.5 text-right">
+                      <span className="font-semibold text-[#111827]">
+                        {currency.format(order.totalAmount)}
+                      </span>
+                    </td>
+                  </motion.tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
       </motion.div>
     </div>

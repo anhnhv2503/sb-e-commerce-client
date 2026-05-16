@@ -6,7 +6,20 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useDocumentTitle } from "@uidotdev/usehooks";
 import { AnimatePresence, motion } from "framer-motion";
-import { Heart, Minus, Plus, ShoppingBag } from "lucide-react";
+import {
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+  Heart,
+  Minus,
+  Package,
+  Plus,
+  RefreshCw,
+  Shield,
+  ShoppingBag,
+  Truck,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -16,6 +29,15 @@ import {
   getProductById,
 } from "../service/ApiFunctions";
 
+/**
+ * ProductDetail
+ * Redesigned with:
+ *  - Image gallery with thumbnails
+ *  - Sticky product info panel
+ *  - Loading skeleton
+ *  - Mobile-responsive layout with bottom CTA bar
+ *  - SKILL.md tokens & accessibility
+ */
 const ProductDetail = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
@@ -59,7 +81,6 @@ const ProductDetail = () => {
 
   useEffect(() => {
     fetchProduct();
-    // Scroll to top on new product load
     window.scrollTo(0, 0);
   }, [id]);
 
@@ -75,22 +96,18 @@ const ProductDetail = () => {
       navigate("/login", { state: { from: location.pathname } });
       return;
     }
-
     if (!selectedSize) {
       toast.error("Vui lòng chọn size sản phẩm");
       return;
     }
-
     if (quantity <= 0) {
       toast.error("Vui lòng nhập số lượng sản phẩm");
       return;
     }
-
     setIsAddingToCart(true);
     const formData = new FormData();
     formData.append("quantity", quantity);
     formData.append("sizeId", selectedSize.id);
-
     try {
       const response = await addItemToCart(formData);
       if (response) {
@@ -106,48 +123,52 @@ const ProductDetail = () => {
   };
 
   const incrementQuantity = () => {
-    if (inventory && quantity < inventory) {
-      setQuantity((prev) => prev + 1);
-    }
+    if (inventory && quantity < inventory) setQuantity((p) => p + 1);
   };
-
   const decrementQuantity = () => {
-    if (quantity > 1) {
-      setQuantity((prev) => prev - 1);
+    if (quantity > 1) setQuantity((p) => p - 1);
+  };
+
+  const goToPrevImage = () => {
+    if (product?.images) {
+      setActiveImageIndex((i) => (i === 0 ? product.images.length - 1 : i - 1));
+    }
+  };
+  const goToNextImage = () => {
+    if (product?.images) {
+      setActiveImageIndex((i) => (i === product.images.length - 1 ? 0 : i + 1));
     }
   };
 
-  const toggleFavorite = () => {
-    setIsFavorited(!isFavorited);
-  };
-
+  // ── Loading Skeleton ──
   if (isLoading || !product) {
     return (
-      <div className="bg-white min-h-screen">
+      <div className="bg-gray-50 min-h-screen">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <ProductBreadcrumb />
-          <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-8">
-            {/* Image Skeleton */}
+          <Skeleton className="h-5 w-64 mb-8" />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
             <div className="space-y-4">
               <Skeleton className="aspect-square w-full rounded-2xl" />
-              <div className="flex gap-2 overflow-x-auto pb-2">
+              <div className="flex gap-3">
                 {[1, 2, 3, 4].map((i) => (
-                  <Skeleton
-                    key={i}
-                    className="w-20 h-20 rounded-lg flex-shrink-0"
-                  />
+                  <Skeleton key={i} className="w-20 h-20 rounded-lg flex-shrink-0" />
                 ))}
               </div>
             </div>
-
-            {/* Product Info Skeleton */}
-            <div className="flex flex-col space-y-6">
+            <div className="space-y-6">
+              <Skeleton className="h-6 w-24 rounded-full" />
               <Skeleton className="h-10 w-3/4" />
               <Skeleton className="h-8 w-1/3" />
-              <Skeleton className="h-24 w-full" />
-              <Skeleton className="h-12 w-full" />
-              <Skeleton className="h-12 w-full" />
-              <Skeleton className="h-16 w-full" />
+              <Skeleton className="h-px w-full" />
+              <Skeleton className="h-20 w-full" />
+              <Skeleton className="h-px w-full" />
+              <div className="flex gap-2">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <Skeleton key={i} className="h-12 w-16 rounded-lg" />
+                ))}
+              </div>
+              <Skeleton className="h-12 w-40" />
+              <Skeleton className="h-14 w-full rounded-xl" />
             </div>
           </div>
         </div>
@@ -155,143 +176,186 @@ const ProductDetail = () => {
     );
   }
 
-  return (
-    <div className="bg-gray-50 min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <ProductBreadcrumb />
+  const isOutOfStock = inventory !== null && inventory <= 0;
+  const isLowStock = inventory !== null && inventory > 0 && inventory <= 10;
 
-        <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-8">
-          {/* Image Gallery */}
+  const features = [
+    { icon: <Check size={16} />, label: "Hàng chính hãng" },
+    { icon: <Truck size={16} />, label: "Giao hàng nhanh" },
+    { icon: <RefreshCw size={16} />, label: "Đổi trả miễn phí" },
+    { icon: <Shield size={16} />, label: "Bảo hành 12 tháng" },
+  ];
+
+  return (
+    <div className="bg-gray-50 min-h-screen pb-24 lg:pb-8">
+      {/* ── Breadcrumb ── */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <ProductBreadcrumb />
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+          {/* ── Image Gallery ── */}
           <div className="space-y-4">
-            <div className="aspect-square overflow-hidden rounded-2xl bg-white border border-gray-100 shadow-sm">
+            {/* Main image */}
+            <div className="relative aspect-square overflow-hidden rounded-2xl bg-white border border-gray-200 shadow-sm group">
               <AnimatePresence mode="wait">
                 <motion.img
                   key={activeImageIndex}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
+                  transition={{ duration: 0.25 }}
                   src={product.images[activeImageIndex]?.url}
-                  alt={product.name}
+                  alt={`${product.name} — hình ${activeImageIndex + 1}`}
                   className="w-full h-full object-cover object-center"
                 />
               </AnimatePresence>
+
+              {/* Navigation arrows */}
+              {product.images.length > 1 && (
+                <>
+                  <button
+                    onClick={goToPrevImage}
+                    aria-label="Hình trước"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/90 backdrop-blur-sm border border-gray-200 text-gray-600 hover:bg-white hover:text-[#111827] opacity-0 group-hover:opacity-100 transition-all shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] focus-visible:opacity-100"
+                  >
+                    <ChevronLeft size={18} />
+                  </button>
+                  <button
+                    onClick={goToNextImage}
+                    aria-label="Hình tiếp theo"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/90 backdrop-blur-sm border border-gray-200 text-gray-600 hover:bg-white hover:text-[#111827] opacity-0 group-hover:opacity-100 transition-all shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] focus-visible:opacity-100"
+                  >
+                    <ChevronRight size={18} />
+                  </button>
+                </>
+              )}
+
+              {/* Image counter */}
+              <div aria-hidden="true" className="absolute bottom-3 right-3 px-2.5 py-1 rounded-full bg-black/50 backdrop-blur-sm text-white text-xs font-mono">
+                {activeImageIndex + 1} / {product.images.length}
+              </div>
+
+              {/* Favorite button */}
+              <button
+                onClick={() => setIsFavorited(!isFavorited)}
+                aria-label={isFavorited ? "Bỏ yêu thích" : "Thêm vào yêu thích"}
+                className={`absolute top-3 right-3 p-2.5 rounded-full backdrop-blur-sm border transition-all shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] ${
+                  isFavorited
+                    ? "bg-red-50 border-red-200 text-red-500"
+                    : "bg-white/90 border-gray-200 text-gray-400 hover:text-red-500 hover:border-red-200"
+                }`}
+              >
+                <Heart size={18} className={isFavorited ? "fill-red-500" : ""} />
+              </button>
             </div>
 
-            {/* Thumbnail Gallery */}
-            {product.images && product.images.length > 1 && (
-              <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+            {/* Thumbnails */}
+            {product.images.length > 1 && (
+              <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-hide" role="tablist" aria-label="Image thumbnails">
                 {product.images.map((image, index) => (
-                  <motion.button
+                  <button
                     key={index}
+                    role="tab"
+                    aria-selected={activeImageIndex === index}
+                    aria-label={`Xem hình ${index + 1}`}
                     onClick={() => setActiveImageIndex(index)}
-                    className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 ${
+                    className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] ${
                       activeImageIndex === index
-                        ? "border-indigo-600"
-                        : "border-transparent opacity-70 hover:opacity-100"
+                        ? "border-[#3B82F6] ring-2 ring-[#3B82F6]/20"
+                        : "border-gray-200 opacity-60 hover:opacity-100 hover:border-gray-300"
                     }`}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
                   >
                     <img
                       src={image.url}
                       alt={`${product.name} thumbnail ${index + 1}`}
                       className="w-full h-full object-cover"
+                      loading="lazy"
                     />
-                  </motion.button>
+                  </button>
                 ))}
               </div>
             )}
           </div>
 
-          {/* Product Info */}
+          {/* ── Product Info ── */}
           <motion.div
-            className="flex flex-col bg-white p-6 rounded-xl shadow-sm"
+            className="lg:sticky lg:top-24 lg:self-start space-y-6"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
+            transition={{ delay: 0.15, duration: 0.45 }}
           >
-            <div className="flex items-start justify-between">
-              <div>
-                {product.category && (
-                  <Badge
-                    variant="outline"
-                    className="mb-2 text-indigo-700 bg-indigo-50 hover:bg-indigo-100"
-                  >
-                    {product.category.name}
-                  </Badge>
-                )}
-                <h1 className="text-3xl font-bold text-gray-900">
-                  {product.name}
-                </h1>
-                <div className="mt-3">
-                  <p className="text-3xl font-semibold text-indigo-600">
-                    {currency.format(product.price)}
-                  </p>
-                </div>
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={toggleFavorite}
-                className={`rounded-full h-10 w-10 ${
-                  isFavorited
-                    ? "text-red-500"
-                    : "text-gray-400 hover:text-red-500"
-                }`}
+            {/* Category */}
+            {product.category && (
+              <Badge
+                variant="outline"
+                className="text-[#3B82F6] bg-blue-50 border-blue-200 hover:bg-blue-100 font-mono text-xs uppercase tracking-wider"
               >
-                <Heart
-                  size={20}
-                  className={isFavorited ? "fill-red-500" : ""}
-                />
-              </Button>
+                {product.category.name}
+              </Badge>
+            )}
+
+            {/* Name */}
+            <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#111827] leading-tight">
+              {product.name}
+            </h1>
+
+            {/* Price */}
+            <p className="text-3xl font-bold text-[#3B82F6]">
+              {currency.format(product.price)}
+            </p>
+
+            <div className="h-px bg-gray-200" />
+
+            {/* Description */}
+            <div className="prose prose-sm max-w-none text-gray-600 leading-relaxed">
+              <p>{product.description}</p>
             </div>
 
-            <div className="mt-6 pb-6 border-b border-gray-200">
-              <div className="prose prose-indigo max-w-none text-gray-600">
-                <p>{product.description}</p>
-              </div>
-            </div>
+            <div className="h-px bg-gray-200" />
 
-            <form className="mt-6 space-y-6" onSubmit={handleAddToCart}>
-              {/* Size Selector */}
+            {/* ── Form ── */}
+            <form className="space-y-6" onSubmit={handleAddToCart}>
+              {/* Size selector */}
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-sm font-medium text-gray-900">Size</h3>
+                  <h3 className="text-sm font-semibold text-[#111827] uppercase tracking-wider font-mono">
+                    Size
+                  </h3>
                   {inventory !== null && (
-                    <p
-                      className={`text-sm ${
-                        inventory > 10
-                          ? "text-green-600"
-                          : inventory > 0
-                          ? "text-orange-500"
-                          : "text-red-600"
-                      }`}
-                    >
-                      {inventory > 10
-                        ? `Còn ${inventory} sản phẩm`
-                        : inventory > 0
-                        ? `Chỉ còn ${inventory} sản phẩm`
-                        : "Hết hàng"}
-                    </p>
+                    <span className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full ${
+                      isOutOfStock
+                        ? "bg-red-50 text-[#DC2626]"
+                        : isLowStock
+                          ? "bg-orange-50 text-[#D97706]"
+                          : "bg-green-50 text-[#16A34A]"
+                    }`}>
+                      <Package size={12} aria-hidden="true" />
+                      {isOutOfStock
+                        ? "Hết hàng"
+                        : isLowStock
+                          ? `Chỉ còn ${inventory}`
+                          : `Còn ${inventory}`}
+                    </span>
                   )}
                 </div>
-                <div className="grid grid-cols-5 gap-2">
+                <div className="flex flex-wrap gap-2">
                   {product.size?.map((size) => (
                     <motion.button
                       key={size.id}
                       type="button"
                       onClick={() => setSelectedSize(size)}
-                      whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      className={`
-                        relative flex items-center justify-center rounded-md py-3 text-sm font-medium uppercase
-                        ${
-                          selectedSize?.id === size.id
-                            ? "bg-indigo-600 text-white ring-2 ring-offset-1 ring-indigo-600"
-                            : "bg-white text-gray-900 border border-gray-300 hover:bg-gray-50"
-                        }
-                      `}
+                      aria-label={`Size ${size.sizeName}`}
+                      aria-pressed={selectedSize?.id === size.id}
+                      className={`min-w-[3.5rem] px-4 py-3 rounded-lg text-sm font-semibold uppercase border-2 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#3B82F6] ${
+                        selectedSize?.id === size.id
+                          ? "bg-[#111827] text-white border-[#111827]"
+                          : "bg-white text-[#111827] border-gray-200 hover:border-[#111827]"
+                      }`}
                     >
                       {size.sizeName}
                     </motion.button>
@@ -299,18 +363,19 @@ const ProductDetail = () => {
                 </div>
               </div>
 
-              {/* Quantity Selector */}
+              {/* Quantity selector */}
               <div>
-                <h3 className="text-sm font-medium text-gray-900 mb-3">
+                <h3 className="text-sm font-semibold text-[#111827] uppercase tracking-wider font-mono mb-3">
                   Số lượng
                 </h3>
-                <div className="flex items-center">
+                <div className="inline-flex items-center border border-gray-200 rounded-lg overflow-hidden">
                   <motion.button
                     type="button"
                     onClick={decrementQuantity}
                     disabled={quantity <= 1}
                     whileTap={{ scale: 0.9 }}
-                    className="rounded-l-md bg-gray-100 p-3 text-gray-600 hover:bg-gray-200 disabled:opacity-50 border border-gray-300"
+                    aria-label="Giảm số lượng"
+                    className="p-3 text-gray-600 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                   >
                     <Minus size={16} />
                   </motion.button>
@@ -320,132 +385,88 @@ const ProductDetail = () => {
                     max={inventory || 1}
                     value={quantity}
                     onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
-                    className="w-16 text-center py-3 focus:ring-indigo-500 focus:border-indigo-500 focus:outline-none"
+                    aria-label="Số lượng sản phẩm"
+                    className="w-14 text-center py-3 text-sm font-semibold text-[#111827] border-x border-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#3B82F6]"
                   />
                   <motion.button
                     type="button"
                     onClick={incrementQuantity}
                     disabled={inventory && quantity >= inventory}
                     whileTap={{ scale: 0.9 }}
-                    className="rounded-r-md bg-gray-100 p-3 text-gray-600 hover:bg-gray-200 disabled:opacity-50 border border-gray-300"
+                    aria-label="Tăng số lượng"
+                    className="p-3 text-gray-600 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                   >
                     <Plus size={16} />
                   </motion.button>
                 </div>
               </div>
 
-              {/* Add to Cart Button */}
+              {/* Add to cart — desktop */}
               <motion.button
                 type="submit"
-                disabled={
-                  !selectedSize ||
-                  !inventory ||
-                  inventory <= 0 ||
-                  isAddingToCart
-                }
-                whileHover={{ scale: 1.02 }}
+                disabled={!selectedSize || isOutOfStock || isAddingToCart}
+                whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full flex items-center justify-center gap-2 rounded-md bg-indigo-600 px-8 py-4 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all"
+                id="product-add-to-cart"
+                className="hidden lg:flex w-full items-center justify-center gap-2.5 rounded-xl bg-[#3B82F6] hover:bg-[#2563EB] px-8 py-4 text-base font-semibold text-white shadow-lg shadow-blue-500/25 disabled:bg-gray-200 disabled:text-gray-500 disabled:shadow-none disabled:cursor-not-allowed transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B82F6]"
               >
                 {isAddingToCart ? (
-                  <div className="w-5 h-5 rounded-full border-2 border-white border-t-transparent animate-spin"></div>
+                  <div className="w-5 h-5 rounded-full border-2 border-white/30 border-t-white animate-spin" />
                 ) : (
-                  <ShoppingBag size={20} />
+                  <ShoppingBag size={20} aria-hidden="true" />
                 )}
-                Thêm vào giỏ hàng
+                {isOutOfStock ? "Hết Hàng" : "Thêm Vào Giỏ Hàng"}
               </motion.button>
             </form>
 
-            {/* Product Features */}
-            <div className="mt-8 grid grid-cols-2 gap-4">
-              <div className="flex items-center">
-                <div className="rounded-full bg-indigo-100 p-2 mr-3">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4 text-indigo-600"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
+            {/* Features grid */}
+            <div className="grid grid-cols-2 gap-3 pt-2">
+              {features.map(({ icon, label }, i) => (
+                <div key={i} className="flex items-center gap-2.5 text-sm text-gray-500">
+                  <span className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-50 text-[#3B82F6] flex-shrink-0">
+                    {icon}
+                  </span>
+                  {label}
                 </div>
-                <span className="text-sm text-gray-600">Hàng chính hãng</span>
-              </div>
-              <div className="flex items-center">
-                <div className="rounded-full bg-indigo-100 p-2 mr-3">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4 text-indigo-600"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                </div>
-                <span className="text-sm text-gray-600">Giao hàng nhanh</span>
-              </div>
-              <div className="flex items-center">
-                <div className="rounded-full bg-indigo-100 p-2 mr-3">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4 text-indigo-600"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-                    />
-                  </svg>
-                </div>
-                <span className="text-sm text-gray-600">Đổi trả miễn phí</span>
-              </div>
-              <div className="flex items-center">
-                <div className="rounded-full bg-indigo-100 p-2 mr-3">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4 text-indigo-600"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                    />
-                  </svg>
-                </div>
-                <span className="text-sm text-gray-600">Bảo hành 12 tháng</span>
-              </div>
+              ))}
             </div>
           </motion.div>
         </div>
 
+        {/* ── Related Products ── */}
         <motion.div
-          className="p-6 mt-8 bg-white rounded-lg shadow-sm"
+          className="mt-16 bg-white rounded-2xl border border-gray-200 p-6 sm:p-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
+          transition={{ delay: 0.35, duration: 0.45 }}
         >
           <RelatedProducts categoryId={categoryId} />
         </motion.div>
+      </div>
+
+      {/* ── Mobile sticky CTA bar ── */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 lg:hidden z-30 shadow-[0_-4px_12px_rgba(0,0,0,0.08)]">
+        <div className="flex items-center gap-3">
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-bold text-[#111827] truncate">{product.name}</p>
+            <p className="text-lg font-bold text-[#3B82F6]">{currency.format(product.price)}</p>
+          </div>
+          <Button
+            onClick={handleAddToCart}
+            disabled={!selectedSize || isOutOfStock || isAddingToCart}
+            id="product-mobile-add-to-cart"
+            className="flex-shrink-0 h-12 px-6 bg-[#3B82F6] hover:bg-[#2563EB] text-white font-semibold rounded-xl shadow-md shadow-blue-500/20 disabled:bg-gray-200 disabled:text-gray-500 disabled:shadow-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B82F6]"
+          >
+            {isAddingToCart ? (
+              <div className="w-5 h-5 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+            ) : (
+              <>
+                <ShoppingBag size={18} className="mr-1.5" aria-hidden="true" />
+                Thêm
+              </>
+            )}
+          </Button>
+        </div>
       </div>
     </div>
   );

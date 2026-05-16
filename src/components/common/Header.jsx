@@ -1,5 +1,4 @@
 import CartIcon from "@/components/common/CartIcon";
-import UserAccordion from "@/components/common/UserAccordion";
 import UserPopover from "@/components/common/UserPopover";
 import { Transition } from "@headlessui/react";
 import { motion } from "framer-motion";
@@ -41,11 +40,11 @@ const Header = () => {
   return (
     <header
       className={`sticky top-0 z-50 w-full transition-all duration-300 ${
-        scrolled ? "bg-white shadow-md" : "bg-gray-100"
+        scrolled ? "bg-white shadow-md" : "bg-gray-50 border-b border-gray-200/50"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <nav className="flex items-center justify-between h-16 md:h-20">
+        <nav className="flex items-center justify-between h-20">
           {/* Logo */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -55,13 +54,13 @@ const Header = () => {
           >
             <button
               onClick={() => navigate("/")}
-              className="flex items-center focus:outline-none"
-              aria-label="Home"
+              className="flex items-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] focus-visible:outline-offset-4 rounded-lg"
+              aria-label="Trang chủ VA Shop"
             >
               <img
                 src={newLogo}
-                alt="Company Logo"
-                className="h-8 md:h-10 w-auto"
+                alt="VA Shop Logo"
+                className="h-10 w-auto"
               />
             </button>
           </motion.div>
@@ -70,24 +69,30 @@ const Header = () => {
           <div className="hidden md:flex md:items-center md:space-x-8">
             <button
               onClick={() => navigate("/")}
-              className={`px-3 py-2 text-sm font-medium transition-colors hover:text-orange-600 ${
-                isActive("/") ? "text-orange-600" : "text-gray-700"
+              className={`px-4 py-3 text-sm font-semibold uppercase tracking-wider transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] rounded-lg ${
+                isActive("/") 
+                  ? "text-[#3B82F6]" 
+                  : "text-[#111827] hover:text-[#3B82F6] hover:bg-blue-50/50"
               }`}
             >
               Trang Chủ
             </button>
             <button
               onClick={() => navigate("/shop")}
-              className={`px-3 py-2 text-sm font-medium transition-colors hover:text-orange-600 ${
-                isActive("/shop") ? "text-orange-600" : "text-gray-700"
+              className={`px-4 py-3 text-sm font-semibold uppercase tracking-wider transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] rounded-lg ${
+                isActive("/shop") 
+                  ? "text-[#3B82F6]" 
+                  : "text-[#111827] hover:text-[#3B82F6] hover:bg-blue-50/50"
               }`}
             >
               Cửa Hàng
             </button>
             <button
               onClick={() => navigate("/about")}
-              className={`px-3 py-2 text-sm font-medium transition-colors hover:text-orange-600 ${
-                isActive("/about") ? "text-orange-600" : "text-gray-700"
+              className={`px-4 py-3 text-sm font-semibold uppercase tracking-wider transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] rounded-lg ${
+                isActive("/about") 
+                  ? "text-[#3B82F6]" 
+                  : "text-[#111827] hover:text-[#3B82F6] hover:bg-blue-50/50"
               }`}
             >
               Về Chúng Tôi
@@ -95,9 +100,13 @@ const Header = () => {
           </div>
 
           {/* Right Section: Cart and User */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-6">
             {/* Cart Button */}
-            {token && <CartIcon />}
+            {token && (
+              <div className="flex items-center h-12 w-12 justify-center">
+                <CartIcon />
+              </div>
+            )}
 
             {/* User Menu - Desktop */}
             <div className="hidden md:block">
@@ -107,8 +116,8 @@ const Header = () => {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="md:hidden p-2 rounded-md text-gray-700 hover:text-orange-600 transition-colors"
-              aria-label="Open menu"
+              className="md:hidden flex items-center justify-center h-12 w-12 rounded-lg text-[#111827] hover:text-[#3B82F6] hover:bg-blue-50 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6]"
+              aria-label="Mở menu"
             >
               <MenuIcon size={24} />
             </button>
@@ -127,7 +136,7 @@ const Header = () => {
         leaveTo="opacity-0"
       >
         <div
-          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40"
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
           onClick={() => setMobileMenuOpen(false)}
         />
       </Transition>
@@ -142,33 +151,41 @@ const Header = () => {
         leaveFrom="translate-x-0"
         leaveTo="translate-x-full"
       >
-        <div className="fixed inset-y-0 right-0 z-50 w-full max-w-xs bg-white shadow-lg">
-          <div className="flex items-center justify-between p-4 border-b">
+        <div className="fixed inset-y-0 right-0 z-50 w-full max-w-sm bg-white shadow-2xl flex flex-col">
+          <div className="flex items-center justify-between p-6 border-b border-gray-100">
             <button
-              onClick={() => navigate("/")}
-              className="focus:outline-none"
+              onClick={() => {
+                navigate("/");
+                setMobileMenuOpen(false);
+              }}
+              className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] rounded-lg"
+              aria-label="Trang chủ VA Shop"
             >
-              <img src={newLogo} alt="Company Logo" className="h-8 w-auto" />
+              <img src={newLogo} alt="VA Shop Logo" className="h-8 w-auto" />
             </button>
             <button
               onClick={() => setMobileMenuOpen(false)}
-              className="p-2 text-gray-500 hover:text-gray-700 transition-colors"
-              aria-label="Close menu"
+              className="flex items-center justify-center h-11 w-11 rounded-full text-gray-500 hover:text-[#111827] hover:bg-gray-100 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6]"
+              aria-label="Đóng menu"
             >
               <X size={24} />
             </button>
           </div>
 
-          <div className="p-4 overflow-y-auto">
-            <div className="space-y-1">
+          <div className="flex-1 overflow-y-auto py-6 px-4">
+            <div className="space-y-2">
               <button
                 onClick={() => {
                   navigate("/");
                   setMobileMenuOpen(false);
                 }}
-                className="flex items-center w-full px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                className={`flex items-center w-full px-4 py-4 rounded-xl text-base font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] ${
+                  isActive("/") 
+                    ? "bg-blue-50 text-[#3B82F6]" 
+                    : "text-[#111827] hover:bg-gray-50"
+                }`}
               >
-                <Home size={18} className="mr-3" />
+                <Home size={20} className="mr-4" />
                 <span>Trang Chủ</span>
               </button>
               <button
@@ -176,9 +193,13 @@ const Header = () => {
                   navigate("/shop");
                   setMobileMenuOpen(false);
                 }}
-                className="flex items-center w-full px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                className={`flex items-center w-full px-4 py-4 rounded-xl text-base font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] ${
+                  isActive("/shop") 
+                    ? "bg-blue-50 text-[#3B82F6]" 
+                    : "text-[#111827] hover:bg-gray-50"
+                }`}
               >
-                <Store size={18} className="mr-3" />
+                <Store size={20} className="mr-4" />
                 <span>Cửa Hàng</span>
               </button>
               <button
@@ -186,29 +207,39 @@ const Header = () => {
                   navigate("/about");
                   setMobileMenuOpen(false);
                 }}
-                className="flex items-center w-full px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                className={`flex items-center w-full px-4 py-4 rounded-xl text-base font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] ${
+                  isActive("/about") 
+                    ? "bg-blue-50 text-[#3B82F6]" 
+                    : "text-[#111827] hover:bg-gray-50"
+                }`}
               >
-                <Info size={18} className="mr-3" />
+                <Info size={20} className="mr-4" />
                 <span>Về Chúng Tôi</span>
               </button>
             </div>
 
-            <div className="mt-6 border-t pt-4">
+            <div className="mt-8 border-t border-gray-100 pt-6">
+              <div className="px-4 mb-4">
+                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider font-mono">
+                  Tài Khoản
+                </p>
+              </div>
+              
               {token && (
                 <button
                   onClick={() => {
                     navigate("/user/cart");
                     setMobileMenuOpen(false);
                   }}
-                  className="flex items-center w-full px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                  className="flex items-center w-full px-4 py-4 mb-2 text-[#111827] hover:bg-gray-50 rounded-xl text-base font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6]"
                 >
-                  <ShoppingBag size={18} className="mr-3" />
+                  <ShoppingBag size={20} className="mr-4 text-gray-500" />
                   <span>Giỏ Hàng</span>
                 </button>
               )}
 
-              <div className="mt-4">
-                <UserAccordion />
+              <div className="px-2">
+                <UserPopover />
               </div>
             </div>
           </div>

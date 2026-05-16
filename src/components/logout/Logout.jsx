@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeftStartOnRectangleIcon } from "@heroicons/react/24/outline";
 import toast from "react-hot-toast";
 
-const Logout = () => {
+const Logout = ({ className }) => {
   const { logout } = useAuth();
 
   const handleLogout = () => {
@@ -15,7 +15,10 @@ const Logout = () => {
   };
 
   return (
-    <Button onClick={handleLogout} className="bg-red-500 hover:bg-rose-600">
+    <Button
+      onClick={handleLogout}
+      className={className || "bg-red-500 hover:bg-rose-600"}
+    >
       <ArrowLeftStartOnRectangleIcon className="h-7 w-7 mr-2" />
       Thoát
     </Button>

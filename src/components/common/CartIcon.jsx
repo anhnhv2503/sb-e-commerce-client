@@ -67,13 +67,15 @@ const CartIcon = () => {
     <>
       <button
         onClick={() => navigate("/user/cart")}
-        className="relative p-2 text-gray-700 hover:text-indigo-600 transition-colors"
-        aria-label="Cart"
+        className="relative p-2 text-gray-700 hover:text-[#3B82F6] hover:bg-blue-50/50 rounded-full transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B82F6]"
+        aria-label="Giỏ hàng"
       >
         <ShoppingBag size={22} />
-        <span className="absolute top-0 right-0 h-4 w-4 rounded-full bg-indigo-600 flex items-center justify-center text-xs text-white">
-          {cartCount}
-        </span>
+        {cartCount > 0 && (
+          <span className="absolute top-0 right-0 h-4 w-4 rounded-full bg-[#3B82F6] flex items-center justify-center text-[10px] font-bold text-white shadow-sm ring-1 ring-white">
+            {cartCount > 99 ? "99+" : cartCount}
+          </span>
+        )}
       </button>
     </>
   );

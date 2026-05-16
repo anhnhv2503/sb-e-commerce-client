@@ -1,45 +1,43 @@
 import AddCategory from "@/components/admin/pages/AddCategory";
 import DotsLoading from "@/components/common/DotsLoading";
-import {
-  deleteCategory,
-  getAllCategories,
-} from "@/components/service/ApiFunctions";
-import { Button } from "@/components/ui/button";
+import { getAllCategories } from "@/components/service/ApiFunctions";
 import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  FolderOpenIcon,
-  FolderPlusIcon,
-  PencilIcon,
-  TagIcon,
-  TrashIcon,
-} from "@heroicons/react/24/outline";
 import { useDocumentTitle } from "@uidotdev/usehooks";
 import { AnimatePresence, motion } from "framer-motion";
-import { RefreshCcwIcon, RefreshCwIcon, SearchIcon } from "lucide-react";
+import {
+  FolderOpen,
+  FolderPlus,
+  Pencil,
+  RefreshCcw,
+  RefreshCw,
+  Search,
+  Tag,
+  Trash2,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 
+/**
+ * ManageCategory Page
+ * Redesigned to match SKILL.md artistic design system
+ */
 const ManageCategory = () => {
-  useDocumentTitle("Quản lý danh mục sản phẩm");
+  useDocumentTitle("Danh Mục — VA Shop Admin");
   const [categories, setCategories] = useState([]);
   const [filteredCategories, setFilteredCategories] = useState([]);
   const [loadingCategories, setLoadingCategories] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Dialog states
   const [addDialogOpen, setAddDialogOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState(null);
 
-  // Fetch categories
   const fetchCategories = async () => {
     try {
       setLoadingCategories(true);
@@ -59,11 +57,10 @@ const ManageCategory = () => {
     fetchCategories();
   }, []);
 
-  // Search functionality
   useEffect(() => {
     if (searchQuery) {
       const filtered = categories.filter((category) =>
-        category.name.toLowerCase().includes(searchQuery.toLowerCase())
+        category.name.toLowerCase().includes(searchQuery.toLowerCase()),
       );
       setFilteredCategories(filtered);
     } else {
@@ -71,7 +68,7 @@ const ManageCategory = () => {
     }
   }, [searchQuery, categories]);
 
-  const container = {
+  const containerVariants = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
@@ -79,166 +76,181 @@ const ManageCategory = () => {
     },
   };
 
-  const item = {
-    hidden: { opacity: 0, y: 20 },
+  const itemVariants = {
+    hidden: { opacity: 0, y: 16 },
     show: { opacity: 1, y: 0 },
   };
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="space-y-6"
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="max-w-6xl mx-auto space-y-6 pb-12"
     >
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
-            Quản lý danh mục sản phẩm
+          <h1 className="font-display text-3xl font-bold text-[#111827] flex items-center gap-3">
+            <FolderOpen size={28} className="text-[#3B82F6]" />
+            Danh Mục
           </h1>
           <p className="mt-1 text-sm text-gray-500">
-            Thêm, chỉnh sửa và xóa danh mục sản phẩm
+            Quản lý và tổ chức các danh mục sản phẩm
           </p>
         </div>
-        <Button
-          onClick={() => setAddDialogOpen(true)}
-          className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700"
-        >
-          <FolderPlusIcon className="h-5 w-5" />
-          Thêm danh mục mới
-        </Button>
-      </div>
 
-      {/* Search and Stats */}
-      <div className="flex flex-col sm:flex-row justify-between items-center bg-white p-4 rounded-lg shadow-sm">
-        <div className="relative w-full sm:w-64 mb-4 sm:mb-0">
-          <SearchIcon className="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-          <Input
-            placeholder="Tìm kiếm danh mục..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
-          />
-        </div>
-
-        <div className="flex items-center space-x-2 text-sm">
-          <div className="flex items-center px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full">
-            <TagIcon className="h-4 w-4 mr-1" />
-            <span className="font-medium">{categories.length} danh mục</span>
-          </div>
-          <Button
-            variant="outline"
-            size="sm"
-            className="flex items-center gap-1"
-            onClick={fetchCategories}
-            disabled={loadingCategories}
-          >
-            <RefreshCwIcon
-              className={`h-4 w-4 ${loadingCategories ? "animate-spin" : ""}`}
-            />
-            {loadingCategories ? "Đang tải..." : "Làm mới"}
-          </Button>
-        </div>
-      </div>
-
-      {/* Categories Table */}
-      <motion.div
-        className="bg-white rounded-lg shadow-sm overflow-hidden"
-        variants={container}
-        initial="hidden"
-        animate="show"
-      >
-        {loadingCategories ? (
-          <div className="flex justify-center items-center py-20">
-            <DotsLoading />
-          </div>
-        ) : filteredCategories.length > 0 ? (
-          <Table>
-            <TableCaption>Danh sách danh mục sản phẩm.</TableCaption>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[100px]">#</TableHead>
-                <TableHead>Tên danh mục</TableHead>
-                <TableHead className="text-right"></TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <AnimatePresence>
-                {filteredCategories.map((category) => (
-                  <motion.tr
-                    key={category.id}
-                    variants={item}
-                    className="hover:bg-gray-50"
-                  >
-                    <TableCell className="font-medium">{category.id}</TableCell>
-                    <TableCell className="flex items-center">
-                      <TagIcon className="h-4 w-4 text-indigo-500 mr-2" />
-                      {category.name}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="flex items-center gap-1"
-                        >
-                          <PencilIcon className="h-4 w-4" />
-                          Sửa
-                        </Button>
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          className="flex items-center gap-1"
-                        >
-                          <TrashIcon className="h-4 w-4" />
-                          Xóa
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </motion.tr>
-                ))}
-              </AnimatePresence>
-            </TableBody>
-          </Table>
-        ) : (
-          <div className="flex flex-col items-center justify-center py-12">
-            <FolderOpenIcon className="h-16 w-16 text-gray-300 mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-1">
-              {searchQuery ? "Không tìm thấy danh mục" : "Chưa có danh mục nào"}
-            </h3>
-            <p className="text-gray-500 mb-4">
-              {searchQuery
-                ? `Không tìm thấy danh mục phù hợp với từ khóa "${searchQuery}"`
-                : "Bạn chưa tạo danh mục sản phẩm nào"}
-            </p>
-            {searchQuery ? (
-              <Button
-                variant="outline"
-                onClick={() => setSearchQuery("")}
-                className="flex items-center gap-2"
-              >
-                <RefreshCcwIcon className="h-4 w-4" />
-                Xóa bộ lọc
-              </Button>
-            ) : (
-              <Button
-                onClick={() => setAddDialogOpen(true)}
-                className="flex items-center gap-2"
-              >
-                <FolderPlusIcon className="h-4 w-4" />
-                Thêm danh mục mới
-              </Button>
-            )}
-          </div>
-        )}
-      </motion.div>
-      {addDialogOpen && (
+        {/* We use the AddCategory component here which has its own trigger button */}
         <AddCategory
           open={addDialogOpen}
           onOpenChange={setAddDialogOpen}
           onSuccess={fetchCategories}
         />
-      )}
+      </div>
+
+      {/* Toolbar */}
+      <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="relative w-full md:max-w-md">
+          <Search
+            size={18}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+          />
+          <Input
+            placeholder="Tìm kiếm danh mục..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10 h-11 bg-gray-50 border-gray-200 focus:border-[#3B82F6] focus:ring-[#3B82F6] rounded-lg text-[#111827] w-full"
+          />
+        </div>
+
+        <div className="flex items-center gap-3 w-full md:w-auto">
+          <div className="flex items-center h-11 px-4 bg-blue-50 text-[#3B82F6] rounded-lg border border-blue-100">
+            <Tag size={16} className="mr-2" />
+            <span className="text-sm font-semibold whitespace-nowrap font-mono">
+              {categories.length} Danh Mục
+            </span>
+          </div>
+          <button
+            onClick={fetchCategories}
+            disabled={loadingCategories}
+            className="flex items-center justify-center h-11 px-4 gap-2 bg-white border border-gray-200 text-gray-600 hover:text-[#111827] hover:bg-gray-50 rounded-lg transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B82F6] disabled:opacity-50"
+            aria-label="Làm mới"
+          >
+            <RefreshCw
+              size={16}
+              className={loadingCategories ? "animate-spin" : ""}
+            />
+            <span className="text-sm font-semibold hidden sm:inline">
+              Làm Mới
+            </span>
+          </button>
+        </div>
+      </div>
+
+      {/* Table Area */}
+      <motion.div
+        className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
+        variants={containerVariants}
+        initial="hidden"
+        animate="show"
+      >
+        {loadingCategories ? (
+          <div className="flex justify-center items-center h-64">
+            <DotsLoading />
+          </div>
+        ) : filteredCategories.length > 0 ? (
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader className="bg-gray-50/80">
+                <TableRow className="border-b border-gray-200 hover:bg-transparent">
+                  <TableHead className="w-[100px] py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono">
+                    ID
+                  </TableHead>
+                  <TableHead className="py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono">
+                    Tên Danh Mục
+                  </TableHead>
+                  <TableHead className="py-4 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono">
+                    Thao Tác
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <AnimatePresence>
+                  {filteredCategories.map((category) => (
+                    <motion.tr
+                      key={category.id}
+                      variants={itemVariants}
+                      className="border-b border-gray-100 hover:bg-blue-50/30 transition-colors group"
+                    >
+                      <TableCell className="py-4">
+                        <span className="font-mono text-sm text-gray-500 bg-gray-50 px-2 py-1 rounded">
+                          #{String(category.id).padStart(3, "0")}
+                        </span>
+                      </TableCell>
+                      <TableCell className="py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center group-hover:bg-[#3B82F6] transition-colors">
+                            <Tag
+                              size={14}
+                              className="text-[#3B82F6] group-hover:text-white transition-colors"
+                            />
+                          </div>
+                          <span className="font-semibold text-[#111827]">
+                            {category.name}
+                          </span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="py-4 text-right">
+                        <div className="flex justify-end gap-2">
+                          <button className="flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-semibold text-[#3B82F6] bg-blue-50 hover:bg-blue-100 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6]">
+                            <Pencil size={14} />
+                            Sửa
+                          </button>
+                          <button className="flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-500">
+                            <Trash2 size={14} />
+                            Xóa
+                          </button>
+                        </div>
+                      </TableCell>
+                    </motion.tr>
+                  ))}
+                </AnimatePresence>
+              </TableBody>
+            </Table>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center py-20 px-4 text-center">
+            <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mb-4">
+              <FolderOpen size={32} className="text-gray-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-[#111827] mb-2">
+              {searchQuery ? "Không Tìm Thấy Kết Quả" : "Chưa Có Danh Mục"}
+            </h3>
+            <p className="text-gray-500 max-w-sm mb-6">
+              {searchQuery
+                ? `Không tìm thấy danh mục nào phù hợp với "${searchQuery}". Vui lòng thử lại.`
+                : "Hệ thống chưa có danh mục sản phẩm nào. Hãy tạo danh mục đầu tiên."}
+            </p>
+            {searchQuery ? (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="flex items-center gap-2 h-10 px-4 bg-white border border-gray-200 text-gray-600 hover:text-[#111827] rounded-lg transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6]"
+              >
+                <RefreshCcw size={16} />
+                <span className="font-semibold text-sm">Xóa Tìm Kiếm</span>
+              </button>
+            ) : (
+              <button
+                onClick={() => setAddDialogOpen(true)}
+                className="flex items-center gap-2 h-10 px-5 bg-[#3B82F6] text-white hover:bg-[#2563EB] rounded-lg shadow-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B82F6]"
+              >
+                <FolderPlus size={16} />
+                <span className="font-semibold text-sm">Thêm Mới</span>
+              </button>
+            )}
+          </div>
+        )}
+      </motion.div>
     </motion.div>
   );
 };
