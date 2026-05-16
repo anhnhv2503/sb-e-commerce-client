@@ -125,7 +125,7 @@ const OrdersTable = ({ data, status, fetchOrders }) => {
       } else {
         await updateOrderStatus(orderId, newStatus);
         toast.success(
-          `Đã cập nhật trạng thái đơn hàng thành ${statusMapping[newStatus].label}`
+          `Đã cập nhật trạng thái đơn hàng thành ${statusMapping[newStatus].label}`,
         );
       }
       fetchOrders(false);
@@ -145,22 +145,40 @@ const OrdersTable = ({ data, status, fetchOrders }) => {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50/80">
             <tr>
-              <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono">
+              <th
+                scope="col"
+                className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono"
+              >
                 Mã đơn
               </th>
-              <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono">
+              <th
+                scope="col"
+                className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono"
+              >
                 Khách hàng
               </th>
-              <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono">
+              <th
+                scope="col"
+                className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono"
+              >
                 Ngày đặt
               </th>
-              <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono">
+              <th
+                scope="col"
+                className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono"
+              >
                 Tổng tiền
               </th>
-              <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono">
+              <th
+                scope="col"
+                className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono"
+              >
                 Trạng thái
               </th>
-              <th scope="col" className="px-6 py-4 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono">
+              <th
+                scope="col"
+                className="px-6 py-4 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono"
+              >
                 Hành động
               </th>
             </tr>
@@ -194,7 +212,9 @@ const OrdersTable = ({ data, status, fetchOrders }) => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-mono text-xs">
                     {order.orderDate
-                      ? format(new Date(order.orderDate), "dd/MM/yyyy", { locale: vi })
+                      ? format(new Date(order.orderDate), "dd/MM/yyyy", {
+                          locale: vi,
+                        })
                       : "N/A"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-[#3B82F6]">
@@ -225,12 +245,17 @@ const OrdersTable = ({ data, status, fetchOrders }) => {
                               <MoreHorizontal size={18} />
                             </Button>
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="w-48 rounded-xl p-1">
+                          <DropdownMenuContent
+                            align="end"
+                            className="w-48 rounded-xl p-1"
+                          >
                             {statusMapping[order.orderStatus].actions.map(
                               (action) => (
                                 <DropdownMenuItem
                                   key={action}
-                                  onClick={() => handleStatusChange(order.id, action)}
+                                  onClick={() =>
+                                    handleStatusChange(order.id, action)
+                                  }
                                   className={`rounded-lg cursor-pointer px-3 py-2 text-sm font-medium mb-1 last:mb-0 ${
                                     action === "CANCELLED"
                                       ? "text-red-600 focus:bg-red-50 focus:text-red-700"
@@ -239,7 +264,7 @@ const OrdersTable = ({ data, status, fetchOrders }) => {
                                 >
                                   {actionLabels[action]}
                                 </DropdownMenuItem>
-                              )
+                              ),
                             )}
                           </DropdownMenuContent>
                         </DropdownMenu>
@@ -248,14 +273,18 @@ const OrdersTable = ({ data, status, fetchOrders }) => {
                         variant="ghost"
                         size="sm"
                         className={`h-9 px-3 rounded-lg flex items-center gap-2 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] ${
-                          expandedOrder === order.id ? "bg-blue-50 text-[#3B82F6]" : "text-gray-500 hover:text-[#111827] hover:bg-gray-100"
+                          expandedOrder === order.id
+                            ? "bg-blue-50 text-[#3B82F6]"
+                            : "text-gray-500 hover:text-[#111827] hover:bg-gray-100"
                         }`}
                         onClick={(e) => {
                           e.stopPropagation();
                           handleExpand(order.id);
                         }}
                       >
-                        <span className="text-xs font-semibold uppercase tracking-wider font-mono">Chi tiết</span>
+                        <span className="text-xs font-semibold uppercase tracking-wider font-mono">
+                          Chi tiết
+                        </span>
                         {expandedOrder === order.id ? (
                           <ChevronUp size={16} />
                         ) : (
@@ -292,7 +321,10 @@ const OrdersTable = ({ data, status, fetchOrders }) => {
                                 </h4>
                                 <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm space-y-4">
                                   <div className="flex gap-3">
-                                    <User size={18} className="text-gray-400 shrink-0 mt-0.5" />
+                                    <User
+                                      size={18}
+                                      className="text-gray-400 shrink-0 mt-0.5"
+                                    />
                                     <div>
                                       <p className="text-sm font-semibold text-[#111827]">
                                         {order.user?.fullName || "N/A"}
@@ -304,14 +336,20 @@ const OrdersTable = ({ data, status, fetchOrders }) => {
                                   </div>
 
                                   <div className="flex gap-3">
-                                    <Phone size={18} className="text-gray-400 shrink-0 mt-0.5" />
+                                    <Phone
+                                      size={18}
+                                      className="text-gray-400 shrink-0 mt-0.5"
+                                    />
                                     <p className="text-sm text-[#111827] font-mono">
                                       {order.user?.phone || "N/A"}
                                     </p>
                                   </div>
 
                                   <div className="flex gap-3">
-                                    <MapPin size={18} className="text-gray-400 shrink-0 mt-0.5" />
+                                    <MapPin
+                                      size={18}
+                                      className="text-gray-400 shrink-0 mt-0.5"
+                                    />
                                     <p className="text-sm text-[#111827] leading-relaxed">
                                       {order.user?.address || "N/A"}
                                     </p>
@@ -341,39 +379,57 @@ const OrdersTable = ({ data, status, fetchOrders }) => {
                                   <table className="min-w-full divide-y divide-gray-100">
                                     <thead className="bg-gray-50">
                                       <tr>
-                                        <th scope="col" className="px-5 py-3 text-left text-[10px] font-semibold text-gray-500 uppercase tracking-widest font-mono">
+                                        <th
+                                          scope="col"
+                                          className="px-5 py-3 text-left text-[10px] font-semibold text-gray-500 uppercase tracking-widest font-mono"
+                                        >
                                           Sản Phẩm
                                         </th>
-                                        <th scope="col" className="px-5 py-3 text-center text-[10px] font-semibold text-gray-500 uppercase tracking-widest font-mono">
+                                        <th
+                                          scope="col"
+                                          className="px-5 py-3 text-center text-[10px] font-semibold text-gray-500 uppercase tracking-widest font-mono"
+                                        >
                                           SL
                                         </th>
-                                        <th scope="col" className="px-5 py-3 text-right text-[10px] font-semibold text-gray-500 uppercase tracking-widest font-mono">
+                                        <th
+                                          scope="col"
+                                          className="px-5 py-3 text-right text-[10px] font-semibold text-gray-500 uppercase tracking-widest font-mono"
+                                        >
                                           Đơn Giá
                                         </th>
                                       </tr>
                                     </thead>
                                     <tbody className="bg-white divide-y divide-gray-50">
                                       {order.items?.map((item, index) => (
-                                        <tr key={index} className="hover:bg-gray-50/50 transition-colors">
+                                        <tr
+                                          key={index}
+                                          className="hover:bg-gray-50/50 transition-colors"
+                                        >
                                           <td className="px-5 py-3 whitespace-nowrap">
                                             <div className="flex items-center gap-4">
                                               <div className="h-12 w-12 flex-shrink-0 rounded-lg bg-gray-50 border border-gray-100 overflow-hidden">
                                                 <img
                                                   src={
-                                                    item.sizeDTO?.product?.images?.[0]?.url ||
+                                                    item.sizeDTO?.product
+                                                      ?.images?.[0]?.url ||
                                                     "https://via.placeholder.com/50"
                                                   }
-                                                  alt={item.sizeDTO?.product?.name}
+                                                  alt={
+                                                    item.sizeDTO?.product?.name
+                                                  }
                                                   className="h-full w-full object-cover"
                                                 />
                                               </div>
                                               <div>
                                                 <p className="text-sm font-semibold text-[#111827] max-w-[200px] sm:max-w-[300px] truncate">
-                                                  {item.sizeDTO?.product?.name || "N/A"}
+                                                  {item.sizeDTO?.product
+                                                    ?.name || "N/A"}
                                                 </p>
                                                 <div className="flex items-center gap-2 mt-1">
                                                   <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-gray-100 text-gray-600">
-                                                    Size {item.sizeDTO?.sizeName || "N/A"}
+                                                    Size{" "}
+                                                    {item.sizeDTO?.sizeName ||
+                                                      "N/A"}
                                                   </span>
                                                 </div>
                                               </div>
@@ -428,7 +484,7 @@ const OrdersTable = ({ data, status, fetchOrders }) => {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter className="mt-6 gap-3 sm:gap-0">
-              <AlertDialogCancel 
+              <AlertDialogCancel
                 disabled={isProcessing}
                 className="h-11 px-6 rounded-lg font-semibold"
               >
