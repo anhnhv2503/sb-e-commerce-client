@@ -210,7 +210,7 @@ const OrdersTable = ({ data, status, fetchOrders }) => {
                       </span>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-mono text-xs">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-mono">
                     {order.orderDate
                       ? format(new Date(order.orderDate), "dd/MM/yyyy", {
                           locale: vi,
