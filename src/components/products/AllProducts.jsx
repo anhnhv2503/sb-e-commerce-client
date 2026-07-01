@@ -8,6 +8,8 @@ import { motion } from "framer-motion";
 import { SlidersHorizontal, Store } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getProducts } from "../service/ApiFunctions";
+import { useLocation, useSearchParams } from "react-router-dom";
+import { useMemo } from "react";
 
 const containerVariants = {
   hidden: {},
@@ -16,7 +18,11 @@ const containerVariants = {
 
 const cardVariants = {
   hidden: { opacity: 0, y: 16 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: "easeOut" } },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.35, ease: "easeOut" },
+  },
 };
 
 /**
@@ -31,15 +37,25 @@ const AllProducts = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const size = 9;
+  const [searchParams] = useSearchParams();
+  const brand = searchParams.get("brand");
+  const category = searchParams.get("category");
+  const [searchKey, setSearchKey] = useState(null);
 
   useEffect(() => {
     fetchProducts();
-  }, [currentPage]);
+  }, [currentPage, brand, category]);
 
   const fetchProducts = async () => {
     try {
       setIsLoading(true);
-      const response = await getProducts(currentPage, size);
+      const response = await getProducts(
+        currentPage,
+        size,
+        category,
+        brand,
+        searchKey,
+      );
       setProducts(response.data?.content);
       setTotalPages(response.data?.page?.totalPages);
       setIsLoading(false);
@@ -63,7 +79,11 @@ const AllProducts = () => {
           <div className="mt-4 flex items-center justify-between">
             <div>
               <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#111827] flex items-center gap-3">
-                <Store size={28} className="text-[#3B82F6]" aria-hidden="true" />
+                <Store
+                  size={28}
+                  className="text-[#3B82F6]"
+                  aria-hidden="true"
+                />
                 Cửa Hàng
               </h1>
               <p className="mt-1 text-sm text-gray-500">
@@ -88,7 +108,10 @@ const AllProducts = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex gap-8">
           {/* Sidebar - desktop */}
-          <aside className="hidden lg:block w-64 flex-shrink-0" aria-label="Product filters">
+          <aside
+            className="hidden lg:block w-64 flex-shrink-0"
+            aria-label="Product filters"
+          >
             <div className="sticky top-24">
               <SideAccordion />
             </div>

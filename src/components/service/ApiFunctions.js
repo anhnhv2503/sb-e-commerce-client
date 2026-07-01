@@ -4,11 +4,20 @@ export const loginUser = async (data) => {
   return axios.post("/api/auth/login", data);
 };
 
-export const getProducts = async (page, size) => {
+export const getProducts = async (
+  page,
+  size,
+  categoryName,
+  brandName,
+  searchKey,
+) => {
   return axios.get("/api/products", {
     params: {
       page: page,
       size: size,
+      categoryName: categoryName,
+      brandName: brandName,
+      search: searchKey,
     },
   });
 };
@@ -175,7 +184,7 @@ export const vnPayCallback = async (data, vnp_ResponseCode) => {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
 };
 
@@ -267,7 +276,7 @@ export const updateCartItemQuantity = async (cartItemId, quantity) => {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
 };
 
@@ -280,7 +289,7 @@ export const createPayOSPayment = async () => {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
 };
 

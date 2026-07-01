@@ -7,6 +7,7 @@ import {
 import { Filter, Layers, Tag } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getAllCategories, getBrands } from "../service/ApiFunctions";
+import { useSearchParams } from "react-router-dom";
 
 /**
  * SideAccordion
@@ -16,12 +17,14 @@ import { getAllCategories, getBrands } from "../service/ApiFunctions";
 const SideAccordion = () => {
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
-  const params = new URLSearchParams(location.search);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const handleParamsChange = (key, value) => {
+    const params = new URLSearchParams(searchParams);
+
     params.set(key, value);
-    const newParams = params.toString();
-    window.history.replaceState({}, "", `?${newParams}`);
+
+    setSearchParams(params);
   };
 
   const fetchCategories = async () => {
@@ -56,9 +59,16 @@ const SideAccordion = () => {
         </h3>
       </div>
 
-      <Accordion type="multiple" defaultValue={["brands", "categories"]} className="w-full space-y-2">
+      <Accordion
+        type="multiple"
+        defaultValue={["brands", "categories"]}
+        className="w-full space-y-2"
+      >
         {/* Brands */}
-        <AccordionItem value="brands" className="border border-gray-200 rounded-lg overflow-hidden bg-white">
+        <AccordionItem
+          value="brands"
+          className="border border-gray-200 rounded-lg overflow-hidden bg-white"
+        >
           <AccordionTrigger className="px-4 py-3 text-sm font-medium text-[#111827] hover:bg-gray-50 hover:no-underline">
             <span className="flex items-center gap-2">
               <Tag size={14} className="text-gray-400" aria-hidden="true" />
@@ -68,18 +78,21 @@ const SideAccordion = () => {
           <div className="border-t border-gray-100">
             {brands.map((brand) => (
               <AccordionContent
-                key={brand}
+                key={brand?.id}
                 className="cursor-pointer hover:bg-[#3B82F6]/5 px-4 py-2.5 text-sm text-gray-600 hover:text-[#3B82F6] transition-colors border-b border-gray-50 last:border-0"
-                onClick={() => handleParamsChange("brand", brand)}
+                onClick={() => handleParamsChange("brand", brand?.name)}
               >
-                {brand}
+                {brand?.name}
               </AccordionContent>
             ))}
           </div>
         </AccordionItem>
 
         {/* Categories */}
-        <AccordionItem value="categories" className="border border-gray-200 rounded-lg overflow-hidden bg-white">
+        <AccordionItem
+          value="categories"
+          className="border border-gray-200 rounded-lg overflow-hidden bg-white"
+        >
           <AccordionTrigger className="px-4 py-3 text-sm font-medium text-[#111827] hover:bg-gray-50 hover:no-underline">
             <span className="flex items-center gap-2">
               <Layers size={14} className="text-gray-400" aria-hidden="true" />

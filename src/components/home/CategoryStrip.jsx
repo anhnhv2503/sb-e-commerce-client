@@ -59,14 +59,19 @@ const CategoryStrip = () => {
               key={id}
               role="listitem"
               variants={pillVariants}
-              whileHover={{ y: -3, boxShadow: "0 6px 20px rgba(59,130,246,0.18)" }}
+              whileHover={{
+                y: -3,
+                boxShadow: "0 6px 20px rgba(59,130,246,0.18)",
+              }}
               whileTap={{ scale: 0.96 }}
               onClick={() => navigate("/shop")}
               id={`category-pill-${id}`}
               aria-label={`Browse ${label}`}
               className="flex-shrink-0 inline-flex items-center gap-2 px-5 py-3 rounded-full bg-gray-50 hover:bg-[#3B82F6] hover:text-white text-gray-700 text-sm font-medium border border-gray-200 hover:border-[#3B82F6] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B82F6]"
             >
-              <span aria-hidden="true" className="text-base">{emoji}</span>
+              <span aria-hidden="true" className="text-base">
+                {emoji}
+              </span>
               {label}
             </motion.button>
           ))}
