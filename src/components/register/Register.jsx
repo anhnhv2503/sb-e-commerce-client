@@ -8,7 +8,16 @@ import { registerSchema } from "@/schemas/register.schema";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDocumentTitle } from "@uidotdev/usehooks";
 import { motion } from "framer-motion";
-import { Eye, EyeOff, Lock, Mail, MapPin, Phone, Sparkles, User } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  Lock,
+  Mail,
+  MapPin,
+  Phone,
+  Sparkles,
+  User,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -31,7 +40,11 @@ const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { duration: 0.4, when: "beforeChildren", staggerChildren: 0.06 },
+    transition: {
+      duration: 0.4,
+      when: "beforeChildren",
+      staggerChildren: 0.06,
+    },
   },
 };
 
@@ -127,11 +140,13 @@ const Register = () => {
 
   const FieldError = ({ error }) =>
     error ? (
-      <p className="text-[#DC2626] text-xs mt-1.5" role="alert">{error.message}</p>
+      <p className="text-[#DC2626] text-xs mt-1.5" role="alert">
+        {error.message}
+      </p>
     ) : null;
 
   return (
-    <div className="min-h-[calc(100vh-80px)] flex">
+    <div className="min-h-[calc(109vh-80px)] flex">
       {/* ── Left decorative panel ── */}
       <div className="hidden lg:flex lg:w-5/12 relative bg-[#111827] items-center justify-center overflow-hidden">
         <div className="absolute top-1/3 -left-16 w-64 h-64 bg-[#8B5CF6]/30 rounded-full blur-3xl" />
@@ -151,7 +166,8 @@ const Register = () => {
             Tạo Tài Khoản
           </h2>
           <p className="text-white/60 text-base leading-relaxed">
-            Đăng ký miễn phí để trải nghiệm mua sắm thời trang cao cấp, theo dõi đơn hàng và nhiều ưu đãi hấp dẫn.
+            Đăng ký miễn phí để trải nghiệm mua sắm thời trang cao cấp, theo dõi
+            đơn hàng và nhiều ưu đãi hấp dẫn.
           </p>
         </motion.div>
       </div>
@@ -164,7 +180,7 @@ const Register = () => {
           animate="visible"
           className="w-full max-w-2xl py-4"
         >
-          <Card className="border border-gray-200 shadow-lg bg-white">
+          <Card className="border-2 border-black shadow-lg bg-white">
             <CardHeader className="pb-2 pt-8 px-8">
               <motion.div variants={itemVariants}>
                 <h1 className="font-display text-3xl font-bold text-[#111827] text-center">
@@ -181,32 +197,50 @@ const Register = () => {
                 {/* Row: Full Name + Phone */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <motion.div variants={itemVariants}>
-                    <Label htmlFor="reg-fullName" className="text-[#111827] text-sm font-medium">Họ Tên</Label>
+                    <Label
+                      htmlFor="reg-fullName"
+                      className="text-[#111827] text-sm font-medium"
+                    >
+                      Họ Tên
+                    </Label>
                     <div className="relative mt-1.5">
-                      <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden="true" />
+                      <User
+                        size={16}
+                        className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                        aria-hidden="true"
+                      />
                       <Input
                         id="reg-fullName"
                         type="text"
                         required
                         {...register("fullName")}
                         placeholder="Nguyễn Văn A"
-                        className="pl-10 h-11 bg-white border-gray-300 focus:border-[#3B82F6] focus:ring-[#3B82F6] text-[#111827]"
+                        className="pl-10 h-11 bg-white border-2 border-black text-[#111827]"
                       />
                     </div>
                     <FieldError error={errors.fullName} />
                   </motion.div>
 
                   <motion.div variants={itemVariants}>
-                    <Label htmlFor="reg-phone" className="text-[#111827] text-sm font-medium">Số điện thoại</Label>
+                    <Label
+                      htmlFor="reg-phone"
+                      className="text-[#111827] text-sm font-medium"
+                    >
+                      Số điện thoại
+                    </Label>
                     <div className="relative mt-1.5">
-                      <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden="true" />
+                      <Phone
+                        size={16}
+                        className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                        aria-hidden="true"
+                      />
                       <Input
                         id="reg-phone"
                         type="text"
                         required
                         {...register("phone")}
                         placeholder="0912 345 678"
-                        className="pl-10 h-11 bg-white border-gray-300 focus:border-[#3B82F6] focus:ring-[#3B82F6] text-[#111827]"
+                        className="pl-10 h-11 bg-white border-2 border-black text-[#111827]"
                       />
                     </div>
                     <FieldError error={errors.phone} />
@@ -216,12 +250,16 @@ const Register = () => {
                 {/* Address section */}
                 <motion.div variants={itemVariants} className="space-y-3">
                   <Label className="text-[#111827] text-sm font-medium flex items-center gap-1.5">
-                    <MapPin size={14} className="text-gray-400" aria-hidden="true" />
+                    <MapPin
+                      size={14}
+                      className="text-gray-400"
+                      aria-hidden="true"
+                    />
                     Địa chỉ
                   </Label>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <Select onValueChange={setSelectedProvince}>
-                      <SelectTrigger className="h-11 bg-white border-gray-300 focus:border-[#3B82F6] text-[#111827]">
+                      <SelectTrigger className="h-11 bg-white border-2 border-black text-[#111827]">
                         <SelectValue placeholder="Tỉnh/Thành" />
                       </SelectTrigger>
                       <SelectContent>
@@ -233,7 +271,7 @@ const Register = () => {
                       </SelectContent>
                     </Select>
                     <Select onValueChange={setSelectedDistrict}>
-                      <SelectTrigger className="h-11 bg-white border-gray-300 focus:border-[#3B82F6] text-[#111827]">
+                      <SelectTrigger className="h-11 bg-white border-2 border-black text-[#111827]">
                         <SelectValue placeholder="Quận/Huyện" />
                       </SelectTrigger>
                       <SelectContent>
@@ -245,7 +283,7 @@ const Register = () => {
                       </SelectContent>
                     </Select>
                     <Select onValueChange={setSelectedWard}>
-                      <SelectTrigger className="h-11 bg-white border-gray-300 focus:border-[#3B82F6] text-[#111827]">
+                      <SelectTrigger className="h-11 bg-white border-2 border-black text-[#111827]">
                         <SelectValue placeholder="Phường/Xã" />
                       </SelectTrigger>
                       <SelectContent>
@@ -263,22 +301,31 @@ const Register = () => {
                     required
                     onChange={(e) => setHomeAddress(e.target.value)}
                     placeholder="Số nhà, đường, ngõ…"
-                    className="h-11 bg-white border-gray-300 focus:border-[#3B82F6] focus:ring-[#3B82F6] text-[#111827]"
+                    className="h-11 bg-white border-2 border-black text-[#111827]"
                   />
                 </motion.div>
 
                 {/* Email */}
                 <motion.div variants={itemVariants}>
-                  <Label htmlFor="reg-email" className="text-[#111827] text-sm font-medium">Email</Label>
+                  <Label
+                    htmlFor="reg-email"
+                    className="text-[#111827] text-sm font-medium"
+                  >
+                    Email
+                  </Label>
                   <div className="relative mt-1.5">
-                    <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden="true" />
+                    <Mail
+                      size={16}
+                      className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                      aria-hidden="true"
+                    />
                     <Input
                       id="reg-email"
                       type="email"
                       required
                       {...register("email")}
                       placeholder="you@example.com"
-                      className="pl-10 h-11 bg-white border-gray-300 focus:border-[#3B82F6] focus:ring-[#3B82F6] text-[#111827]"
+                      className="pl-10 h-11 bg-white border-2 border-black text-[#111827]"
                     />
                   </div>
                   <FieldError error={errors.email} />
@@ -287,40 +334,64 @@ const Register = () => {
                 {/* Password row */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <motion.div variants={itemVariants}>
-                    <Label htmlFor="reg-password" className="text-[#111827] text-sm font-medium">Mật khẩu</Label>
+                    <Label
+                      htmlFor="reg-password"
+                      className="text-[#111827] text-sm font-medium"
+                    >
+                      Mật khẩu
+                    </Label>
                     <div className="relative mt-1.5">
-                      <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden="true" />
+                      <Lock
+                        size={16}
+                        className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                        aria-hidden="true"
+                      />
                       <Input
                         id="reg-password"
                         type={showPassword ? "text" : "password"}
                         required
                         {...register("password")}
                         placeholder="••••••••"
-                        className="pl-10 pr-10 h-11 bg-white border-gray-300 focus:border-[#3B82F6] focus:ring-[#3B82F6] text-[#111827]"
+                        className="pl-10 pr-10 h-11 bg-white border-2 border-black text-[#111827]"
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
                         className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                        aria-label={showPassword ? "Ẩn mật khẩu" : "Hiển thị mật khẩu"}
+                        aria-label={
+                          showPassword ? "Ẩn mật khẩu" : "Hiển thị mật khẩu"
+                        }
                       >
-                        {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                        {showPassword ? (
+                          <EyeOff size={16} />
+                        ) : (
+                          <Eye size={16} />
+                        )}
                       </button>
                     </div>
                     <FieldError error={errors.password} />
                   </motion.div>
 
                   <motion.div variants={itemVariants}>
-                    <Label htmlFor="reg-confirmPassword" className="text-[#111827] text-sm font-medium">Nhập lại mật khẩu</Label>
+                    <Label
+                      htmlFor="reg-confirmPassword"
+                      className="text-[#111827] text-sm font-medium"
+                    >
+                      Nhập lại mật khẩu
+                    </Label>
                     <div className="relative mt-1.5">
-                      <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden="true" />
+                      <Lock
+                        size={16}
+                        className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                        aria-hidden="true"
+                      />
                       <Input
                         id="reg-confirmPassword"
                         type={showPassword ? "text" : "password"}
                         required
                         {...register("confirmPassword")}
                         placeholder="••••••••"
-                        className="pl-10 h-11 bg-white border-gray-300 focus:border-[#3B82F6] focus:ring-[#3B82F6] text-[#111827]"
+                        className="pl-10 h-11 bg-white border-2 border-black text-[#111827]"
                       />
                     </div>
                     <FieldError error={errors.confirmPassword} />
@@ -328,14 +399,20 @@ const Register = () => {
                 </div>
 
                 {/* Show password */}
-                <motion.div variants={itemVariants} className="flex items-center gap-2">
+                <motion.div
+                  variants={itemVariants}
+                  className="flex items-center gap-2"
+                >
                   <Checkbox
                     id="reg-show-password"
                     checked={showPassword}
                     onCheckedChange={() => setShowPassword(!showPassword)}
-                    className="border-gray-400 data-[state=checked]:bg-[#3B82F6] data-[state=checked]:border-[#3B82F6]"
+                    className="border-2 data-[state=checked]:bg-[#ff8e3c] data-[state=checked]:border-black"
                   />
-                  <Label htmlFor="reg-show-password" className="text-sm text-gray-500 cursor-pointer">
+                  <Label
+                    htmlFor="reg-show-password"
+                    className="text-sm text-gray-500 cursor-pointer"
+                  >
                     Hiển thị mật khẩu
                   </Label>
                 </motion.div>
@@ -351,7 +428,8 @@ const Register = () => {
                       type="submit"
                       disabled={loading}
                       id="register-submit-btn"
-                      className="w-full h-12 bg-[#3B82F6] hover:bg-[#2563EB] text-white font-semibold text-base transition-colors shadow-md shadow-blue-500/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B82F6] rounded-lg"
+                      className="w-full h-12 bg-[#d9376e] hover:bg-[#d9376e] text-white font-semibold text-base transition-colors 
+                      border-2 border-black shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d9376e] rounded-lg"
                     >
                       Tạo Tài Khoản
                     </Button>
@@ -365,7 +443,7 @@ const Register = () => {
                     <button
                       type="button"
                       onClick={() => nav("/login")}
-                      className="text-[#3B82F6] hover:text-[#2563EB] font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] rounded"
+                      className="text-[#ff8e3c] hover:text-[#d9376e] font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#ff8e3c] rounded"
                     >
                       Đăng Nhập
                     </button>

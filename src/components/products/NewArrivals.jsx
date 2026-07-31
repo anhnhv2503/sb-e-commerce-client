@@ -13,7 +13,11 @@ const containerVariants = {
 
 const cardVariants = {
   hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" } },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.45, ease: "easeOut" },
+  },
 };
 
 /**
@@ -57,7 +61,7 @@ const NewArrivals = () => {
         >
           <div>
             {/* Badge */}
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#3B82F6]/10 text-[#3B82F6] text-xs font-semibold uppercase tracking-widest mb-3 font-mono">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-blue-500 text-[#eff0f3] text-xs font-semibold uppercase tracking-widest mb-3 font-mono border-2 border-slate-950">
               <Flame size={12} aria-hidden="true" />
               Mới Nhất
             </span>
@@ -67,7 +71,8 @@ const NewArrivals = () => {
               Sản Phẩm Mới Về
             </h2>
             <p className="mt-2 text-gray-500 text-sm sm:text-base max-w-md">
-              Những mẫu mới nhất vừa được cập nhật — nhanh tay trước khi hết hàng.
+              Những mẫu mới nhất vừa được cập nhật — nhanh tay trước khi hết
+              hàng.
             </p>
           </div>
 

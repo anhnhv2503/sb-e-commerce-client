@@ -4,20 +4,16 @@ import { ArrowRight, ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-/** Token aliases (SKILL.md: prefer semantic tokens over raw values) */
-const TOKENS = {
-  primary: "#3B82F6",
-  secondary: "#8B5CF6",
-  surface: "#FFFFFF",
-  text: "#111827",
-};
-
 const SLIDE_INTERVAL = 5000;
 const AUTOPLAY_RESUME_DELAY = 10000;
 
 const slideVariants = {
   enter: { opacity: 0, scale: 1.04 },
-  center: { opacity: 1, scale: 1, transition: { duration: 1.1, ease: "easeOut" } },
+  center: {
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 1.1, ease: "easeOut" },
+  },
   exit: { opacity: 0, transition: { duration: 0.6, ease: "easeIn" } },
 };
 
@@ -68,7 +64,7 @@ const HeroSection = () => {
       setCurrentIndex(idx);
       pauseThenResume();
     },
-    [pauseThenResume]
+    [pauseThenResume],
   );
 
   return (
@@ -108,10 +104,7 @@ const HeroSection = () => {
           animate="visible"
           className="mb-6 inline-flex items-center gap-2 w-fit"
         >
-          <span
-            className="flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold tracking-widest uppercase border border-white/20 bg-white/10 backdrop-blur-md text-white"
-          >
-            <Sparkles size={14} className="text-[#8B5CF6]" aria-hidden="true" />
+          <span className="flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-semibold tracking-widest uppercase border border-white/20 bg-white/10 backdrop-blur-md text-white">
             Bộ Sưu Tập Mới Nhất
           </span>
         </motion.div>
@@ -125,10 +118,7 @@ const HeroSection = () => {
           className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-[1.05] text-white max-w-3xl"
         >
           Phong Cách{" "}
-          <span
-            className="animate-shimmer"
-            aria-label="Của Bạn"
-          >
+          <span className="animate-shimmer" aria-label="Của Bạn">
             Của Bạn
           </span>
         </motion.h1>
@@ -141,7 +131,8 @@ const HeroSection = () => {
           animate="visible"
           className="mt-6 text-base sm:text-lg text-white/75 max-w-xl leading-relaxed"
         >
-          Khám phá hàng nghìn sản phẩm thời trang cao cấp — từ casual đến formal — được tuyển chọn dành riêng cho bạn.
+          Khám phá hàng nghìn sản phẩm thời trang cao cấp — từ casual đến formal
+          — được tuyển chọn dành riêng cho bạn.
         </motion.p>
 
         {/* CTAs – 44px+ touch targets (SKILL.md accessibility) */}
@@ -157,7 +148,7 @@ const HeroSection = () => {
             whileTap={{ scale: 0.97 }}
             onClick={() => navigate("/shop")}
             id="hero-cta-shop"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-[#3B82F6] hover:bg-[#2563EB] text-white font-semibold text-base transition-colors shadow-lg shadow-blue-500/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B82F6]"
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-md bg-[#ff8e3c] hover:bg-[#ff8e3c] text-white font-semibold text-base transition-colors shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 border-2 border-slate-950"
             aria-label="Xem cửa hàng"
           >
             Mua Ngay
@@ -169,7 +160,7 @@ const HeroSection = () => {
             whileTap={{ scale: 0.97 }}
             onClick={() => navigate("/about")}
             id="hero-cta-about"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-white/10 hover:bg-white/20 border border-white/30 text-white font-semibold text-base backdrop-blur-sm transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/60"
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-md bg-[#d9376e] hover:bg-[#d9376e] text-white font-semibold text-base transition-colors shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 border-2 border-slate-950"
             aria-label="Tìm hiểu thêm về chúng tôi"
           >
             Về Chúng Tôi
@@ -203,7 +194,7 @@ const HeroSection = () => {
       <button
         onClick={goToPrev}
         aria-label="Previous slide"
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-black/30 hover:bg-black/50 backdrop-blur-sm text-white transition-all border border-white/10 hover:border-white/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+        className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-black/30 hover:bg-black/50 backdrop-blur-sm text-white transition-all border-2 border-white/10 hover:border-white/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white "
       >
         <ChevronLeft size={22} aria-hidden="true" />
       </button>
@@ -211,7 +202,7 @@ const HeroSection = () => {
       <button
         onClick={goToNext}
         aria-label="Next slide"
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-black/30 hover:bg-black/50 backdrop-blur-sm text-white transition-all border border-white/10 hover:border-white/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+        className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-black/30 hover:bg-black/50 backdrop-blur-sm text-white transition-all border-white/10 hover:border-white/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white border-2"
       >
         <ChevronRight size={22} aria-hidden="true" />
       </button>
@@ -221,7 +212,8 @@ const HeroSection = () => {
         aria-hidden="true"
         className="absolute bottom-8 right-8 font-mono text-xs text-white/40 tracking-widest z-20"
       >
-        {String(currentIndex + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}
+        {String(currentIndex + 1).padStart(2, "0")} /{" "}
+        {String(images.length).padStart(2, "0")}
       </div>
     </section>
   );

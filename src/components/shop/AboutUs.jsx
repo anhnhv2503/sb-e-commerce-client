@@ -14,7 +14,7 @@ import toast from "react-hot-toast";
 const AboutUs = () => {
   useDocumentTitle("Giới thiệu về chúng tôi — VA Shop");
   const [hovered, setHovered] = useState(null);
-  
+
   const handleContactUs = () => {
     toast.success("Cảm ơn bạn! Chúng tôi sẽ liên hệ lại sớm nhất.");
   };
@@ -41,12 +41,12 @@ const AboutUs = () => {
     <div className="font-sans bg-gray-50/50">
       {/* Hero Section with Premium Gradient Overlay */}
       <section className="relative h-screen min-h-[600px] flex items-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#111827] via-[#1f2937] to-[#3B82F6] opacity-95"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-[#2a2a2a] via-[#1f2937] to-[#ff8e3c] opacity-95"></div>
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80')] bg-cover bg-center mix-blend-overlay opacity-40"></div>
-        
+
         {/* Abstract decorative glowing orb */}
-        <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] bg-[#3B82F6]/30 rounded-full blur-[120px] pointer-events-none mix-blend-screen" />
-        
+        <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] rounded-full blur-[120px] pointer-events-none mix-blend-screen" />
+
         <div className="container mx-auto px-6 relative z-10 text-white">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -55,15 +55,17 @@ const AboutUs = () => {
             className="max-w-3xl"
           >
             <h1 className="font-display text-5xl md:text-7xl font-bold mb-6 tracking-tight leading-tight">
-              Câu Chuyện <br/><span className="text-[#3B82F6]">Của Chúng Tôi</span>
+              Câu Chuyện <br />
+              <span className="text-[#ff8e3c]">Của Chúng Tôi</span>
             </h1>
             <p className="text-lg md:text-xl mb-10 text-gray-300 leading-relaxed font-light">
               Chúng tôi đam mê cung cấp các sản phẩm và trải nghiệm đặc biệt
-              giúp thay đổi cách khách hàng đạt được mục tiêu của họ trong kỷ nguyên số.
+              giúp thay đổi cách khách hàng đạt được mục tiêu của họ trong kỷ
+              nguyên số.
             </p>
             <div className="flex flex-col sm:flex-row flex-wrap gap-4">
               <Button
-                className="h-14 px-8 bg-[#3B82F6] hover:bg-[#2563EB] text-white shadow-lg shadow-blue-500/30 rounded-full font-semibold text-base transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B82F6]"
+                className="h-14 px-8 bg-blue-500 hover:bg-[#2563EB] text-white shadow-lg rounded-md border-2 border-slate-950 font-semibold text-base transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B82F6]"
                 onClick={handleContactUs}
               >
                 Liên Hệ Ngay
@@ -71,7 +73,7 @@ const AboutUs = () => {
               </Button>
               <Button
                 variant="outline"
-                className="h-14 px-8 bg-transparent border border-white/30 text-white hover:bg-white hover:text-[#111827] rounded-full font-semibold text-base transition-all backdrop-blur-sm"
+                className="h-14 px-8 bg-transparent border border-white/30 text-white hover:bg-white hover:text-[#111827] rounded-md font-semibold text-base transition-all backdrop-blur-sm"
               >
                 Dự Án Của Chúng Tôi
               </Button>
@@ -98,7 +100,9 @@ const AboutUs = () => {
             </h2>
             <div className="h-1.5 w-24 bg-[#3B82F6] rounded-full mx-auto mb-8"></div>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Cung cấp các giải pháp sáng tạo và bền vững giúp cá nhân và tổ chức phát huy hết tiềm năng của mình trong bối cảnh thay đổi nhanh chóng hiện nay.
+              Cung cấp các giải pháp sáng tạo và bền vững giúp cá nhân và tổ
+              chức phát huy hết tiềm năng của mình trong bối cảnh thay đổi nhanh
+              chóng hiện nay.
             </p>
           </motion.div>
 
@@ -109,26 +113,30 @@ const AboutUs = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
-              className="bg-white rounded-3xl shadow-xl shadow-blue-900/5 p-10 border border-gray-100 hover:-translate-y-2 transition-transform duration-300 relative overflow-hidden group"
+              className="bg-[#eff0f3] rounded-lg shadow-xl shadow-blue-900/5 p-10 border-2 border-slate-950 hover:-translate-y-2 transition-transform duration-300 relative overflow-hidden group"
             >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full blur-3xl -mr-10 -mt-10 group-hover:bg-[#3B82F6]/10 transition-colors" />
+              <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-md blur-3xl -mr-10 -mt-10 group-hover:bg-[#3B82F6]/10 transition-colors" />
               <div className="relative z-10">
-                <div className="bg-blue-50 rounded-2xl w-16 h-16 flex items-center justify-center mb-8 border border-blue-100">
+                <div className="bg-[#eff0f3] rounded-lg w-16 h-16 flex items-center justify-center mb-8 border-2 border-slate-950">
                   <svg
-                    className="w-8 h-8 text-[#3B82F6]"
+                    className="w-8 h-8 text-[#ff8e3c]"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
                     <path d="M5.5 16a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 16h-8z"></path>
                   </svg>
                 </div>
-                <h3 className="font-display text-2xl font-bold mb-4 text-[#111827]">Sản Phẩm Chất Lượng</h3>
+                <h3 className="font-display text-2xl font-bold mb-4 text-[#111827]">
+                  Sản Phẩm Chất Lượng
+                </h3>
                 <p className="text-gray-600 mb-8 leading-relaxed">
-                  Chúng tôi tạo ra những sản phẩm đặc biệt kết hợp giữa sự đổi mới với độ tin cậy, đảm bảo khách hàng nhận được giải pháp vượt qua mong đợi trong khi vẫn dễ dàng tiếp cận.
+                  Chúng tôi tạo ra những sản phẩm đặc biệt kết hợp giữa sự đổi
+                  mới với độ tin cậy, đảm bảo khách hàng nhận được giải pháp
+                  vượt qua mong đợi trong khi vẫn dễ dàng tiếp cận.
                 </p>
                 <Button
                   variant="link"
-                  className="text-[#3B82F6] p-0 font-bold hover:text-[#2563EB] flex items-center gap-2"
+                  className="text-[#0d0d0d] p-0 font-bold hover:text-[#0d0d0d] flex items-center gap-2"
                 >
                   Tìm hiểu thêm <ArrowRight className="h-4 w-4" />
                 </Button>
@@ -141,13 +149,13 @@ const AboutUs = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
               viewport={{ once: true }}
-              className="bg-white rounded-3xl shadow-xl shadow-blue-900/5 p-10 border border-gray-100 hover:-translate-y-2 transition-transform duration-300 relative overflow-hidden group"
+              className="bg-[#eff0f3] rounded-lg shadow-xl shadow-blue-900/5 p-10 border-2 border-slate-950 hover:-translate-y-2 transition-transform duration-300 relative overflow-hidden group"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-full blur-3xl -mr-10 -mt-10 group-hover:bg-emerald-100 transition-colors" />
               <div className="relative z-10">
-                <div className="bg-emerald-50 rounded-2xl w-16 h-16 flex items-center justify-center mb-8 border border-emerald-100">
+                <div className="bg-[#eff0f3] rounded-lg w-16 h-16 flex items-center justify-center mb-8 border-2 border-slate-950">
                   <svg
-                    className="w-8 h-8 text-emerald-500"
+                    className="w-8 h-8 text-[#d9376e]"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -158,13 +166,17 @@ const AboutUs = () => {
                     ></path>
                   </svg>
                 </div>
-                <h3 className="font-display text-2xl font-bold mb-4 text-[#111827]">Phát Triển Bền Vững</h3>
+                <h3 className="font-display text-2xl font-bold mb-4 text-[#111827]">
+                  Phát Triển Bền Vững
+                </h3>
                 <p className="text-gray-600 mb-8 leading-relaxed">
-                  Tính bền vững tạo thành nền tảng cho cách tiếp cận của chúng tôi, hướng dẫn mọi thứ từ nguồn vật liệu có trách nhiệm đến sản xuất thân thiện với môi trường.
+                  Tính bền vững tạo thành nền tảng cho cách tiếp cận của chúng
+                  tôi, hướng dẫn mọi thứ từ nguồn vật liệu có trách nhiệm đến
+                  sản xuất thân thiện với môi trường.
                 </p>
                 <Button
                   variant="link"
-                  className="text-emerald-600 p-0 font-bold hover:text-emerald-700 flex items-center gap-2"
+                  className="text-[#0d0d0d] p-0 font-bold hover:text-[#0d0d0d] flex items-center gap-2"
                 >
                   Tìm hiểu thêm <ArrowRight className="h-4 w-4" />
                 </Button>
@@ -209,7 +221,7 @@ const AboutUs = () => {
                 onMouseLeave={() => setHovered(null)}
                 className="relative group"
               >
-                <Card className="bg-white shadow-lg border-gray-100 rounded-3xl overflow-hidden h-full hover:shadow-2xl hover:shadow-blue-900/10 transition-all duration-500">
+                <Card className="bg-white shadow-lg rounded-lg overflow-hidden h-full hover:shadow-2xl hover:shadow-blue-900/10 transition-all duration-500 border-2 border-slate-950">
                   <CardHeader className="p-0">
                     <div className="relative h-[400px] overflow-hidden">
                       <img
@@ -219,7 +231,7 @@ const AboutUs = () => {
                       />
                       {/* Gradient overlay */}
                       <div className="absolute inset-0 bg-gradient-to-t from-[#111827] via-transparent to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-300" />
-                      
+
                       {/* Hidden info appearing on hover */}
                       <div className="absolute inset-x-0 bottom-0 p-8 transform translate-y-8 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
                         <p className="text-gray-200 text-sm mb-6 leading-relaxed font-light">
@@ -243,8 +255,12 @@ const AboutUs = () => {
                     </div>
                   </CardHeader>
                   <CardContent className="p-8 absolute bottom-0 left-0 right-0 group-hover:opacity-0 transition-opacity duration-300 bg-gradient-to-t from-[#111827] to-transparent pt-32 pointer-events-none">
-                    <h3 className="font-display text-2xl font-bold mb-2 text-white">{member.name}</h3>
-                    <p className="text-[#3B82F6] font-semibold tracking-wide text-sm uppercase">{member.role}</p>
+                    <h3 className="font-display text-2xl font-bold mb-2 text-white">
+                      {member.name}
+                    </h3>
+                    <p className="text-[#3B82F6] font-semibold tracking-wide text-sm uppercase">
+                      {member.role}
+                    </p>
                   </CardContent>
                 </Card>
               </motion.div>

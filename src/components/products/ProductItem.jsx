@@ -21,7 +21,7 @@ const ProductItem = ({ product }) => {
       transition={{ duration: 0.3 }}
     >
       <Card
-        className="overflow-hidden cursor-pointer group h-full border border-gray-100 hover:border-[#3B82F6]/30 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-300 bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6]"
+        className="overflow-hidden cursor-pointer group h-full border-2 border-slate-950 hover:shadow-lg transition-all duration-300 bg-[#eff0f3] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6]"
         onClick={() => navigate(`/product/${product.id}`)}
         tabIndex={0}
         role="link"
@@ -47,7 +47,7 @@ const ProductItem = ({ product }) => {
 
           {/* Quick view badge */}
           <div className="absolute bottom-3 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">
-            <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/95 backdrop-blur-sm text-[#111827] text-xs font-semibold shadow-lg">
+            <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md border-2 border-slate-950 bg-white/95 backdrop-blur-sm text-[#111827] text-xs font-semibold shadow-lg">
               <Eye size={14} aria-hidden="true" />
               Xem Nhanh
             </span>
@@ -55,14 +55,14 @@ const ProductItem = ({ product }) => {
 
           {/* Category badge */}
           {product.category && (
-            <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-sm text-[10px] font-semibold uppercase tracking-wider text-gray-600 border border-gray-200/50">
+            <span className="absolute top-3 left-3 px-2.5 py-1 rounded-md border-2 border-slate-950 bg-white/90 backdrop-blur-sm text-[10px] font-semibold uppercase tracking-wider text-[#d9376e]">
               {product.category.name}
             </span>
           )}
         </div>
 
         <CardContent className="p-4 space-y-1.5">
-          <h3 className="text-sm font-medium text-[#111827] line-clamp-2 leading-snug group-hover:text-[#3B82F6] transition-colors">
+          <h3 className="text-sm font-medium text-[#111827] line-clamp-2 leading-snug group-hover:text-[#ff8e3c] transition-colors">
             {product.name}
           </h3>
           <p className="text-lg font-bold text-[#111827]">

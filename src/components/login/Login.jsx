@@ -19,13 +19,21 @@ const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { duration: 0.4, when: "beforeChildren", staggerChildren: 0.07 },
+    transition: {
+      duration: 0.4,
+      when: "beforeChildren",
+      staggerChildren: 0.07,
+    },
   },
 };
 
 const itemVariants = {
   hidden: { opacity: 0, y: 12 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: "easeOut" } },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.35, ease: "easeOut" },
+  },
 };
 
 const Login = () => {
@@ -56,7 +64,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-80px)] flex">
+    <div className="min-h-[calc(108vh-70px)] flex">
       {/* ── Left decorative panel (hidden on mobile) ── */}
       <div className="hidden lg:flex lg:w-1/2 relative bg-[#111827] items-center justify-center overflow-hidden">
         {/* Gradient orbs */}
@@ -77,7 +85,8 @@ const Login = () => {
             Chào Mừng Trở Lại
           </h2>
           <p className="text-white/60 text-base leading-relaxed">
-            Đăng nhập để truy cập giỏ hàng, theo dõi đơn hàng và khám phá bộ sưu tập mới nhất.
+            Đăng nhập để truy cập giỏ hàng, theo dõi đơn hàng và khám phá bộ sưu
+            tập mới nhất.
           </p>
         </motion.div>
       </div>
@@ -90,7 +99,7 @@ const Login = () => {
           animate="visible"
           className="w-full max-w-md"
         >
-          <Card className="border border-gray-200 shadow-lg bg-white">
+          <Card className="border-2 border-black shadow-lg bg-white">
             <CardHeader className="pb-2 pt-8 px-8">
               <motion.div variants={itemVariants}>
                 <h1 className="font-display text-3xl font-bold text-[#111827] text-center">
@@ -106,71 +115,97 @@ const Login = () => {
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                 {/* Email */}
                 <motion.div variants={itemVariants}>
-                  <Label htmlFor="login-email" className="text-[#111827] text-sm font-medium">
+                  <Label
+                    htmlFor="login-email"
+                    className="text-[#111827] text-sm font-medium"
+                  >
                     Email
                   </Label>
                   <div className="relative mt-1.5">
-                    <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden="true" />
+                    <Mail
+                      size={16}
+                      className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                      aria-hidden="true"
+                    />
                     <Input
                       id="login-email"
                       type="email"
                       {...register("email")}
                       placeholder="you@example.com"
                       required
-                      className="pl-10 h-11 bg-white border-gray-300 focus:border-[#3B82F6] focus:ring-[#3B82F6] text-[#111827] transition-all"
+                      className="pl-10 h-11 bg-white border-2 border-black text-[#111827] transition-all"
                     />
                   </div>
                   {errors.email && (
-                    <p className="text-[#DC2626] text-xs mt-1.5" role="alert">{errors.email.message}</p>
+                    <p className="text-[#DC2626] text-xs mt-1.5" role="alert">
+                      {errors.email.message}
+                    </p>
                   )}
                 </motion.div>
 
                 {/* Password */}
                 <motion.div variants={itemVariants}>
-                  <Label htmlFor="login-password" className="text-[#111827] text-sm font-medium">
+                  <Label
+                    htmlFor="login-password"
+                    className="text-[#111827] text-sm font-medium"
+                  >
                     Mật khẩu
                   </Label>
                   <div className="relative mt-1.5">
-                    <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden="true" />
+                    <Lock
+                      size={16}
+                      className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                      aria-hidden="true"
+                    />
                     <Input
                       id="login-password"
                       type={showPassword ? "text" : "password"}
                       {...register("password")}
                       placeholder="••••••••"
                       required
-                      className="pl-10 pr-10 h-11 bg-white border-gray-300 focus:border-[#3B82F6] focus:ring-[#3B82F6] text-[#111827] transition-all"
+                      className="pl-10 pr-10 h-11 bg-white border-2 border-black text-[#111827] transition-all"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors p-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] rounded"
-                      aria-label={showPassword ? "Ẩn mật khẩu" : "Hiển thị mật khẩu"}
+                      aria-label={
+                        showPassword ? "Ẩn mật khẩu" : "Hiển thị mật khẩu"
+                      }
                     >
                       {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
                   </div>
                   {errors.password && (
-                    <p className="text-[#DC2626] text-xs mt-1.5" role="alert">{errors.password.message}</p>
+                    <p className="text-[#DC2626] text-xs mt-1.5" role="alert">
+                      {errors.password.message}
+                    </p>
                   )}
                 </motion.div>
 
                 {/* Show password checkbox */}
-                <motion.div variants={itemVariants} className="flex items-center justify-between">
+                <motion.div
+                  variants={itemVariants}
+                  className="flex items-center justify-between"
+                >
                   <div className="flex items-center gap-2">
                     <Checkbox
                       id="login-show-password"
                       checked={showPassword}
                       onCheckedChange={() => setShowPassword(!showPassword)}
-                      className="border-gray-400 data-[state=checked]:bg-[#3B82F6] data-[state=checked]:border-[#3B82F6]"
+                      className="border-2 data-[state=checked]:bg-[#d9376e] data-[state=checked]:border-black"
                     />
-                    <Label htmlFor="login-show-password" className="text-sm text-gray-500 cursor-pointer">
+                    <Label
+                      htmlFor="login-show-password"
+                      className="text-sm text-gray-500 cursor-pointer"
+                    >
                       Hiển thị mật khẩu
                     </Label>
                   </div>
                   <button
                     type="button"
                     onClick={() => nav("/forgot/password")}
-                    className="text-sm text-[#3B82F6] hover:text-[#2563EB] font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] rounded"
+                    className="text-sm text-[#d9376e] hover:text-[#d9376e] font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#d9376e] rounded"
                   >
                     Quên mật khẩu?
                   </button>
@@ -178,7 +213,10 @@ const Login = () => {
 
                 {/* Error */}
                 {error && (
-                  <p className="text-[#DC2626] text-sm bg-red-50 border border-red-200 rounded-lg px-4 py-2" role="alert">
+                  <p
+                    className="text-[#DC2626] text-sm bg-red-50 border border-red-200 rounded-lg px-4 py-2"
+                    role="alert"
+                  >
                     {error}
                   </p>
                 )}
@@ -189,14 +227,18 @@ const Login = () => {
                     type="submit"
                     disabled={isSubmitting}
                     id="login-submit-btn"
-                    className="w-full h-12 bg-[#3B82F6] hover:bg-[#2563EB] text-white font-semibold text-base transition-colors shadow-md shadow-blue-500/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B82F6] rounded-lg"
+                    className="w-full h-12 bg-[#ff8e3c] hover:bg-[#ff8e3c] text-white font-semibold text-base transition-colors shadow-md shadow-blue-500/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff8e3c] rounded-lg border-2 border-black"
                   >
                     {isSubmitting ? (
                       <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                     ) : (
                       <>
                         Đăng Nhập
-                        <ArrowRight size={16} className="ml-2" aria-hidden="true" />
+                        <ArrowRight
+                          size={16}
+                          className="ml-2"
+                          aria-hidden="true"
+                        />
                       </>
                     )}
                   </Button>
@@ -204,9 +246,14 @@ const Login = () => {
               </form>
 
               {/* Divider */}
-              <motion.div variants={itemVariants} className="flex items-center gap-4">
+              <motion.div
+                variants={itemVariants}
+                className="flex items-center gap-4"
+              >
                 <div className="flex-1 h-px bg-gray-200" />
-                <span className="text-xs text-gray-400 uppercase tracking-widest font-mono">hoặc</span>
+                <span className="text-xs text-gray-400 uppercase tracking-widest font-mono">
+                  hoặc
+                </span>
                 <div className="flex-1 h-px bg-gray-200" />
               </motion.div>
 
@@ -215,7 +262,7 @@ const Login = () => {
                 <Button
                   variant="outline"
                   id="login-google-btn"
-                  className="w-full h-12 bg-white hover:bg-gray-50 text-[#111827] border-gray-300 font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B82F6] rounded-lg"
+                  className="w-full h-12 bg-white hover:bg-gray-50 text-[#111827] font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B82F6] rounded-lg border-2 border-black"
                   onClick={handleGoogleLogin}
                 >
                   <FaGoogle className="mr-2 text-[#EA4335]" />
@@ -229,7 +276,7 @@ const Login = () => {
                   Chưa có tài khoản?{" "}
                   <button
                     onClick={() => nav("/register")}
-                    className="text-[#3B82F6] hover:text-[#2563EB] font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] rounded"
+                    className="text-[#d9376e] hover:text-[#d9376e] font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#d9376e] rounded"
                   >
                     Đăng Ký Ngay
                   </button>

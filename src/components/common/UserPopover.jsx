@@ -69,21 +69,18 @@ const UserPopover = () => {
             </>
           ) : (
             <>
-              <div className="px-3 py-2 mb-1 border-b border-gray-100">
-                <p className="text-sm font-semibold text-[#111827]">Khách</p>
-              </div>
               <button
                 onClick={() => nav("/login")}
-                className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:text-[#3B82F6] hover:bg-blue-50 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6]"
+                className="flex items-center gap-3 rounded-md border-2 border-slate-950 w-full px-3 py-2.5 text-sm font-medium text-[#fffffe] bg-[#ff8e3c] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#ff8e3c]"
               >
-                <LogIn size={18} className="text-gray-400" />
+                <LogIn size={18} className="text-[#fffffe]" />
                 Đăng Nhập
               </button>
               <button
                 onClick={() => nav("/register")}
-                className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:text-[#3B82F6] hover:bg-blue-50 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6]"
+                className="flex items-center gap-3 rounded-md border-2 border-slate-950 w-full px-3 py-2.5 text-sm font-medium text-[#fffffe] bg-[#d9376e] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#d9376e]"
               >
-                <UserPlus size={18} className="text-gray-400" />
+                <UserPlus size={18} className="text-[#fffffe]" />
                 Đăng Ký
               </button>
             </>

@@ -16,7 +16,7 @@ const Paginator = ({ totalPages, currentPage, onPageChange }) => {
               <PaginationLink
                 className={`cursor-pointer transition-all ${
                   page === currentPage
-                    ? "bg-indigo-600 text-white hover:bg-indigo-700"
+                    ? "bg-[#d9376e] text-white hover:bg-[#eff0f3] border-2 border-slate-950"
                     : "hover:bg-gray-100"
                 }`}
                 onClick={() => onPageChange(page)}

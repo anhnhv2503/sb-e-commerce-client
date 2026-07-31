@@ -1,5 +1,6 @@
 import ManageCategory from "@/components/admin/pages/ManageCategory";
 import ManageOrder from "@/components/admin/pages/ManageOrder";
+import { AuthProvider } from "@/components/auth/AuthContext";
 import AppLoading from "@/components/common/AppLoading";
 import Auth from "@/components/common/Auth";
 import NotFound from "@/components/error/NotFound";
@@ -11,6 +12,7 @@ import PayOSCallback from "@/components/orders/PayOS/PayOSCallback";
 import VnPayCallback from "@/components/orders/VnPayCallback";
 import MyOrder from "@/components/user/MyOrder";
 import AdminRoute from "@/routes/AdminRoute";
+import PublicRoute from "@/routes/PublicRoute";
 import UserRoute from "@/routes/UserRoute";
 import { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
@@ -48,40 +50,53 @@ function App() {
 
   const router = createBrowserRouter([
     {
-      path: "verify",
-      element: <VerifyEmail />,
-    },
-    {
-      path: "auth",
-      element: <Auth />,
-    },
-    {
-      path: "email/verify/success",
-      element: <VerifyEmailSuccess />,
-    },
-    {
-      path: "email/verify/failed",
-      element: <VerifyEmailFailed />,
-    },
-    {
-      path: "reset/password",
-      element: <ResetPassword />,
-    },
-    {
-      path: "order/success",
-      element: <OrderSuccess />,
-    },
-    {
-      path: "order/fail",
-      element: <OrderFailed />,
-    },
-    {
-      path: "payment-callback",
-      element: <VnPayCallback />,
-    },
-    {
-      path: "payos/callback",
-      element: <PayOSCallback />,
+      element: <PublicRoute />,
+      children: [
+        {
+          path: "verify",
+          element: <VerifyEmail />,
+        },
+        {
+          path: "auth",
+          element: <Auth />,
+        },
+        {
+          path: "email/verify/success",
+          element: <VerifyEmailSuccess />,
+        },
+        {
+          path: "email/verify/failed",
+          element: <VerifyEmailFailed />,
+        },
+        {
+          path: "reset/password",
+          element: <ResetPassword />,
+        },
+        {
+          path: "order/success",
+          element: <OrderSuccess />,
+        },
+        {
+          path: "order/fail",
+          element: <OrderFailed />,
+        },
+        {
+          path: "payment-callback",
+          element: <VnPayCallback />,
+        },
+        {
+          path: "payos/callback",
+          element: <PayOSCallback />,
+        },
+        {
+          path: "login",
+          element: <Login />,
+        },
+        {
+          path: "register",
+          element: <Register />,
+        },
+      ],
     },
     {
       path: "/",
@@ -95,14 +110,7 @@ function App() {
           path: "about",
           element: <AboutUs />,
         },
-        {
-          path: "login",
-          element: <Login />,
-        },
-        {
-          path: "register",
-          element: <Register />,
-        },
+
         {
           path: "product/:id",
           element: <ProductDetail />,
@@ -176,10 +184,11 @@ function App() {
   ]);
 
   return (
-    <>
-      <Toaster />
-      <RouterProvider router={router}></RouterProvider>
-    </>
+    <RouterProvider router={router}>
+      <AuthProvider>
+        <Toaster />
+      </AuthProvider>
+    </RouterProvider>
   );
 }
 

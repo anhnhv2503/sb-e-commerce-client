@@ -151,7 +151,10 @@ const ProductDetail = () => {
               <Skeleton className="aspect-square w-full rounded-2xl" />
               <div className="flex gap-3">
                 {[1, 2, 3, 4].map((i) => (
-                  <Skeleton key={i} className="w-20 h-20 rounded-lg flex-shrink-0" />
+                  <Skeleton
+                    key={i}
+                    className="w-20 h-20 rounded-lg flex-shrink-0"
+                  />
                 ))}
               </div>
             </div>
@@ -200,7 +203,7 @@ const ProductDetail = () => {
           {/* ── Image Gallery ── */}
           <div className="space-y-4">
             {/* Main image */}
-            <div className="relative aspect-square overflow-hidden rounded-2xl bg-white border border-gray-200 shadow-sm group">
+            <div className="relative aspect-square overflow-hidden rounded-md bg-white border-2 border-slate-950 shadow-sm group">
               <AnimatePresence mode="wait">
                 <motion.img
                   key={activeImageIndex}
@@ -235,7 +238,10 @@ const ProductDetail = () => {
               )}
 
               {/* Image counter */}
-              <div aria-hidden="true" className="absolute bottom-3 right-3 px-2.5 py-1 rounded-full bg-black/50 backdrop-blur-sm text-white text-xs font-mono">
+              <div
+                aria-hidden="true"
+                className="absolute bottom-3 right-3 px-2.5 py-1 rounded-md bg-black/50 backdrop-blur-sm text-white text-xs font-mono"
+              >
                 {activeImageIndex + 1} / {product.images.length}
               </div>
 
@@ -249,13 +255,20 @@ const ProductDetail = () => {
                     : "bg-white/90 border-gray-200 text-gray-400 hover:text-red-500 hover:border-red-200"
                 }`}
               >
-                <Heart size={18} className={isFavorited ? "fill-red-500" : ""} />
+                <Heart
+                  size={18}
+                  className={isFavorited ? "fill-red-500" : ""}
+                />
               </button>
             </div>
 
             {/* Thumbnails */}
             {product.images.length > 1 && (
-              <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-hide" role="tablist" aria-label="Image thumbnails">
+              <div
+                className="flex gap-3 overflow-x-auto pb-1 scrollbar-hide"
+                role="tablist"
+                aria-label="Image thumbnails"
+              >
                 {product.images.map((image, index) => (
                   <button
                     key={index}
@@ -263,9 +276,9 @@ const ProductDetail = () => {
                     aria-selected={activeImageIndex === index}
                     aria-label={`Xem hình ${index + 1}`}
                     onClick={() => setActiveImageIndex(index)}
-                    className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] ${
+                    className={`flex-shrink-0 w-20 h-20 rounded-md overflow-hidden border-2 transition-all ${
                       activeImageIndex === index
-                        ? "border-[#3B82F6] ring-2 ring-[#3B82F6]/20"
+                        ? "border-[#0d0d0d]"
                         : "border-gray-200 opacity-60 hover:opacity-100 hover:border-gray-300"
                     }`}
                   >
@@ -292,7 +305,7 @@ const ProductDetail = () => {
             {product.category && (
               <Badge
                 variant="outline"
-                className="text-[#3B82F6] bg-blue-50 border-blue-200 hover:bg-blue-100 font-mono text-xs uppercase tracking-wider"
+                className="text-[#d9376e] rounded-md bg-[#eff0f3] border-2 border-slate-950 font-mono text-xs uppercase tracking-wider"
               >
                 {product.category.name}
               </Badge>
@@ -304,7 +317,7 @@ const ProductDetail = () => {
             </h1>
 
             {/* Price */}
-            <p className="text-3xl font-bold text-[#3B82F6]">
+            <p className="text-3xl font-bold text-[#ff8e3c]">
               {currency.format(product.price)}
             </p>
 
@@ -326,13 +339,15 @@ const ProductDetail = () => {
                     Size
                   </h3>
                   {inventory !== null && (
-                    <span className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full ${
-                      isOutOfStock
-                        ? "bg-red-50 text-[#DC2626]"
-                        : isLowStock
-                          ? "bg-orange-50 text-[#D97706]"
-                          : "bg-green-50 text-[#16A34A]"
-                    }`}>
+                    <span
+                      className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-md border-2 border-slate-950 text-[#eff0f3] ${
+                        isOutOfStock
+                          ? "bg-[#DC2626]"
+                          : isLowStock
+                            ? "bg-[#ec922b]"
+                            : "bg-[#16A34A]"
+                      }`}
+                    >
                       <Package size={12} aria-hidden="true" />
                       {isOutOfStock
                         ? "Hết hàng"
@@ -351,9 +366,9 @@ const ProductDetail = () => {
                       whileTap={{ scale: 0.95 }}
                       aria-label={`Size ${size.sizeName}`}
                       aria-pressed={selectedSize?.id === size.id}
-                      className={`min-w-[3.5rem] px-4 py-3 rounded-lg text-sm font-semibold uppercase border-2 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#3B82F6] ${
+                      className={`min-w-[3.5rem] px-4 py-3 rounded-md text-sm font-semibold uppercase border-2 border-slate-950 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#3B82F6] ${
                         selectedSize?.id === size.id
-                          ? "bg-[#111827] text-white border-[#111827]"
+                          ? "bg-[#d9376e] text-white border-[#111827]"
                           : "bg-white text-[#111827] border-gray-200 hover:border-[#111827]"
                       }`}
                     >
@@ -368,7 +383,7 @@ const ProductDetail = () => {
                 <h3 className="text-sm font-semibold text-[#111827] uppercase tracking-wider font-mono mb-3">
                   Số lượng
                 </h3>
-                <div className="inline-flex items-center border border-gray-200 rounded-lg overflow-hidden">
+                <div className="inline-flex items-center border-2 border-slate-950 rounded-md overflow-hidden">
                   <motion.button
                     type="button"
                     onClick={decrementQuantity}
@@ -408,7 +423,7 @@ const ProductDetail = () => {
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.98 }}
                 id="product-add-to-cart"
-                className="hidden lg:flex w-full items-center justify-center gap-2.5 rounded-xl bg-[#3B82F6] hover:bg-[#2563EB] px-8 py-4 text-base font-semibold text-white shadow-lg shadow-blue-500/25 disabled:bg-gray-200 disabled:text-gray-500 disabled:shadow-none disabled:cursor-not-allowed transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B82F6]"
+                className="hidden lg:flex w-full items-center justify-center gap-2.5 rounded-md border-2 border-slate-950 bg-[#ff8e3c] hover:bg-[#ff8e3c] px-8 py-4 text-base font-semibold text-white shadow-lg disabled:bg-gray-200 disabled:text-gray-500 disabled:shadow-none disabled:cursor-not-allowed transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
               >
                 {isAddingToCart ? (
                   <div className="w-5 h-5 rounded-full border-2 border-white/30 border-t-white animate-spin" />
@@ -422,8 +437,11 @@ const ProductDetail = () => {
             {/* Features grid */}
             <div className="grid grid-cols-2 gap-3 pt-2">
               {features.map(({ icon, label }, i) => (
-                <div key={i} className="flex items-center gap-2.5 text-sm text-gray-500">
-                  <span className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-50 text-[#3B82F6] flex-shrink-0">
+                <div
+                  key={i}
+                  className="flex items-center gap-2.5 text-sm text-gray-500"
+                >
+                  <span className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-50 text-[#2a2a2a] flex-shrink-0">
                     {icon}
                   </span>
                   {label}
@@ -435,7 +453,7 @@ const ProductDetail = () => {
 
         {/* ── Related Products ── */}
         <motion.div
-          className="mt-16 bg-white rounded-2xl border border-gray-200 p-6 sm:p-8"
+          className="mt-16 bg-white rounded-md border-2 border-slate-950 p-6 sm:p-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35, duration: 0.45 }}
@@ -448,8 +466,12 @@ const ProductDetail = () => {
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 lg:hidden z-30 shadow-[0_-4px_12px_rgba(0,0,0,0.08)]">
         <div className="flex items-center gap-3">
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-bold text-[#111827] truncate">{product.name}</p>
-            <p className="text-lg font-bold text-[#3B82F6]">{currency.format(product.price)}</p>
+            <p className="text-sm font-bold text-[#111827] truncate">
+              {product.name}
+            </p>
+            <p className="text-lg font-bold text-[#3B82F6]">
+              {currency.format(product.price)}
+            </p>
           </div>
           <Button
             onClick={handleAddToCart}

@@ -81,7 +81,7 @@ const AllProducts = () => {
               <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#111827] flex items-center gap-3">
                 <Store
                   size={28}
-                  className="text-[#3B82F6]"
+                  className="text-[#d9376e]"
                   aria-hidden="true"
                 />
                 Cửa Hàng

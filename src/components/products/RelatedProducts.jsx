@@ -77,7 +77,7 @@ const RelatedProducts = ({ categoryId }) => {
   return (
     <motion.div
       ref={sectionRef}
-      className="relative w-full my-8 px-1"
+      className="relative w-full my-4 px-1"
       initial={{ opacity: 0, y: 20 }}
       animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
       transition={{ duration: 0.5 }}

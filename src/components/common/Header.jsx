@@ -40,7 +40,9 @@ const Header = () => {
   return (
     <header
       className={`sticky top-0 z-50 w-full transition-all duration-300 ${
-        scrolled ? "bg-white shadow-md" : "bg-gray-50 border-b border-gray-200/50"
+        scrolled
+          ? "bg-white shadow-md"
+          : "bg-gray-50 border-b border-gray-200/50"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -57,11 +59,7 @@ const Header = () => {
               className="flex items-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] focus-visible:outline-offset-4 rounded-lg"
               aria-label="Trang chủ VA Shop"
             >
-              <img
-                src={newLogo}
-                alt="VA Shop Logo"
-                className="h-10 w-auto"
-              />
+              <img src={newLogo} alt="VA Shop Logo" className="h-10 w-auto" />
             </button>
           </motion.div>
 
@@ -70,9 +68,9 @@ const Header = () => {
             <button
               onClick={() => navigate("/")}
               className={`px-4 py-3 text-sm font-semibold uppercase tracking-wider transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] rounded-lg ${
-                isActive("/") 
-                  ? "text-[#3B82F6]" 
-                  : "text-[#111827] hover:text-[#3B82F6] hover:bg-blue-50/50"
+                isActive("/")
+                  ? "text-[#eff0f3] rounded-md bg-[#d9376e] hover:bg-[#d9376e] border-2 border-slate-950"
+                  : "text-[#111827] hover:text-[#ff8e3c] hover:bg-blue-50/50"
               }`}
             >
               Trang Chủ
@@ -80,9 +78,9 @@ const Header = () => {
             <button
               onClick={() => navigate("/shop")}
               className={`px-4 py-3 text-sm font-semibold uppercase tracking-wider transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] rounded-lg ${
-                isActive("/shop") 
-                  ? "text-[#3B82F6]" 
-                  : "text-[#111827] hover:text-[#3B82F6] hover:bg-blue-50/50"
+                isActive("/shop")
+                  ? "text-[#eff0f3] rounded-md bg-[#d9376e] hover:bg-[#d9376e] border-2 border-slate-950"
+                  : "text-[#111827] hover:text-[#ff8e3c] hover:bg-blue-50/50"
               }`}
             >
               Cửa Hàng
@@ -90,9 +88,9 @@ const Header = () => {
             <button
               onClick={() => navigate("/about")}
               className={`px-4 py-3 text-sm font-semibold uppercase tracking-wider transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] rounded-lg ${
-                isActive("/about") 
-                  ? "text-[#3B82F6]" 
-                  : "text-[#111827] hover:text-[#3B82F6] hover:bg-blue-50/50"
+                isActive("/about")
+                  ? "text-[#eff0f3] rounded-md bg-[#d9376e] hover:bg-[#d9376e] border-2 border-slate-950"
+                  : "text-[#111827] hover:text-[#ff8e3c] hover:bg-blue-50/50"
               }`}
             >
               Về Chúng Tôi
@@ -180,8 +178,8 @@ const Header = () => {
                   setMobileMenuOpen(false);
                 }}
                 className={`flex items-center w-full px-4 py-4 rounded-xl text-base font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] ${
-                  isActive("/") 
-                    ? "bg-blue-50 text-[#3B82F6]" 
+                  isActive("/")
+                    ? "bg-blue-50 text-[#3B82F6]"
                     : "text-[#111827] hover:bg-gray-50"
                 }`}
               >
@@ -194,8 +192,8 @@ const Header = () => {
                   setMobileMenuOpen(false);
                 }}
                 className={`flex items-center w-full px-4 py-4 rounded-xl text-base font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] ${
-                  isActive("/shop") 
-                    ? "bg-blue-50 text-[#3B82F6]" 
+                  isActive("/shop")
+                    ? "bg-blue-50 text-[#3B82F6]"
                     : "text-[#111827] hover:bg-gray-50"
                 }`}
               >
@@ -208,8 +206,8 @@ const Header = () => {
                   setMobileMenuOpen(false);
                 }}
                 className={`flex items-center w-full px-4 py-4 rounded-xl text-base font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] ${
-                  isActive("/about") 
-                    ? "bg-blue-50 text-[#3B82F6]" 
+                  isActive("/about")
+                    ? "bg-blue-50 text-[#3B82F6]"
                     : "text-[#111827] hover:bg-gray-50"
                 }`}
               >
@@ -224,7 +222,7 @@ const Header = () => {
                   Tài Khoản
                 </p>
               </div>
-              
+
               {token && (
                 <button
                   onClick={() => {

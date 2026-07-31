@@ -89,15 +89,6 @@
   100% { transform: translateX(-50%); }
 }
 
-.animate-shimmer {
-  background: linear-gradient(90deg, #3B82F6 0%, #8B5CF6 40%, #3B82F6 80%);
-  background-size: 200% auto;
-  animation: shimmer 3s linear infinite;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
 .animate-float {
   animation: float 4s ease-in-out infinite;
 }
