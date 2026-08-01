@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
       setUser(response.data);
       localStorage.setItem(
         "accessToken",
-        JSON.stringify(response.data?.accessToken)
+        JSON.stringify(response.data?.accessToken),
       );
       const token = localStorage.getItem("accessToken");
       const decodedToken = jwtDecode(token);
@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
         icon: "✅",
       });
     } catch (error) {
-      toast.error("Email hoặc mật khẩu không đúng");
+      toast.error(error.response.data.message);
     }
   };
 

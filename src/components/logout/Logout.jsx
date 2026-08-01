@@ -15,10 +15,7 @@ const Logout = ({ className }) => {
   };
 
   return (
-    <Button
-      onClick={handleLogout}
-      className={className || "bg-red-500 hover:bg-rose-600"}
-    >
+    <Button onClick={handleLogout} variant="default" className={className}>
       <ArrowLeftStartOnRectangleIcon className="h-7 w-7 mr-2" />
       Thoát
     </Button>

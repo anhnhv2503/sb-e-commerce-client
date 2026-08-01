@@ -132,7 +132,7 @@ const CartPage = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
         <CartBreadcrumb />
         <h1 className="font-display text-3xl font-bold mb-8 text-[#111827] mt-6 flex items-center gap-3">
-          <ShoppingBag size={28} className="text-[#3B82F6]" />
+          <ShoppingBag size={28} className="text-[#d9376e]" />
           Giỏ Hàng Của Bạn
         </h1>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -191,14 +191,14 @@ const CartPage = () => {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 mt-6">
         <div>
           <h1 className="font-display text-4xl font-bold text-[#111827] flex items-center gap-3">
-            <ShoppingBag size={32} className="text-[#3B82F6]" />
+            <ShoppingBag size={32} className="text-[#d9376e]" />
             Giỏ Hàng
           </h1>
           <p className="text-gray-500 mt-2">
             Xem lại các sản phẩm bạn đã chọn trước khi thanh toán.
           </p>
         </div>
-        <Badge className="bg-blue-50 text-[#3B82F6] hover:bg-blue-100 border-none px-4 py-1.5 text-sm font-semibold tracking-wide rounded-full">
+        <Badge className="bg-white border-2 border-black text-[#d9376e] hover:bg-red-50 px-4 py-1.5 text-sm font-semibold tracking-wide rounded-md cursor-default">
           {cart.items.length} Sản Phẩm
         </Badge>
       </div>
@@ -214,10 +214,10 @@ const CartPage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.3, delay: index * 0.05 }}
-                className={`flex flex-col sm:flex-row gap-6 bg-white p-5 rounded-2xl border transition-all duration-300 ${
+                className={`flex flex-col sm:flex-row gap-6 bg-white p-5 rounded-md border-2 border-black transition-all duration-300 ${
                   updatingItemId === item.itemId
                     ? "opacity-60 border-blue-200 ring-2 ring-blue-50"
-                    : "border-gray-100 shadow-sm hover:shadow-md hover:border-[#3B82F6]/30"
+                    : " shadow-sm hover:shadow-md"
                 }`}
               >
                 {/* Product Image */}
@@ -243,7 +243,7 @@ const CartPage = () => {
                         {item.productName}
                       </h3>
                       <div className="mt-1 flex items-center gap-2">
-                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider bg-gray-100 text-gray-600">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-md border-2 border-black text-xs uppercase tracking-wider bg-gray-100 text-gray-600">
                           Size {item.sizeName}
                         </span>
                       </div>
@@ -261,7 +261,7 @@ const CartPage = () => {
 
                   <div className="mt-auto pt-4 flex flex-wrap items-end justify-between gap-4">
                     {/* Quantity Selector */}
-                    <div className="flex items-center bg-gray-50 border border-gray-200 rounded-lg p-1">
+                    <div className="flex items-center bg-gray-50 border-2 border-black rounded-md p-1">
                       <button
                         disabled={
                           item.quantity <= 1 || updatingItemId === item.itemId
@@ -290,10 +290,7 @@ const CartPage = () => {
                     </div>
 
                     <div className="text-right">
-                      <div className="text-sm text-gray-500 mb-0.5">
-                        {currency.format(item.productPrice)} / sp
-                      </div>
-                      <div className="font-bold text-[#3B82F6] text-xl">
+                      <div className="font-bold text-[#d9376e] text-xl">
                         {currency.format(item.productPrice * item.quantity)}
                       </div>
                     </div>
@@ -307,7 +304,7 @@ const CartPage = () => {
             <Button
               variant="outline"
               onClick={() => nav("/shop")}
-              className="h-12 px-6 border-gray-200 text-[#111827] hover:text-[#3B82F6] hover:border-blue-200 hover:bg-blue-50 rounded-xl font-semibold transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6]"
+              className="h-12 px-6 border-2 border-black text-[#111827] hover:text-[#3B82F6] hover:border-blue-200 hover:bg-blue-50 rounded-md font-semibold transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6]"
             >
               Tiếp Tục Mua Sắm
             </Button>
@@ -316,8 +313,8 @@ const CartPage = () => {
 
         {/* Order Summary (Sticky Sidebar) */}
         <div className="lg:col-span-1 sticky top-24">
-          <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-100 flex flex-col gap-6">
-            <h2 className="font-display text-xl font-bold text-[#111827] border-b border-gray-100 pb-4">
+          <div className="bg-white p-6 sm:p-8 rounded-md border-2 border-black flex flex-col gap-6">
+            <h2 className="font-display text-xl font-bold text-[#111827] border-b border-black pb-4">
               Tóm Tắt Đơn Hàng
             </h2>
 
@@ -330,7 +327,7 @@ const CartPage = () => {
                 >
                   Địa Chỉ Giao Hàng
                 </Label>
-                <div className="bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm text-[#111827] leading-relaxed">
+                <div className="bg-gray-50 border-2 border-black rounded-md p-3 text-sm text-[#111827] leading-relaxed">
                   {address ? (
                     address
                   ) : (
@@ -363,9 +360,9 @@ const CartPage = () => {
                   {paymentMethods.map((method) => (
                     <div
                       key={method.id}
-                      className={`relative flex items-center border rounded-xl p-4 cursor-pointer transition-all duration-200 ${
+                      className={`relative flex items-center border rounded-md p-4 cursor-pointer transition-all duration-200 ${
                         paymentMethod === method.id
-                          ? "border-[#3B82F6] bg-blue-50/50 shadow-sm ring-1 ring-[#3B82F6]"
+                          ? "border-black bg-blue-50/50 shadow-sm border-2"
                           : "border-gray-200 hover:border-gray-300 bg-white"
                       }`}
                       onClick={() => setPaymentMethod(method.id)}
@@ -373,7 +370,7 @@ const CartPage = () => {
                       <RadioGroupItem
                         value={method.id}
                         id={method.id}
-                        className="absolute right-4 text-[#3B82F6]"
+                        className="absolute right-4 text-[#ff8e3c]"
                       />
                       <div className="flex items-center gap-4">
                         <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shrink-0 border border-gray-100">
@@ -425,7 +422,7 @@ const CartPage = () => {
                       Đã bao gồm VAT
                     </span>
                   </div>
-                  <span className="font-black text-2xl text-[#3B82F6]">
+                  <span className="font-black text-2xl text-[#ff8e3c]">
                     {currency.format(cart.totalPrice)}
                   </span>
                 </div>
@@ -435,7 +432,7 @@ const CartPage = () => {
             {/* Checkout Action */}
             <div className="pt-2">
               <Button
-                className="w-full h-14 bg-[#3B82F6] hover:bg-[#2563EB] text-white shadow-lg shadow-blue-500/30 rounded-xl text-base font-bold transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B82F6] flex items-center justify-center gap-2"
+                className="w-full h-14 bg-[#ff8e3c] hover:bg-[#ff8e3c] text-white shadow-lg shadow-blue-500/30 rounded-md border-2 border-black text-base font-bold transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff8e3c] flex items-center justify-center gap-2"
                 onClick={handleCheckout}
                 disabled={!address.trim() || paymentLoading}
               >

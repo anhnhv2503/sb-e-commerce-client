@@ -15,7 +15,6 @@ import AdminRoute from "@/routes/AdminRoute";
 import PublicRoute from "@/routes/PublicRoute";
 import UserRoute from "@/routes/UserRoute";
 import { useEffect, useState } from "react";
-import { Toaster } from "react-hot-toast";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AddProduct from "./components/admin/pages/AddProduct";
 import AdminPage from "./components/admin/pages/AdminPage";
@@ -185,9 +184,7 @@ function App() {
 
   return (
     <RouterProvider router={router}>
-      <AuthProvider>
-        <Toaster />
-      </AuthProvider>
+      <AuthProvider></AuthProvider>
     </RouterProvider>
   );
 }

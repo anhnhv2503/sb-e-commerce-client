@@ -50,21 +50,20 @@ const UserPopover = () => {
               </div>
               <button
                 onClick={() => nav("/user/profile")}
-                className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:text-[#111827] hover:bg-gray-50 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6]"
+                className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg border-2 border-black text-sm font-medium text-gray-700 hover:text-[#111827] hover:bg-gray-50 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6]"
               >
                 <User size={18} className="text-gray-400" />
                 Thông tin
               </button>
               <button
                 onClick={() => nav("/user/my-orders")}
-                className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:text-[#111827] hover:bg-gray-50 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6]"
+                className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg border-2 border-black text-sm font-medium text-gray-700 hover:text-[#111827] hover:bg-gray-50 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6]"
               >
                 <ShoppingBag size={18} className="text-gray-400" />
                 Đơn hàng của Tôi
               </button>
-              <div className="h-px bg-gray-100 my-1" />
               <div className="w-full">
-                <Logout className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-500 justify-start" />
+                <Logout className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-white bg-[#d9376e] hover:bg-[#d9376e] border-2 border-black transition-colors focus-visible:outline focus-visible:outline-2 justify-center" />
               </div>
             </>
           ) : (
