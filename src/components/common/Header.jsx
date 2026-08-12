@@ -179,7 +179,7 @@ const Header = () => {
                 }}
                 className={`flex items-center w-full px-4 py-4 rounded-xl text-base font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] ${
                   isActive("/")
-                    ? "bg-blue-50 text-[#3B82F6]"
+                    ? "text-[#eff0f3] rounded-md bg-[#d9376e] hover:bg-[#d9376e] border-2 border-slate-950"
                     : "text-[#111827] hover:bg-gray-50"
                 }`}
               >
@@ -193,7 +193,7 @@ const Header = () => {
                 }}
                 className={`flex items-center w-full px-4 py-4 rounded-xl text-base font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] ${
                   isActive("/shop")
-                    ? "bg-blue-50 text-[#3B82F6]"
+                    ? "text-[#eff0f3] rounded-md bg-[#d9376e] hover:bg-[#d9376e] border-2 border-slate-950"
                     : "text-[#111827] hover:bg-gray-50"
                 }`}
               >
@@ -207,7 +207,7 @@ const Header = () => {
                 }}
                 className={`flex items-center w-full px-4 py-4 rounded-xl text-base font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] ${
                   isActive("/about")
-                    ? "bg-blue-50 text-[#3B82F6]"
+                    ? "text-[#eff0f3] rounded-md bg-[#d9376e] hover:bg-[#d9376e] border-2 border-slate-950"
                     : "text-[#111827] hover:bg-gray-50"
                 }`}
               >
