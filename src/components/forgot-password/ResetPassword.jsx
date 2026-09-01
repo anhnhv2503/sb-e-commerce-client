@@ -34,13 +34,13 @@ const ResetPassword = () => {
     if (password.trim() === "" || confirmPassword.trim() === "") {
       toast.error("Vui lòng nhập đầy đủ mật khẩu mới và xác nhận mật khẩu.");
       return;
-    } 
-    
+    }
+
     if (password !== confirmPassword) {
       toast.error("Mật khẩu xác nhận không khớp.");
       return;
-    } 
-    
+    }
+
     try {
       setLoading(true);
       const response = await resetPassword(tokenParam, password);
@@ -57,30 +57,33 @@ const ResetPassword = () => {
       }
     } catch (error) {
       console.error(error);
-      toast.error(error.response?.data?.data || "Không thể đặt lại mật khẩu. Token có thể đã hết hạn.");
+      toast.error(
+        error.response?.data?.data ||
+          "Không thể đặt lại mật khẩu. Token có thể đã hết hạn.",
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-[#111827] px-4 py-12 relative overflow-hidden">
+    <div className="flex items-center justify-center min-h-screen bg-[#eff0f3] px-4 py-12 relative overflow-hidden">
       {/* Background glowing blobs */}
       <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-[#3B82F6]/20 rounded-full blur-[100px] pointer-events-none mix-blend-screen" />
       <div className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-[#8B5CF6]/20 rounded-full blur-[100px] pointer-events-none mix-blend-screen" />
 
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-md bg-white rounded-3xl shadow-2xl relative z-10 overflow-hidden"
+        className="w-full max-w-md bg-white rounded-md shadow-2xl relative z-10 overflow-hidden"
       >
         <div className="bg-[#111827] px-8 py-10 relative overflow-hidden border-b border-gray-800">
           <div className="absolute top-0 right-0 w-32 h-32 bg-[#3B82F6]/30 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none" />
-          
+
           <div className="relative z-10 flex flex-col items-center text-center mt-2">
             <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center border border-white/10 mb-4 backdrop-blur-md">
-              <ShieldCheck size={32} className="text-[#3B82F6]" />
+              <ShieldCheck size={32} className="text-[#d9376e]" />
             </div>
             <h2 className="font-display text-3xl font-bold text-white mb-2">
               Đặt Lại Mật Khẩu
@@ -100,11 +103,14 @@ const ResetPassword = () => {
               Mật Khẩu Mới
             </label>
             <div className="relative">
-              <KeyRound className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+              <KeyRound
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-900"
+                size={18}
+              />
               <input
                 id="newPassword"
                 type={showPassword ? "text" : "password"}
-                className="w-full pl-11 pr-12 h-12 bg-gray-50 border border-gray-200 text-[#111827] rounded-xl focus:border-[#3B82F6] focus:ring-2 focus:ring-[#3B82F6] transition-all"
+                className="w-full pl-11 pr-12 h-12 bg-gray-50 border-2 border-black text-[#111827] rounded-md focus:border-[#3B82F6] focus:ring-2 focus:ring-[#3B82F6] transition-all"
                 placeholder="Nhập mật khẩu mới"
                 required
                 value={password}
@@ -128,11 +134,14 @@ const ResetPassword = () => {
               Xác Nhận Mật Khẩu
             </label>
             <div className="relative">
-              <KeyRound className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+              <KeyRound
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-900"
+                size={18}
+              />
               <input
                 id="confirmPassword"
                 type={showConfirmPassword ? "text" : "password"}
-                className="w-full pl-11 pr-12 h-12 bg-gray-50 border border-gray-200 text-[#111827] rounded-xl focus:border-[#3B82F6] focus:ring-2 focus:ring-[#3B82F6] transition-all"
+                className="w-full pl-11 pr-12 h-12 bg-gray-50 border-2 border-black text-[#111827] rounded-xl focus:border-[#3B82F6] focus:ring-2 focus:ring-[#3B82F6] transition-all"
                 placeholder="Nhập lại mật khẩu mới"
                 required
                 value={confirmPassword}
@@ -152,8 +161,8 @@ const ResetPassword = () => {
           </div>
 
           <div className="pt-2">
-            <Button 
-              className="w-full h-12 bg-[#3B82F6] hover:bg-[#2563EB] text-white rounded-xl shadow-md shadow-blue-500/20 font-semibold text-base transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B82F6]" 
+            <Button
+              className="w-full h-12 bg-[#ff8e3c] hover:bg-[#ff8e3c] text-white rounded-md shadow-md shadow-blue-500/20 font-semibold text-base transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B82F6] border-2 border-black"
               onClick={handleSavePassword}
               disabled={loading}
             >

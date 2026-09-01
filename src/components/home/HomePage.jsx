@@ -5,6 +5,7 @@ import { useEffect } from "react";
 
 import HeroSection from "@/components/home/HeroSection";
 import NewArrivals from "@/components/products/NewArrivals";
+import VietnamReunionHero from "@/components/common/VietnamHero";
 
 const HomePage = () => {
   useDocumentTitle("VA SHOP — Thời Trang Cao Cấp");
@@ -15,6 +16,7 @@ const HomePage = () => {
 
   return (
     <main id="main-content" tabIndex={-1} aria-label="Homepage">
+      <VietnamReunionHero />
       {/* 1 ── Hero */}
       <HeroSection />
 

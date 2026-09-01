@@ -76,7 +76,7 @@ const Profile = () => {
       className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 min-h-screen"
     >
       {/* Profile Header Card */}
-      <div className="relative bg-[#111827] rounded-3xl overflow-hidden shadow-xl mb-8 border border-gray-800">
+      <div className="relative bg-[#ff8e3c] rounded-md overflow-hidden shadow-xl mb-8 border border-gray-800">
         {/* Background glow effects */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#3B82F6]/20 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#8B5CF6]/20 rounded-full blur-3xl -ml-10 -mb-10 pointer-events-none" />

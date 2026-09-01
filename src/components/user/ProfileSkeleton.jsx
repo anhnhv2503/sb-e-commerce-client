@@ -7,18 +7,16 @@ import { Skeleton } from "@/components/ui/skeleton";
  * Redesigned to match SKILL.md artistic design system (matching Profile.jsx layout)
  */
 const ProfileSkeleton = () => {
-  useDocumentTitle("Đang Tải...");
-
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 min-h-screen">
       {/* Profile Header Card Skeleton */}
-      <div className="relative bg-[#111827] rounded-3xl overflow-hidden shadow-xl mb-8 border border-gray-800">
+      <div className="relative bg-[#ff8e3c] rounded-md overflow-hidden shadow-xl mb-8 border border-gray-800">
         <div className="absolute top-0 right-0 w-64 h-64 bg-gray-800/50 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-gray-800/50 rounded-full blur-3xl -ml-10 -mb-10 pointer-events-none" />
-        
+
         <div className="relative z-10 px-6 py-10 sm:px-10 flex flex-col md:flex-row items-center md:items-start gap-8">
           <Skeleton className="w-32 h-32 rounded-full bg-gray-700 border-4 border-[#111827] shrink-0" />
-          
+
           <div className="flex-1 text-center md:text-left space-y-4 w-full">
             <div className="flex flex-col md:flex-row md:items-center gap-3">
               <Skeleton className="h-10 w-48 bg-gray-700 mx-auto md:mx-0" />

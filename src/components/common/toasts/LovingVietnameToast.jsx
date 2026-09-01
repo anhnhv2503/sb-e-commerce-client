@@ -32,7 +32,7 @@ const LovingVietnameToast = ({ t }) => {
           </div>
           <div className="ml-3 flex-1">
             <p className="text-sm font-medium text-gray-900">
-              Yêu Thương Việt Nam
+              Tôi là người Việt Nam và tôi yêu đất nước của mình!
             </p>
             <p className="mt-1 text-sm text-gray-500">{handleRandomFact()}</p>
           </div>

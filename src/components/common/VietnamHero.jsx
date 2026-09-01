@@ -5,12 +5,13 @@ import LovingVietnameToast from "@/components/common/toasts/LovingVietnameToast"
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { Calendar, Heart, Star } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { TypeAnimation } from "react-type-animation";
 
 export default function VietnamReunionHero() {
   useEffect(() => {
+    checkPublicHoliday();
     AOS.init({
       duration: 1000,
       once: true,
@@ -18,10 +19,56 @@ export default function VietnamReunionHero() {
     });
   }, []);
 
-  const handleCalculateYear = () => {
+  const [publicHoliday, setPublicHoliday] = useState({
+    name: "",
+    date: "",
+    description: "",
+    year: null,
+    sequences: [],
+  });
+  const [isPublicHoliday, setIsPublicHoliday] = useState(false);
+
+  const checkPublicHoliday = () => {
+    const today = new Date();
+    const month = today.getMonth() + 1;
+    const day = today.getDate();
+    if (month === 4 && day <= 30) {
+      setPublicHoliday({
+        name: "Ngày Giải Phóng Miền Nam",
+        date: "30 tháng 4",
+        description:
+          "Ngày 30 tháng 4 năm 1975, giải phóng miền Nam - thống nhất Đất nước. Đánh dấu một bước ngoặt quan trọng trong lịch sử Việt Nam, kết thúc cuộc chiến tranh dành lại độc lập dân tộc kéo dài suốt 30 năm.",
+        year: 1975,
+        sequences: [
+          "Đại thắng Mùa Xuân 1975",
+          3000,
+
+          "Giải phóng miền Nam",
+          3000,
+
+          "Thống nhất đất nước",
+          3000,
+        ],
+      });
+      setIsPublicHoliday(true);
+    } else if (month === 9 && day <= 2) {
+      setPublicHoliday({
+        name: "Ngày Quốc Khánh Nước CHXHCN Việt Nam",
+        date: "2 tháng 9",
+        description:
+          "Ngày 2/9/1945, giữa Quảng trường Ba Đình, Chủ tịch Hồ Chí Minh đọc Bản Tuyên ngôn Độc lập, mở ra một trang sử mới của dân tộc – trang sử của một Việt Nam độc lập, tự do.",
+        year: 1945,
+        sequences: ["Độc Lập", 3000, "Tự Do", 3000, "Hạnh Phúc", 3000],
+      });
+      setIsPublicHoliday(true);
+    } else {
+      setIsPublicHoliday(false);
+    }
+  };
+
+  const handleCalculateYear = (year) => {
     const currentYear = new Date().getFullYear();
-    const reunionYear = 1975;
-    return currentYear - reunionYear;
+    return currentYear - year;
   };
 
   const handlePrimaryClick = () => {
@@ -30,6 +77,10 @@ export default function VietnamReunionHero() {
       duration: 1000,
     });
   };
+
+  if (!isPublicHoliday) {
+    return null; // Don't render the component if it's not a public holiday
+  }
 
   return (
     <div className="relative bg-red-600 overflow-hidden">
@@ -66,22 +117,13 @@ export default function VietnamReunionHero() {
             >
               <Calendar className="w-6 h-6 mr-2 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12" />
               <span className="font-medium transition-all duration-300 group-hover:font-bold group-hover:text-white">
-                30 tháng 04
+                {publicHoliday.name} - {publicHoliday.date}
               </span>
             </div>
 
             <h1 data-aos="fade-down" data-aos-delay="300">
               <TypeAnimation
-                sequence={[
-                  "Đại thắng Mùa Xuân 1975",
-                  3000,
-
-                  "Giải phóng miền Nam",
-                  3000,
-
-                  "Thống nhất đất nước",
-                  3000,
-                ]}
+                sequence={publicHoliday.sequences}
                 wrapper="span"
                 cursor={false}
                 repeat={Infinity}
@@ -95,10 +137,7 @@ export default function VietnamReunionHero() {
               data-aos-delay="300"
               className="text-white/90 text-lg mb-6 leading-relaxed transition-all duration-300 hover:text-white  rounded-lg cursor-default"
             >
-              Ngày 30 tháng 4 năm 1975, giải phóng miền Nam - thống nhất Đất
-              nước. Đánh dấu một bước ngoặt quan trọng trong lịch sử Việt Nam,
-              kết thúc cuộc chiến tranh dành lại độc lập dân tộc kéo dài suốt 30
-              năm.
+              {publicHoliday.description}
             </p>
 
             <div
@@ -167,7 +206,9 @@ export default function VietnamReunionHero() {
           className="animate-bounce hover:animate-none absolute top-4 right-4 md:top-8 md:right-8 bg-yellow-400 text-red-800 rounded-full w-16 h-16 flex items-center justify-center font-bold shadow-lg cursor-pointer transition-all hover:scale-125 hover:bg-white hover:shadow-xl hover:shadow-yellow-400/50"
         >
           <div className="text-center leading-tight transition-all">
-            <div className="text-2xl">{handleCalculateYear()}</div>
+            <div className="text-2xl">
+              {handleCalculateYear(publicHoliday.year)}
+            </div>
             <div className="text-xs">NĂM</div>
           </div>
         </div>

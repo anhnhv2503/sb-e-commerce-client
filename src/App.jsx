@@ -40,9 +40,8 @@ function App() {
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
-    }, 2000);
+    }, 1000);
   }, []);
-
   if (isLoading) {
     return <AppLoading />;
   }
@@ -95,6 +94,10 @@ function App() {
           path: "register",
           element: <Register />,
         },
+        {
+          path: "forgot/password",
+          element: <ForgotPassword />,
+        },
       ],
     },
     {
@@ -117,10 +120,6 @@ function App() {
         {
           path: "shop",
           element: <AllProducts />,
-        },
-        {
-          path: "forgot/password",
-          element: <ForgotPassword />,
         },
         {
           path: "user",
