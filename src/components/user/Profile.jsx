@@ -91,7 +91,7 @@ const Profile = () => {
                 alt={user.fullName}
                 className="object-cover"
               />
-              <AvatarFallback className="bg-gradient-to-br from-[#3B82F6] to-[#8B5CF6] text-white text-3xl font-display">
+              <AvatarFallback className="bg-gradient-to-br from-[#9fbdee] to-[#a582f5] text-white text-3xl font-display">
                 {getInitials(user.fullName)}
               </AvatarFallback>
             </Avatar>
@@ -104,15 +104,15 @@ const Profile = () => {
                 {user.fullName || "Người Dùng"}
               </h1>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/10 text-white/90 text-xs font-mono tracking-widest uppercase self-center md:self-start">
-                <Sparkles size={12} className="text-[#3B82F6]" />
+                <Sparkles size={12} className="text-white" />
                 Thành Viên Từ {getMemberSince()}
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 sm:gap-6 text-gray-300">
+            <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 sm:gap-6 text-white">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center border border-white/10">
-                  <Mail size={14} className="text-[#3B82F6]" />
+                  <Mail size={14} className="text-white" />
                 </div>
                 <span className="font-medium text-sm">
                   {user.email || "Chưa cập nhật"}
@@ -120,7 +120,7 @@ const Profile = () => {
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center border border-white/10">
-                  <Phone size={14} className="text-[#3B82F6]" />
+                  <Phone size={14} className="text-white" />
                 </div>
                 <span className="font-medium font-mono text-sm">
                   {user.phone || "Chưa cập nhật"}
@@ -138,14 +138,14 @@ const Profile = () => {
             <TabsList className="grid w-full sm:w-[400px] grid-cols-2 bg-gray-50/80 p-1 rounded-xl">
               <TabsTrigger
                 value="profile"
-                className="flex items-center gap-2 rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#3B82F6] data-[state=active]:shadow-sm font-semibold transition-all"
+                className="flex items-center gap-2 rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#d9376e] data-[state=active]:shadow-sm font-semibold transition-all"
               >
                 <UserCircle2 size={18} />
                 <span>Hồ Sơ</span>
               </TabsTrigger>
               <TabsTrigger
                 value="security"
-                className="flex items-center gap-2 rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#3B82F6] data-[state=active]:shadow-sm font-semibold transition-all"
+                className="flex items-center gap-2 rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#d9376e] data-[state=active]:shadow-sm font-semibold transition-all"
               >
                 <KeyRound size={18} />
                 <span>Bảo Mật</span>
@@ -168,7 +168,7 @@ const Profile = () => {
                     <div className="bg-gray-50 border border-gray-100 rounded-2xl p-6 hover:shadow-md hover:border-gray-200 transition-all">
                       <div className="flex items-start gap-4">
                         <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
-                          <MapPin className="text-[#3B82F6]" size={20} />
+                          <MapPin className="text-[#d9376e]" size={20} />
                         </div>
                         <div>
                           <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono mb-2">
@@ -185,7 +185,7 @@ const Profile = () => {
                     <div className="bg-gray-50 border border-gray-100 rounded-2xl p-6 hover:shadow-md hover:border-gray-200 transition-all">
                       <div className="flex items-start gap-4">
                         <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
-                          <Mail className="text-[#3B82F6]" size={20} />
+                          <Mail className="text-[#d9376e]" size={20} />
                         </div>
                         <div>
                           <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono mb-2">
@@ -205,7 +205,7 @@ const Profile = () => {
                   <div className="flex justify-end pt-4 border-t border-gray-100">
                     <Button
                       onClick={() => setIsEditing(true)}
-                      className="h-11 px-6 bg-[#3B82F6] hover:bg-[#2563EB] text-white rounded-xl shadow-md shadow-blue-500/20 gap-2 font-semibold transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B82F6]"
+                      className="h-11 px-6 bg-[#d9376e] hover:bg-[#d9376e] text-white shadow-md shadow-blue-500/20 gap-2 font-semibold transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B82F6] rounded-md border-2 border-black"
                     >
                       <Edit2 size={16} />
                       Chỉnh Sửa Hồ Sơ
@@ -222,7 +222,7 @@ const Profile = () => {
               {/* Security Advisory */}
               <div className="bg-blue-50/50 border border-blue-100 rounded-2xl p-5 flex items-start gap-4">
                 <ShieldAlert
-                  className="text-[#3B82F6] mt-0.5 shrink-0"
+                  className="text-[#d9376e] mt-0.5 shrink-0"
                   size={24}
                 />
                 <div>

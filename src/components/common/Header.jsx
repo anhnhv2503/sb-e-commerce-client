@@ -46,7 +46,7 @@ const Header = () => {
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <nav className="flex items-center justify-between h-20">
+        <nav className="flex items-center justify-between h-14">
           {/* Logo */}
           <motion.div
             initial={{ opacity: 0 }}
