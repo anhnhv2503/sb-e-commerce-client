@@ -116,7 +116,7 @@ const EditProfile = ({ setIsEditing, user, fetchUser }) => {
           variant="outline"
           onClick={() => setIsEditing(false)}
           disabled={isLoading}
-          className="h-11 px-6 border-gray-200 text-gray-600 hover:text-[#111827] hover:bg-gray-50 border-2 border-black font-semibold transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] w-full sm:w-auto rounded-md"
+          className="h-11 px-6 text-gray-600 hover:text-[#111827] hover:bg-gray-50 border-2 border-black font-semibold transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] w-full sm:w-auto rounded-md"
         >
           <X size={18} className="mr-2" />
           Hủy Bỏ
