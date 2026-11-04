@@ -30,7 +30,7 @@ const MyOrder = () => {
       >
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-8">
           <div>
-            <h1 className="font-display text-3xl font-bold text-[#111827] flex items-center gap-3">
+            <h1 className="display-heading flex items-center gap-3">
               <ShoppingBag size={28} className="text-[#3B82F6]" />
               Đơn Hàng Của Tôi
             </h1>
@@ -40,7 +40,7 @@ const MyOrder = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="bg-white rounded-lg border border-gray-100 overflow-hidden">
           {/* Status Tabs */}
           <div className="border-b border-gray-100 overflow-x-auto no-scrollbar">
             <LayoutGroup>
@@ -51,14 +51,14 @@ const MyOrder = () => {
                     <button
                       key={item.id}
                       onClick={() => setStatus(item.id)}
-                      className={`relative px-6 py-3 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] rounded-xl
+                      className={`relative px-6 py-3 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] rounded-lg
                         ${isActive ? "text-[#3B82F6]" : "text-gray-500 hover:text-[#111827] hover:bg-gray-50"}
                       `}
                     >
                       {isActive && (
                         <motion.div
                           layoutId="activeTab"
-                          className="absolute inset-0 bg-blue-50 rounded-xl"
+                          className="absolute inset-0 bg-blue-50 rounded-lg"
                           initial={false}
                           transition={{ type: "spring", stiffness: 400, damping: 30 }}
                         />

@@ -4,113 +4,120 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Filter, Layers, Tag } from "lucide-react";
 import { useEffect, useState } from "react";
-import { getAllCategories, getBrands } from "../service/ApiFunctions";
 import { useSearchParams } from "react-router-dom";
+import { getAllCategories, getBrands } from "../service/ApiFunctions";
 
 /**
- * SideAccordion
- * Styled filter sidebar with icons and hover states.
- * SKILL.md: 44px+ touch targets on filter items, visible hover feedback.
+ * SideAccordion — filter sidebar.
+ * Hairline-separated groups with label-style headings. The selected option is
+ * marked in brand pink; clicking it again clears that filter.
  */
 const SideAccordion = () => {
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const handleParamsChange = (key, value) => {
+  const toggleParam = (key, value) => {
     const params = new URLSearchParams(searchParams);
-
-    params.set(key, value);
-
+    if (params.get(key) === value) {
+      params.delete(key);
+    } else {
+      params.set(key, value);
+    }
     setSearchParams(params);
   };
 
-  const fetchCategories = async () => {
-    try {
-      const response = await getAllCategories();
-      setCategories(response.data?.data);
-    } catch (error) {
-      console.error("Error loading categories", error);
-    }
-  };
-  const fetchBrands = async () => {
-    try {
-      const response = await getBrands();
-      setBrands(response.data?.data);
-    } catch (error) {
-      console.error("Error loading brands", error);
-    }
-  };
-
   useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await getAllCategories();
+        setCategories(response.data?.data);
+      } catch (error) {
+        console.error("Error loading categories", error);
+      }
+    };
+    const fetchBrands = async () => {
+      try {
+        const response = await getBrands();
+        setBrands(response.data?.data);
+      } catch (error) {
+        console.error("Error loading brands", error);
+      }
+    };
     fetchCategories();
     fetchBrands();
   }, []);
 
+  const groups = [
+    {
+      value: "brands",
+      title: "Thương Hiệu",
+      param: "brand",
+      options: brands.map((b) => ({ id: b?.id, name: b?.name })),
+    },
+    {
+      value: "categories",
+      title: "Thể Loại",
+      param: "category",
+      options: categories.map((c) => ({ id: c?.id, name: c?.name })),
+    },
+  ];
+
   return (
-    <div className="space-y-4">
-      {/* Header */}
-      <div className="flex items-center gap-2 px-1">
-        <Filter size={16} className="text-[#d9376e]" aria-hidden="true" />
-        <h3 className="text-sm font-semibold text-[#111827] uppercase tracking-wider font-mono">
-          Bộ Lọc
-        </h3>
-      </div>
+    <div>
+      <h3 className="eyebrow border-b border-brand-ink pb-3 text-brand-ink">
+        Bộ Lọc
+      </h3>
 
       <Accordion
         type="multiple"
         defaultValue={["brands", "categories"]}
-        className="w-full space-y-2"
+        className="w-full"
       >
-        {/* Brands */}
-        <AccordionItem
-          value="brands"
-          className="border-2 border-slate-950 rounded-md overflow-hidden bg-white"
-        >
-          <AccordionTrigger className="px-4 py-3 text-sm font-medium text-[#111827] hover:bg-gray-50 hover:no-underline">
-            <span className="flex items-center gap-2">
-              <Tag size={14} className="text-gray-400" aria-hidden="true" />
-              Thương Hiệu
-            </span>
-          </AccordionTrigger>
-          <div className="border-t border-gray-100">
-            {brands.map((brand) => (
-              <AccordionContent
-                key={brand?.id}
-                className="cursor-pointer hover:bg-[#3B82F6]/5 px-4 py-2.5 text-sm text-gray-600 hover:text-[#ff8e3c] transition-colors border-b border-gray-50 last:border-0"
-                onClick={() => handleParamsChange("brand", brand?.name)}
-              >
-                {brand?.name}
+        {groups.map((group) => {
+          const selected = searchParams.get(group.param);
+          return (
+            <AccordionItem
+              key={group.value}
+              value={group.value}
+              className="border-b border-hairline"
+            >
+              <AccordionTrigger className="font-label py-4 text-sm tracking-[0.038em] text-brand-ink hover:no-underline">
+                {group.title}
+              </AccordionTrigger>
+              <AccordionContent className="pb-4">
+                <ul className="space-y-1">
+                  {group.options.map((option) => {
+                    const isActive = selected === option.name;
+                    return (
+                      <li key={option.id}>
+                        <button
+                          type="button"
+                          onClick={() => toggleParam(group.param, option.name)}
+                          aria-pressed={isActive}
+                          className={`flex w-full items-center justify-between rounded py-2 text-left text-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-blue ${
+                            isActive
+                              ? "font-semibold text-brand-pink"
+                              : "text-[#363537] hover:text-brand-orange"
+                          }`}
+                        >
+                          {option.name}
+                          {isActive && (
+                            <span
+                              className="h-1.5 w-1.5 rounded-full bg-brand-pink"
+                              aria-hidden="true"
+                            />
+                          )}
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
               </AccordionContent>
-            ))}
-          </div>
-        </AccordionItem>
-
-        {/* Categories */}
-        <AccordionItem
-          value="categories"
-          className="border-2 border-slate-950 rounded-md overflow-hidden bg-white"
-        >
-          <AccordionTrigger className="px-4 py-3 text-sm font-medium text-[#111827] hover:bg-gray-50 hover:no-underline">
-            <span className="flex items-center gap-2">
-              <Layers size={14} className="text-gray-400" aria-hidden="true" />
-              Thể Loại
-            </span>
-          </AccordionTrigger>
-          <div className="border-t border-gray-100">
-            {categories.map((category) => (
-              <AccordionContent
-                key={category.id}
-                className="cursor-pointer hover:bg-[#3B82F6]/5 px-4 py-2.5 text-sm text-gray-600 hover:text-[#ff8e3c] transition-colors border-b border-gray-50 last:border-0"
-                onClick={() => handleParamsChange("category", category.name)}
-              >
-                {category.name}
-              </AccordionContent>
-            ))}
-          </div>
-        </AccordionItem>
+            </AccordionItem>
+          );
+        })}
       </Accordion>
     </div>
   );

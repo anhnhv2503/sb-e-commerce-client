@@ -11,16 +11,13 @@ import {
   removeItemFromCart,
   updateCartItemQuantity,
 } from "@/components/service/ApiFunctions";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useDocumentTitle } from "@uidotdev/usehooks";
 import { AnimatePresence, motion } from "framer-motion";
 import { jwtDecode } from "jwt-decode";
-import { ArrowRight, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Minus, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -129,44 +126,23 @@ const CartPage = () => {
   // Loading UI
   if (loading) {
     return (
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+      <div className="page-container min-h-screen py-10">
         <CartBreadcrumb />
-        <h1 className="font-display text-3xl font-bold mb-8 text-[#111827] mt-6 flex items-center gap-3">
-          <ShoppingBag size={28} className="text-[#d9376e]" />
-          Giỏ Hàng Của Bạn
-        </h1>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-6">
+        <Skeleton className="mb-10 mt-8 h-12 w-72 rounded" />
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
+          <div className="divide-y divide-hairline border-y border-hairline lg:col-span-2">
             {[1, 2, 3].map((i) => (
-              <div
-                key={i}
-                className="flex flex-col sm:flex-row gap-6 bg-white p-6 rounded-2xl shadow-sm border border-gray-100"
-              >
-                <Skeleton className="w-full sm:w-32 h-32 rounded-xl" />
-                <div className="flex-1 space-y-4">
-                  <Skeleton className="h-6 w-3/4" />
-                  <Skeleton className="h-4 w-1/4" />
-                  <div className="flex justify-between items-end mt-auto pt-4">
-                    <Skeleton className="h-10 w-28" />
-                    <Skeleton className="h-6 w-24" />
-                  </div>
+              <div key={i} className="flex gap-6 py-6">
+                <Skeleton className="h-32 w-24 rounded-lg sm:w-28" />
+                <div className="flex-1 space-y-3">
+                  <Skeleton className="h-5 w-3/4 rounded" />
+                  <Skeleton className="h-4 w-1/4 rounded" />
+                  <Skeleton className="mt-6 h-10 w-28 rounded" />
                 </div>
               </div>
             ))}
           </div>
-          <div className="lg:col-span-1">
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-6">
-              <Skeleton className="h-8 w-1/2" />
-              <Skeleton className="h-16 w-full" />
-              <Skeleton className="h-32 w-full" />
-              <Separator />
-              <div className="space-y-3">
-                <Skeleton className="h-5 w-full" />
-                <Skeleton className="h-5 w-full" />
-              </div>
-              <Skeleton className="h-12 w-full rounded-xl" />
-            </div>
-          </div>
+          <Skeleton className="h-96 w-full rounded-lg" />
         </div>
       </div>
     );
@@ -175,9 +151,9 @@ const CartPage = () => {
   // Empty cart UI
   if (!cart || cart.items.length === 0) {
     return (
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen flex flex-col">
+      <div className="page-container flex min-h-screen flex-col py-10">
         <CartBreadcrumb />
-        <div className="flex-1 flex items-center justify-center py-12">
+        <div className="flex flex-1 items-center py-12">
           <EmtyCart />
         </div>
       </div>
@@ -185,269 +161,252 @@ const CartPage = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
+    <div className="page-container min-h-screen py-10">
       <CartBreadcrumb />
 
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 mt-6">
+      <div className="mb-10 mt-8 flex flex-col justify-between gap-4 border-b border-hairline pb-8 sm:flex-row sm:items-end">
         <div>
-          <h1 className="font-display text-4xl font-bold text-[#111827] flex items-center gap-3">
-            <ShoppingBag size={32} className="text-[#d9376e]" />
-            Giỏ Hàng
-          </h1>
-          <p className="text-gray-500 mt-2">
+          <p className="eyebrow mb-3 text-brand-pink">Thanh Toán</p>
+          <h1 className="display-heading lg:text-[64px]">Giỏ hàng —</h1>
+          <p className="mt-4 text-base text-[#606562]">
             Xem lại các sản phẩm bạn đã chọn trước khi thanh toán.
           </p>
         </div>
-        <Badge className="bg-white border-2 border-black text-[#d9376e] hover:bg-red-50 px-4 py-1.5 text-sm font-semibold tracking-wide rounded-md cursor-default">
+        <span className="pill self-start bg-brand-ink px-3 py-1 text-white sm:self-auto">
           {cart.items.length} Sản Phẩm
-        </Badge>
+        </span>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-        {/* Cart Items List */}
-        <div className="lg:col-span-2 space-y-4">
-          <AnimatePresence>
-            {cart.items.map((item, index) => (
-              <motion.div
-                key={item.itemId}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.3, delay: index * 0.05 }}
-                className={`flex flex-col sm:flex-row gap-6 bg-white p-5 rounded-md border-2 border-black transition-all duration-300 ${
-                  updatingItemId === item.itemId
-                    ? "opacity-60 border-blue-200 ring-2 ring-blue-50"
-                    : " shadow-sm hover:shadow-md"
-                }`}
-              >
-                {/* Product Image */}
-                <div
-                  className="w-full sm:w-32 h-32 bg-gray-50 rounded-xl flex items-center justify-center cursor-pointer overflow-hidden border border-gray-100 group shrink-0"
-                  onClick={() => nav(`/product/${item.productId}`)}
+      <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-3">
+        {/* Cart items */}
+        <div className="lg:col-span-2">
+          <ul className="divide-y divide-hairline border-y border-hairline">
+            <AnimatePresence>
+              {cart.items.map((item, index) => (
+                <motion.li
+                  key={item.itemId}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                  className={`flex gap-4 py-6 transition-opacity sm:gap-6 ${
+                    updatingItemId === item.itemId ? "opacity-50" : ""
+                  }`}
                 >
-                  <img
-                    src={item.imageUrl}
-                    alt={item.productName}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
-
-                {/* Product Info */}
-                <div className="flex-1 flex flex-col min-w-0">
-                  <div className="flex justify-between items-start gap-4">
-                    <div className="min-w-0">
-                      <h3
-                        className="font-bold text-lg text-[#111827] hover:text-[#3B82F6] cursor-pointer line-clamp-2 transition-colors"
-                        onClick={() => nav(`/product/${item.productId}`)}
-                      >
-                        {item.productName}
-                      </h3>
-                      <div className="mt-1 flex items-center gap-2">
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-md border-2 border-black text-xs uppercase tracking-wider bg-gray-100 text-gray-600">
-                          Size {item.sizeName}
-                        </span>
-                      </div>
-                    </div>
-
-                    <button
-                      className="text-gray-400 hover:text-red-500 hover:bg-red-50 p-2 rounded-full transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-500"
-                      onClick={() => handleRemoveItem(item.itemId)}
-                      disabled={updatingItemId === item.itemId}
-                      title="Xóa sản phẩm"
-                    >
-                      <Trash2 size={20} />
-                    </button>
-                  </div>
-
-                  <div className="mt-auto pt-4 flex flex-wrap items-end justify-between gap-4">
-                    {/* Quantity Selector */}
-                    <div className="flex items-center bg-gray-50 border-2 border-black rounded-md p-1">
-                      <button
-                        disabled={
-                          item.quantity <= 1 || updatingItemId === item.itemId
-                        }
-                        onClick={() =>
-                          handleUpdateItem(item.itemId, item.quantity - 1)
-                        }
-                        className="w-8 h-8 flex items-center justify-center rounded-md text-gray-600 hover:bg-white hover:text-[#111827] hover:shadow-sm disabled:opacity-50 transition-all"
-                      >
-                        <Minus size={16} />
-                      </button>
-                      <span className="w-10 text-center font-semibold text-[#111827] font-mono text-sm">
-                        {item.quantity}
-                      </span>
-                      <button
-                        disabled={
-                          item.quantity >= 10 || updatingItemId === item.itemId
-                        }
-                        onClick={() =>
-                          handleUpdateItem(item.itemId, item.quantity + 1)
-                        }
-                        className="w-8 h-8 flex items-center justify-center rounded-md text-gray-600 hover:bg-white hover:text-[#111827] hover:shadow-sm disabled:opacity-50 transition-all"
-                      >
-                        <Plus size={16} />
-                      </button>
-                    </div>
-
-                    <div className="text-right">
-                      <div className="font-bold text-[#d9376e] text-xl">
-                        {currency.format(item.productPrice * item.quantity)}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-
-          <div className="pt-4">
-            <Button
-              variant="outline"
-              onClick={() => nav("/shop")}
-              className="h-12 px-6 border-2 border-black text-[#111827] hover:text-[#3B82F6] hover:border-blue-200 hover:bg-blue-50 rounded-md font-semibold transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6]"
-            >
-              Tiếp Tục Mua Sắm
-            </Button>
-          </div>
-        </div>
-
-        {/* Order Summary (Sticky Sidebar) */}
-        <div className="lg:col-span-1 sticky top-24">
-          <div className="bg-white p-6 sm:p-8 rounded-md border-2 border-black flex flex-col gap-6">
-            <h2 className="font-display text-xl font-bold text-[#111827] border-b border-black pb-4">
-              Tóm Tắt Đơn Hàng
-            </h2>
-
-            <div className="space-y-6">
-              {/* Shipping Address */}
-              <div>
-                <Label
-                  htmlFor="address"
-                  className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 block"
-                >
-                  Địa Chỉ Giao Hàng
-                </Label>
-                <div className="bg-gray-50 border-2 border-black rounded-md p-3 text-sm text-[#111827] leading-relaxed">
-                  {address ? (
-                    address
-                  ) : (
-                    <span className="text-red-500 italic">
-                      Vui lòng cập nhật địa chỉ trong hồ sơ!
-                    </span>
-                  )}
-                </div>
-                {!address && (
-                  <Button
-                    variant="link"
-                    className="px-0 text-[#3B82F6] text-xs h-auto mt-1"
-                    onClick={() => nav("/user/profile")}
+                  {/* Product image */}
+                  <button
+                    type="button"
+                    className="h-32 w-24 flex-shrink-0 overflow-hidden rounded-lg bg-brand-mist focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-blue sm:w-28"
+                    onClick={() => nav(`/product/${item.productId}`)}
+                    aria-label={`Xem ${item.productName}`}
                   >
-                    Cập nhật ngay
-                  </Button>
-                )}
-              </div>
+                    <img
+                      src={item.imageUrl}
+                      alt={item.productName}
+                      className="h-full w-full object-cover"
+                    />
+                  </button>
 
-              {/* Payment Method */}
-              <div>
-                <Label className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 block">
-                  Phương Thức Thanh Toán
-                </Label>
-                <RadioGroup
-                  value={paymentMethod}
-                  onValueChange={setPaymentMethod}
-                  className="space-y-3"
-                >
-                  {paymentMethods.map((method) => (
-                    <div
-                      key={method.id}
-                      className={`relative flex items-center border rounded-md p-4 cursor-pointer transition-all duration-200 ${
-                        paymentMethod === method.id
-                          ? "border-black bg-blue-50/50 shadow-sm border-2"
-                          : "border-gray-200 hover:border-gray-300 bg-white"
-                      }`}
-                      onClick={() => setPaymentMethod(method.id)}
-                    >
-                      <RadioGroupItem
-                        value={method.id}
-                        id={method.id}
-                        className="absolute right-4 text-[#ff8e3c]"
-                      />
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shrink-0 border border-gray-100">
-                          <img
-                            src={method.icon}
-                            alt={method.name}
-                            className="w-8 h-8 object-contain"
-                          />
-                        </div>
-                        <Label
-                          htmlFor={method.id}
-                          className="cursor-pointer font-semibold text-sm text-[#111827]"
+                  {/* Product info */}
+                  <div className="flex min-w-0 flex-1 flex-col">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="min-w-0">
+                        <h3
+                          className="line-clamp-2 cursor-pointer text-base font-semibold text-brand-ink transition-colors hover:text-brand-orange"
+                          onClick={() => nav(`/product/${item.productId}`)}
                         >
-                          {method.name}
-                        </Label>
+                          {item.productName}
+                        </h3>
+                        <p className="mt-1 text-sm text-[#606562]">
+                          Size{" "}
+                          <span className="font-mono text-brand-ink">
+                            {item.sizeName}
+                          </span>
+                        </p>
                       </div>
+
+                      <button
+                        className="icon-btn -mr-2 -mt-2 text-[#606562] hover:text-brand-pink"
+                        onClick={() => handleRemoveItem(item.itemId)}
+                        disabled={updatingItemId === item.itemId}
+                        aria-label="Xóa sản phẩm"
+                        title="Xóa sản phẩm"
+                      >
+                        <Trash2 size={18} strokeWidth={1.5} />
+                      </button>
                     </div>
-                  ))}
-                </RadioGroup>
-              </div>
 
-              <Separator className="bg-gray-100" />
+                    <div className="mt-auto flex flex-wrap items-end justify-between gap-4 pt-4">
+                      {/* Quantity selector */}
+                      <div className="inline-flex h-10 items-center overflow-hidden rounded border border-[#cccfcd]">
+                        <button
+                          disabled={
+                            item.quantity <= 1 || updatingItemId === item.itemId
+                          }
+                          onClick={() =>
+                            handleUpdateItem(item.itemId, item.quantity - 1)
+                          }
+                          aria-label="Giảm số lượng"
+                          className="flex h-full w-10 items-center justify-center text-brand-ink transition-colors hover:bg-brand-mist disabled:opacity-30"
+                        >
+                          <Minus size={14} />
+                        </button>
+                        <span className="w-10 border-x border-[#cccfcd] text-center font-mono text-sm leading-10 text-brand-ink">
+                          {item.quantity}
+                        </span>
+                        <button
+                          disabled={
+                            item.quantity >= 10 || updatingItemId === item.itemId
+                          }
+                          onClick={() =>
+                            handleUpdateItem(item.itemId, item.quantity + 1)
+                          }
+                          aria-label="Tăng số lượng"
+                          className="flex h-full w-10 items-center justify-center text-brand-ink transition-colors hover:bg-brand-mist disabled:opacity-30"
+                        >
+                          <Plus size={14} />
+                        </button>
+                      </div>
 
-              {/* Totals */}
-              <div className="space-y-3">
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-500 font-medium">
-                    Tổng Tiền Hàng:
-                  </span>
-                  <span className="text-[#111827] font-semibold">
-                    {currency.format(cart.totalPrice)}
-                  </span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-500 font-medium">
-                    Phí Giao Hàng:
-                  </span>
-                  <span className="text-green-600 font-bold tracking-wide uppercase text-xs self-center">
-                    Miễn Phí
-                  </span>
-                </div>
-
-                <div className="pt-4 mt-4 border-t border-gray-100 flex justify-between items-end">
-                  <div>
-                    <span className="block font-bold text-[#111827] text-lg">
-                      Tổng Cộng:
-                    </span>
-                    <span className="text-xs text-gray-500">
-                      Đã bao gồm VAT
-                    </span>
+                      <p className="text-base font-semibold text-brand-pink">
+                        {currency.format(item.productPrice * item.quantity)}
+                      </p>
+                    </div>
                   </div>
-                  <span className="font-black text-2xl text-[#ff8e3c]">
-                    {currency.format(cart.totalPrice)}
+                </motion.li>
+              ))}
+            </AnimatePresence>
+          </ul>
+
+          <button
+            onClick={() => nav("/shop")}
+            className="btn btn-ghost mt-6"
+          >
+            <ArrowLeft size={16} aria-hidden="true" />
+            Tiếp Tục Mua Sắm
+          </button>
+        </div>
+
+        {/* Order summary */}
+        <aside className="rounded-lg bg-brand-mist p-6 sm:p-8 lg:sticky lg:top-24">
+          <h2 className="font-label border-b border-brand-ink pb-4 text-2xl text-brand-ink">
+            Tóm Tắt Đơn Hàng
+          </h2>
+
+          <div className="space-y-8 pt-6">
+            {/* Shipping address */}
+            <div>
+              <Label
+                htmlFor="address"
+                className="eyebrow mb-2 block text-xs text-[#606562]"
+              >
+                Địa Chỉ Giao Hàng
+              </Label>
+              <div className="rounded border border-[#cccfcd] bg-white p-3 text-sm leading-relaxed text-brand-ink">
+                {address ? (
+                  address
+                ) : (
+                  <span className="text-brand-pink">
+                    Vui lòng cập nhật địa chỉ trong hồ sơ!
                   </span>
-                </div>
+                )}
               </div>
+              {!address && (
+                <button
+                  className="btn btn-ghost btn-sm mt-2 text-brand-blue"
+                  onClick={() => nav("/user/profile")}
+                >
+                  Cập nhật ngay
+                </button>
+              )}
             </div>
 
-            {/* Checkout Action */}
-            <div className="pt-2">
-              <Button
-                className="w-full h-14 bg-[#ff8e3c] hover:bg-[#ff8e3c] text-white shadow-lg shadow-blue-500/30 rounded-md border-2 border-black text-base font-bold transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff8e3c] flex items-center justify-center gap-2"
-                onClick={handleCheckout}
-                disabled={!address.trim() || paymentLoading}
+            {/* Payment method */}
+            <div>
+              <Label className="eyebrow mb-2 block text-xs text-[#606562]">
+                Phương Thức Thanh Toán
+              </Label>
+              <RadioGroup
+                value={paymentMethod}
+                onValueChange={setPaymentMethod}
+                className="space-y-2"
               >
-                {paymentLoading ? (
-                  <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                ) : (
-                  <>
-                    Thanh Toán Ngay
-                    <ArrowRight size={20} />
-                  </>
-                )}
-              </Button>
+                {paymentMethods.map((method) => (
+                  <div
+                    key={method.id}
+                    className={`relative flex cursor-pointer items-center rounded border bg-white p-3 transition-colors ${
+                      paymentMethod === method.id
+                        ? "border-brand-ink"
+                        : "border-[#cccfcd] hover:border-brand-ink"
+                    }`}
+                    onClick={() => setPaymentMethod(method.id)}
+                  >
+                    <RadioGroupItem
+                      value={method.id}
+                      id={method.id}
+                      className="absolute right-4 text-brand-orange"
+                    />
+                    <div className="flex items-center gap-3 pr-8">
+                      <img
+                        src={method.icon}
+                        alt=""
+                        className="h-8 w-8 flex-shrink-0 object-contain"
+                      />
+                      <Label
+                        htmlFor={method.id}
+                        className="cursor-pointer text-sm font-semibold text-brand-ink"
+                      >
+                        {method.name}
+                      </Label>
+                    </div>
+                  </div>
+                ))}
+              </RadioGroup>
             </div>
+
+            {/* Totals */}
+            <dl className="space-y-3 border-t border-[#cccfcd] pt-6 text-sm">
+              <div className="flex justify-between">
+                <dt className="text-[#606562]">Tổng tiền hàng</dt>
+                <dd className="text-brand-ink">
+                  {currency.format(cart.totalPrice)}
+                </dd>
+              </div>
+              <div className="flex justify-between">
+                <dt className="text-[#606562]">Phí giao hàng</dt>
+                <dd className="eyebrow text-xs text-green-600">Miễn Phí</dd>
+              </div>
+              <div className="flex items-end justify-between border-t border-[#cccfcd] pt-4">
+                <dt>
+                  <span className="font-label block text-base text-brand-ink">
+                    Tổng Cộng
+                  </span>
+                  <span className="text-xs text-[#606562]">
+                    Đã bao gồm VAT
+                  </span>
+                </dt>
+                <dd className="text-2xl font-semibold text-brand-orange">
+                  {currency.format(cart.totalPrice)}
+                </dd>
+              </div>
+            </dl>
+
+            <button
+              className="btn btn-primary h-14 w-full"
+              onClick={handleCheckout}
+              disabled={!address.trim() || paymentLoading}
+            >
+              {paymentLoading ? (
+                <div className="h-6 w-6 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+              ) : (
+                <>
+                  Thanh Toán Ngay
+                  <ArrowRight size={20} aria-hidden="true" />
+                </>
+              )}
+            </button>
           </div>
-        </div>
+        </aside>
       </div>
     </div>
   );

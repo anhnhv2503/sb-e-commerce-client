@@ -10,10 +10,7 @@ const ProfileSkeleton = () => {
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 min-h-screen">
       {/* Profile Header Card Skeleton */}
-      <div className="relative bg-[#ff8e3c] rounded-md overflow-hidden shadow-xl mb-8 border border-gray-800">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-gray-800/50 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-gray-800/50 rounded-full blur-3xl -ml-10 -mb-10 pointer-events-none" />
-
+      <div className="relative bg-[#ff8e3c] rounded-md overflow-hidden mb-8 border border-gray-800">
         <div className="relative z-10 px-6 py-10 sm:px-10 flex flex-col md:flex-row items-center md:items-start gap-8">
           <Skeleton className="w-32 h-32 rounded-full bg-gray-700 border-4 border-[#111827] shrink-0" />
 
@@ -32,7 +29,7 @@ const ProfileSkeleton = () => {
       </div>
 
       {/* Main Content Area Skeleton */}
-      <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-lg border border-gray-100 overflow-hidden">
         <div className="px-6 pt-6 border-b border-gray-100">
           <div className="grid w-full sm:w-[400px] grid-cols-2 gap-2 mb-2">
             <Skeleton className="h-10 w-full rounded-lg" />
@@ -42,12 +39,12 @@ const ProfileSkeleton = () => {
 
         <div className="p-6 sm:p-8 space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Skeleton className="h-28 w-full rounded-2xl" />
-            <Skeleton className="h-28 w-full rounded-2xl" />
+            <Skeleton className="h-28 w-full rounded-lg" />
+            <Skeleton className="h-28 w-full rounded-lg" />
           </div>
 
           <div className="flex justify-end pt-4 border-t border-gray-100">
-            <Skeleton className="h-11 w-40 rounded-xl" />
+            <Skeleton className="h-11 w-40 rounded-lg" />
           </div>
         </div>
       </div>

@@ -149,9 +149,6 @@ const Register = () => {
     <div className="min-h-[calc(109vh-80px)] flex">
       {/* ── Left decorative panel ── */}
       <div className="hidden lg:flex lg:w-5/12 relative bg-[#111827] items-center justify-center overflow-hidden">
-        <div className="absolute top-1/3 -left-16 w-64 h-64 bg-[#8B5CF6]/30 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/3 right-0 w-80 h-80 bg-[#3B82F6]/20 rounded-full blur-3xl" />
-
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -162,7 +159,7 @@ const Register = () => {
             <Sparkles size={14} className="text-[#8B5CF6]" aria-hidden="true" />
             VA Shop
           </div>
-          <h2 className="font-display text-4xl text-white leading-tight mb-6">
+          <h2 className="font-display text-5xl xl:text-[64px] text-white mb-6">
             Tạo Tài Khoản
           </h2>
           <p className="text-white/60 text-base leading-relaxed">
@@ -180,11 +177,11 @@ const Register = () => {
           animate="visible"
           className="w-full max-w-2xl py-4"
         >
-          <Card className="border-2 border-black shadow-lg bg-white">
+          <Card className="border border-hairline bg-white">
             <CardHeader className="pb-2 pt-8 px-8">
               <motion.div variants={itemVariants}>
-                <h1 className="font-display text-3xl font-bold text-[#111827] text-center">
-                  ĐĂNG KÝ
+                <h1 className="font-display text-[40px] text-[#111827] text-center">
+                  Đăng ký
                 </h1>
                 <p className="text-sm text-gray-500 text-center mt-2">
                   Điền thông tin bên dưới để tạo tài khoản mới
@@ -215,7 +212,7 @@ const Register = () => {
                         required
                         {...register("fullName")}
                         placeholder="Nguyễn Văn A"
-                        className="pl-10 h-11 bg-white border-2 border-black text-[#111827]"
+                        className="pl-10 h-11 bg-white border border-hairline text-[#111827]"
                       />
                     </div>
                     <FieldError error={errors.fullName} />
@@ -240,7 +237,7 @@ const Register = () => {
                         required
                         {...register("phone")}
                         placeholder="0912 345 678"
-                        className="pl-10 h-11 bg-white border-2 border-black text-[#111827]"
+                        className="pl-10 h-11 bg-white border border-hairline text-[#111827]"
                       />
                     </div>
                     <FieldError error={errors.phone} />
@@ -259,7 +256,7 @@ const Register = () => {
                   </Label>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <Select onValueChange={setSelectedProvince}>
-                      <SelectTrigger className="h-11 bg-white border-2 border-black text-[#111827]">
+                      <SelectTrigger className="h-11 bg-white border border-hairline text-[#111827]">
                         <SelectValue placeholder="Tỉnh/Thành" />
                       </SelectTrigger>
                       <SelectContent>
@@ -271,7 +268,7 @@ const Register = () => {
                       </SelectContent>
                     </Select>
                     <Select onValueChange={setSelectedDistrict}>
-                      <SelectTrigger className="h-11 bg-white border-2 border-black text-[#111827]">
+                      <SelectTrigger className="h-11 bg-white border border-hairline text-[#111827]">
                         <SelectValue placeholder="Quận/Huyện" />
                       </SelectTrigger>
                       <SelectContent>
@@ -283,7 +280,7 @@ const Register = () => {
                       </SelectContent>
                     </Select>
                     <Select onValueChange={setSelectedWard}>
-                      <SelectTrigger className="h-11 bg-white border-2 border-black text-[#111827]">
+                      <SelectTrigger className="h-11 bg-white border border-hairline text-[#111827]">
                         <SelectValue placeholder="Phường/Xã" />
                       </SelectTrigger>
                       <SelectContent>
@@ -301,7 +298,7 @@ const Register = () => {
                     required
                     onChange={(e) => setHomeAddress(e.target.value)}
                     placeholder="Số nhà, đường, ngõ…"
-                    className="h-11 bg-white border-2 border-black text-[#111827]"
+                    className="h-11 bg-white border border-hairline text-[#111827]"
                   />
                 </motion.div>
 
@@ -325,7 +322,7 @@ const Register = () => {
                       required
                       {...register("email")}
                       placeholder="you@example.com"
-                      className="pl-10 h-11 bg-white border-2 border-black text-[#111827]"
+                      className="pl-10 h-11 bg-white border border-hairline text-[#111827]"
                     />
                   </div>
                   <FieldError error={errors.email} />
@@ -352,7 +349,7 @@ const Register = () => {
                         required
                         {...register("password")}
                         placeholder="••••••••"
-                        className="pl-10 pr-10 h-11 bg-white border-2 border-black text-[#111827]"
+                        className="pl-10 pr-10 h-11 bg-white border border-hairline text-[#111827]"
                       />
                       <button
                         type="button"
@@ -391,7 +388,7 @@ const Register = () => {
                         required
                         {...register("confirmPassword")}
                         placeholder="••••••••"
-                        className="pl-10 h-11 bg-white border-2 border-black text-[#111827]"
+                        className="pl-10 h-11 bg-white border border-hairline text-[#111827]"
                       />
                     </div>
                     <FieldError error={errors.confirmPassword} />
@@ -428,8 +425,8 @@ const Register = () => {
                       type="submit"
                       disabled={loading}
                       id="register-submit-btn"
-                      className="w-full h-12 bg-[#d9376e] hover:bg-[#d9376e] text-white font-semibold text-base transition-colors 
-                      border-2 border-black shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d9376e] rounded-lg"
+                      className="w-full h-12 bg-[#d9376e] hover:bg-[#d9376e] text-white  text-base transition-colors 
+                      border border-hairline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d9376e] rounded font-label font-semibold tracking-[0.057em]"
                     >
                       Tạo Tài Khoản
                     </Button>

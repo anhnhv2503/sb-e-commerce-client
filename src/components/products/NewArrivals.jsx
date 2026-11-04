@@ -2,7 +2,7 @@ import DotsLoading from "@/components/common/DotsLoading";
 import ProductItem from "@/components/products/ProductItem";
 import { getNewArrivals } from "@/components/service/ApiFunctions";
 import { motion } from "framer-motion";
-import { ArrowRight, Flame } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -21,9 +21,8 @@ const cardVariants = {
 };
 
 /**
- * NewArrivals
- * Redesigned section header with display typography, animated entrance, and View All CTA.
- * Data fetching logic is unchanged from the original implementation.
+ * NewArrivals — product grid section on the white canvas.
+ * Left-aligned display heading with an em-dash terminal, ghost "view all".
  */
 const NewArrivals = () => {
   const [newProducts, setNewProducts] = useState([]);
@@ -46,48 +45,38 @@ const NewArrivals = () => {
   }, []);
 
   return (
-    <section
-      aria-label="New arrivals"
-      className="w-full bg-gray-50 py-16 sm:py-24"
-    >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section aria-label="New arrivals" className="w-full bg-white py-16 sm:py-20">
+      <div className="page-container">
         {/* ── Section header ── */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12"
+          className="mb-10 flex flex-col gap-6 border-b border-hairline pb-8 sm:flex-row sm:items-end sm:justify-between"
         >
           <div>
-            {/* Badge */}
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-blue-500 text-[#eff0f3] text-xs font-semibold uppercase tracking-widest mb-3 font-mono border-2 border-slate-950">
-              <Flame size={12} aria-hidden="true" />
+            <span className="pill mb-4 bg-brand-blue px-3 py-1 text-white">
               Mới Nhất
             </span>
-
-            {/* Heading – Limelight display font (SKILL.md) */}
-            <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-[#111827] leading-tight">
-              Sản Phẩm Mới Về
+            <h2 className="display-heading lg:text-[64px]">
+              Sản phẩm mới về —
             </h2>
-            <p className="mt-2 text-gray-500 text-sm sm:text-base max-w-md">
+            <p className="mt-4 max-w-md text-base text-[#606562]">
               Những mẫu mới nhất vừa được cập nhật — nhanh tay trước khi hết
               hàng.
             </p>
           </div>
 
-          {/* View all CTA */}
-          <motion.button
-            whileHover={{ x: 4 }}
-            whileTap={{ scale: 0.97 }}
+          <button
             onClick={() => navigate("/shop")}
             id="new-arrivals-view-all"
             aria-label="View all products"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-[#3B82F6] hover:text-[#2563EB] transition-colors flex-shrink-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B82F6]"
+            className="btn btn-ghost flex-shrink-0 self-start text-brand-blue hover:text-brand-ink sm:self-auto"
           >
             Xem Tất Cả
             <ArrowRight size={16} aria-hidden="true" />
-          </motion.button>
+          </button>
         </motion.div>
 
         {/* ── Product grid ── */}
@@ -103,7 +92,7 @@ const NewArrivals = () => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-60px" }}
-            className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+            className="grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 lg:grid-cols-3 xl:grid-cols-4"
           >
             {newProducts.map((product) => (
               <motion.div key={product.id} variants={cardVariants}>

@@ -67,12 +67,12 @@ const CartIcon = () => {
     <>
       <button
         onClick={() => navigate("/user/cart")}
-        className="relative p-2 text-gray-700 hover:text-[#d9376e] hover:bg-blue-50/50 rounded-full transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d9376e]"
+        className="icon-btn relative"
         aria-label="Giỏ hàng"
       >
-        <ShoppingBag size={22} />
+        <ShoppingBag size={22} strokeWidth={1.5} />
         {cartCount > 0 && (
-          <span className="absolute top-0 right-0 h-4 w-4 rounded-full bg-[#d9376e] flex items-center justify-center text-[10px] font-bold text-white shadow-sm ring-1 ring-white">
+          <span className="absolute right-0 top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-brand-pink px-1 font-mono text-[10px] leading-none text-white">
             {cartCount > 99 ? "99+" : cartCount}
           </span>
         )}

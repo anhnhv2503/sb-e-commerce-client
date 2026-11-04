@@ -44,12 +44,12 @@ const EditProfile = ({ setIsEditing, user, fetchUser }) => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.3 }}
-      className="space-y-6 bg-white border border-blue-100 rounded-3xl p-6 sm:p-8 shadow-sm ring-1 ring-[#3B82F6]/5 relative overflow-hidden"
+      className="space-y-6 bg-white border border-blue-100 rounded-lg p-6 sm:p-8 ring-1 ring-[#3B82F6]/5 relative overflow-hidden"
     >
       <div className="absolute top-0 left-0 w-full h-1" />
 
       <div className="mb-6 border-b border-gray-100 pb-4">
-        <h3 className="font-display text-xl font-bold text-[#111827]">
+        <h3 className="font-label text-2xl text-[#111827]">
           Chỉnh Sửa Thông Tin
         </h3>
         <p className="text-gray-500 text-sm mt-1">
@@ -70,7 +70,7 @@ const EditProfile = ({ setIsEditing, user, fetchUser }) => {
             name="fullName"
             value={formData.fullName}
             onChange={handleChange}
-            className="h-11 bg-gray-50 border-gray-200 focus:border-[#3B82F6] focus:ring-[#3B82F6] text-[#111827] rounded-xl transition-all"
+            className="h-11 bg-gray-50 border-gray-200 focus:border-[#3B82F6] focus:ring-[#3B82F6] text-[#111827] rounded-lg transition-all"
             placeholder="Nhập họ và tên"
           />
         </div>
@@ -87,7 +87,7 @@ const EditProfile = ({ setIsEditing, user, fetchUser }) => {
             name="phone"
             value={formData.phone}
             onChange={handleChange}
-            className="h-11 bg-gray-50 border-gray-200 focus:border-[#3B82F6] focus:ring-[#3B82F6] text-[#111827] font-mono rounded-xl transition-all"
+            className="h-11 bg-gray-50 border-gray-200 focus:border-[#3B82F6] focus:ring-[#3B82F6] text-[#111827] font-mono rounded-lg transition-all"
             placeholder="Nhập số điện thoại"
           />
         </div>
@@ -106,7 +106,7 @@ const EditProfile = ({ setIsEditing, user, fetchUser }) => {
           rows={4}
           value={formData.address}
           onChange={handleChange}
-          className="bg-gray-50 border-gray-200 focus:border-[#3B82F6] focus:ring-[#3B82F6] text-[#111827] rounded-xl transition-all resize-y p-3"
+          className="bg-gray-50 border-gray-200 focus:border-[#3B82F6] focus:ring-[#3B82F6] text-[#111827] rounded-lg transition-all resize-y p-3"
           placeholder="Nhập địa chỉ nhận hàng chi tiết..."
         />
       </div>
@@ -116,7 +116,7 @@ const EditProfile = ({ setIsEditing, user, fetchUser }) => {
           variant="outline"
           onClick={() => setIsEditing(false)}
           disabled={isLoading}
-          className="h-11 px-6 text-gray-600 hover:text-[#111827] hover:bg-gray-50 border-2 border-black font-semibold transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] w-full sm:w-auto rounded-md"
+          className="h-11 px-6 text-gray-600 hover:text-[#111827] hover:bg-gray-50 border border-hairline font-semibold transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] w-full sm:w-auto rounded-md"
         >
           <X size={18} className="mr-2" />
           Hủy Bỏ
@@ -124,7 +124,7 @@ const EditProfile = ({ setIsEditing, user, fetchUser }) => {
         <Button
           onClick={handleSave}
           disabled={isLoading || !formData.fullName}
-          className="h-11 px-8 bg-[#ff8e3c] hover:bg-[#ff8e3c] text-white shadow-md shadow-blue-500/20  font-semibold transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B82F6] w-full sm:w-auto disabled:opacity-50 rounded-md border-2 border-black"
+          className="h-11 px-8 bg-[#ff8e3c] hover:bg-[#ff8e3c] text-white transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B82F6] w-full sm:w-auto disabled:opacity-50 rounded font-label font-semibold tracking-[0.057em]"
         >
           {isLoading ? (
             <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

@@ -76,22 +76,18 @@ const Profile = () => {
       className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 min-h-screen"
     >
       {/* Profile Header Card */}
-      <div className="relative bg-[#ff8e3c] rounded-md overflow-hidden shadow-xl mb-8 border border-gray-800">
+      <div className="relative bg-[#ff8e3c] rounded-md overflow-hidden mb-8 border border-gray-800">
         {/* Background glow effects */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-[#3B82F6]/20 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#8B5CF6]/20 rounded-full blur-3xl -ml-10 -mb-10 pointer-events-none" />
-
         <div className="relative z-10 px-6 py-10 sm:px-10 flex flex-col md:flex-row items-center md:items-start gap-8">
           {/* Avatar */}
           <div className="relative shrink-0">
-            <div className="absolute inset-0 bg-gradient-to-tr from-[#3B82F6] to-[#8B5CF6] rounded-full blur-md opacity-60" />
-            <Avatar className="w-32 h-32 border-4 border-[#111827] relative z-10 shadow-lg">
+            <Avatar className="w-32 h-32 border-4 border-[#111827] relative z-10">
               <AvatarImage
                 src={vietnameseBoy}
                 alt={user.fullName}
                 className="object-cover"
               />
-              <AvatarFallback className="bg-gradient-to-br from-[#9fbdee] to-[#a582f5] text-white text-3xl font-display">
+              <AvatarFallback className="bg-brand-pink text-white text-3xl font-label">
                 {getInitials(user.fullName)}
               </AvatarFallback>
             </Avatar>
@@ -100,7 +96,7 @@ const Profile = () => {
           {/* User Info */}
           <div className="flex-1 text-center md:text-left space-y-4">
             <div className="flex flex-col md:flex-row md:items-center gap-3">
-              <h1 className="font-display text-3xl sm:text-4xl font-bold text-white tracking-tight">
+              <h1 className="font-display text-[40px] sm:text-5xl text-white">
                 {user.fullName || "Người Dùng"}
               </h1>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/10 text-white/90 text-xs font-mono tracking-widest uppercase self-center md:self-start">
@@ -132,10 +128,10 @@ const Profile = () => {
       </div>
 
       {/* Main Content Area */}
-      <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-lg border border-gray-100 overflow-hidden">
         <Tabs defaultValue="profile" className="w-full">
           <div className="px-6 pt-6 border-b border-gray-100">
-            <TabsList className="grid w-full sm:w-[400px] grid-cols-2 bg-gray-50/80 p-1 rounded-xl">
+            <TabsList className="grid w-full sm:w-[400px] grid-cols-2 bg-gray-50/80 p-1 rounded-lg">
               <TabsTrigger
                 value="profile"
                 className="flex items-center gap-2 rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#d9376e] data-[state=active]:shadow-sm font-semibold transition-all"
@@ -165,7 +161,7 @@ const Profile = () => {
                 <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Address Card */}
-                    <div className="bg-gray-50 border border-gray-100 rounded-2xl p-6 hover:shadow-md hover:border-gray-200 transition-all">
+                    <div className="bg-gray-50 border border-gray-100 rounded-lg p-6 hover:border-gray-200 transition-all">
                       <div className="flex items-start gap-4">
                         <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
                           <MapPin className="text-[#d9376e]" size={20} />
@@ -182,7 +178,7 @@ const Profile = () => {
                     </div>
 
                     {/* Email Card */}
-                    <div className="bg-gray-50 border border-gray-100 rounded-2xl p-6 hover:shadow-md hover:border-gray-200 transition-all">
+                    <div className="bg-gray-50 border border-gray-100 rounded-lg p-6 hover:border-gray-200 transition-all">
                       <div className="flex items-start gap-4">
                         <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
                           <Mail className="text-[#d9376e]" size={20} />
@@ -205,7 +201,7 @@ const Profile = () => {
                   <div className="flex justify-end pt-4 border-t border-gray-100">
                     <Button
                       onClick={() => setIsEditing(true)}
-                      className="h-11 px-6 bg-[#d9376e] hover:bg-[#d9376e] text-white shadow-md shadow-blue-500/20 gap-2 font-semibold transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B82F6] rounded-md border-2 border-black"
+                      className="h-11 px-6 bg-[#d9376e] hover:bg-[#d9376e] text-white gap-2 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B82F6] rounded font-label font-semibold tracking-[0.057em]"
                     >
                       <Edit2 size={16} />
                       Chỉnh Sửa Hồ Sơ
@@ -220,7 +216,7 @@ const Profile = () => {
               className="m-0 space-y-8 outline-none animate-in fade-in slide-in-from-bottom-4 duration-500"
             >
               {/* Security Advisory */}
-              <div className="bg-blue-50/50 border border-blue-100 rounded-2xl p-5 flex items-start gap-4">
+              <div className="bg-blue-50/50 border border-blue-100 rounded-lg p-5 flex items-start gap-4">
                 <ShieldAlert
                   className="text-[#d9376e] mt-0.5 shrink-0"
                   size={24}
@@ -237,7 +233,7 @@ const Profile = () => {
                 </div>
               </div>
 
-              <div className="bg-gray-50 border border-gray-100 rounded-2xl p-6 hover:shadow-md transition-all">
+              <div className="bg-gray-50 border border-gray-100 rounded-lg p-6 transition-all">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
                   <div>
                     <h3 className="font-bold text-[#111827] mb-1">
@@ -250,7 +246,7 @@ const Profile = () => {
                   <Button
                     onClick={() => setIsPasswordModalOpen(true)}
                     variant="outline"
-                    className="h-11 px-6 border-gray-200 text-[#111827] hover:text-[#3B82F6] hover:border-blue-200 hover:bg-blue-50 rounded-xl font-semibold transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] w-full sm:w-auto shrink-0"
+                    className="h-11 px-6 border-gray-200 text-[#111827] hover:text-[#3B82F6] hover:border-blue-200 hover:bg-blue-50 rounded-lg font-semibold transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] w-full sm:w-auto shrink-0"
                   >
                     Đổi Mật Khẩu
                   </Button>

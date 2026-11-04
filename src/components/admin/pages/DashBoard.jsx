@@ -1,29 +1,37 @@
-import DotsLoading from "@/components/common/DotsLoading";
+import {
+  Badge,
+  EmptyState,
+  LoadingRows,
+  PageHeader,
+  Panel,
+  StatCard,
+  StatusBadge,
+} from "@/components/admin/ui/AdminKit";
 import useCurrencyFormat from "@/components/hooks/useCurrencyFormat";
 import {
   getDashboardData,
   getNewestOrders,
 } from "@/components/service/ApiFunctions";
 import { useDocumentTitle } from "@uidotdev/usehooks";
-import { motion } from "framer-motion";
 import {
+  AlertTriangle,
   ArrowRight,
-  BarChart3,
   Box,
   Clock,
   DollarSign,
   Layers,
+  RefreshCw,
   ShoppingBag,
   Users,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import CountUp from "react-countup";
+import { useNavigate } from "react-router-dom";
 import {
   Area,
   AreaChart,
   CartesianGrid,
   Cell,
-  Legend,
   Pie,
   PieChart,
   ResponsiveContainer,
@@ -32,299 +40,241 @@ import {
   YAxis,
 } from "recharts";
 
+/* Sample series — the backend does not expose monthly revenue or
+   category distribution yet, so these charts are labelled as illustrative. */
+const mockChartData = [
+  { name: "T1", value: 400 },
+  { name: "T2", value: 300 },
+  { name: "T3", value: 600 },
+  { name: "T4", value: 800 },
+  { name: "T5", value: 500 },
+  { name: "T6", value: 900 },
+  { name: "T7", value: 700 },
+  { name: "T8", value: 1000 },
+  { name: "T9", value: 1200 },
+  { name: "T10", value: 900 },
+  { name: "T11", value: 1300 },
+  { name: "T12", value: 1600 },
+];
+
+const pieData = [
+  { name: "Giày", value: 540 },
+  { name: "Áo", value: 370 },
+  { name: "Mũ", value: 210 },
+  { name: "Quần", value: 290 },
+  { name: "Phụ kiện", value: 190 },
+];
+
+const PIE_COLORS = ["#3B82F6", "#8B5CF6", "#D97706", "#16A34A", "#DC2626"];
+
 /**
- * DashBoard
- * Redesigned analytics page with SKILL.md design tokens.
+ * DashBoard — KPI tiles, charts and recent orders in flat panels.
  */
 const DashBoard = () => {
   useDocumentTitle("Thống Kê — VA Shop Admin");
-  const [data, setData] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
   const currency = useCurrencyFormat();
+  const [isLoading, setIsLoading] = useState(true);
   const [newestOrders, setNewestOrders] = useState([]);
   const [dashboardData, setDashboardData] = useState(null);
+  const [lastUpdated, setLastUpdated] = useState(null);
+  const [loadError, setLoadError] = useState(false);
 
-  const mockChartData = [
-    { name: "T1", value: 400 },
-    { name: "T2", value: 300 },
-    { name: "T3", value: 600 },
-    { name: "T4", value: 800 },
-    { name: "T5", value: 500 },
-    { name: "T6", value: 900 },
-    { name: "T7", value: 700 },
-    { name: "T8", value: 1000 },
-    { name: "T9", value: 1200 },
-    { name: "T10", value: 900 },
-    { name: "T11", value: 1300 },
-    { name: "T12", value: 1600 },
-  ];
-
-  const pieData = [
-    { name: "Giày", value: 540 },
-    { name: "Áo", value: 370 },
-    { name: "Mũ", value: 210 },
-    { name: "Quần", value: 290 },
-    { name: "Phụ kiện", value: 190 },
-  ];
-
-  const PIE_COLORS = ["#3B82F6", "#8B5CF6", "#D97706", "#16A34A", "#DC2626"];
-
-  const fetchNewestOrders = async () => {
-    try {
-      const response = await getNewestOrders();
-      setNewestOrders(response.data);
-    } catch (error) {
-      console.error("Error fetching newest orders:", error);
-    }
-  };
-
-  const fetchDashboardData = async () => {
-    try {
-      const response = await getDashboardData();
-      setDashboardData(response.data?.data);
-    } catch (error) {
-      console.error("Error fetching dashboard data:", error);
-    }
-  };
-
-  useEffect(() => {
-    const load = async () => {
-      setIsLoading(true);
-      await Promise.all([fetchDashboardData(), fetchNewestOrders()]);
-      setIsLoading(false);
-    };
-    load();
+  const load = useCallback(async () => {
+    setIsLoading(true);
+    const [dash, orders] = await Promise.allSettled([
+      getDashboardData(),
+      getNewestOrders(),
+    ]);
+    if (dash.status === "fulfilled") setDashboardData(dash.value.data?.data);
+    else console.error("Error fetching dashboard data:", dash.reason);
+    if (orders.status === "fulfilled")
+      setNewestOrders(
+        Array.isArray(orders.value.data)
+          ? orders.value.data
+          : orders.value.data?.data || [],
+      );
+    else console.error("Error fetching newest orders:", orders.reason);
+    setLoadError(dash.status === "rejected" || orders.status === "rejected");
+    setLastUpdated(new Date());
+    setIsLoading(false);
   }, []);
 
-  const getStatusLabel = (status) => {
-    const map = {
-      DELIVERED: {
-        label: "Hoàn thành",
-        style: "bg-green-50 text-[#16A34A] border-green-200",
-      },
-      PENDING: {
-        label: "Chờ xử lý",
-        style: "bg-yellow-50 text-[#D97706] border-yellow-200",
-      },
-      IN_PROGRESS: {
-        label: "Đang xử lý",
-        style: "bg-blue-50 text-[#3B82F6] border-blue-200",
-      },
-      SHIPPING: {
-        label: "Đang giao",
-        style: "bg-purple-50 text-[#8B5CF6] border-purple-200",
-      },
-      CANCELLED: {
-        label: "Đã hủy",
-        style: "bg-red-50 text-[#DC2626] border-red-200",
-      },
-    };
-    return (
-      map[status] || {
-        label: status,
-        style: "bg-gray-50 text-gray-600 border-gray-200",
-      }
-    );
-  };
+  useEffect(() => {
+    load();
+  }, [load]);
 
   const statCards = [
     {
-      title: "Tổng Đơn Hàng",
-      value: dashboardData?.totalOrders || 0,
-      icon: <ShoppingBag size={20} />,
-      color: "bg-[#3B82F6]",
-    },
-    {
-      title: "Tổng Danh Mục",
-      value: dashboardData?.totalCategories || 0,
-      icon: <Layers size={20} />,
-      color: "bg-[#8B5CF6]",
-    },
-    {
-      title: "Tổng Sản Phẩm",
-      value: dashboardData?.totalProducts || 0,
-      icon: <Box size={20} />,
-      color: "bg-[#D97706]",
-    },
-    {
-      title: "Tổng Người Dùng",
-      value: dashboardData?.totalUsers || 0,
-      icon: <Users size={20} />,
-      color: "bg-[#16A34A]",
-    },
-    {
-      title: "Tổng Doanh Thu",
+      label: "Tổng doanh thu",
       value: dashboardData?.totalRevenue || 0,
       formatter: (value) => currency.format(value),
-      icon: <DollarSign size={20} />,
-      color: "bg-[#DC2626]",
+      icon: DollarSign,
+      accent: "text-brand-pink",
+      wide: true,
+    },
+    {
+      label: "Đơn hàng",
+      value: dashboardData?.totalOrders || 0,
+      icon: ShoppingBag,
+      accent: "text-brand-blue",
+    },
+    {
+      label: "Sản phẩm",
+      value: dashboardData?.totalProducts || 0,
+      icon: Box,
+      accent: "text-[#D97706]",
+    },
+    {
+      label: "Danh mục",
+      value: dashboardData?.totalCategories || 0,
+      icon: Layers,
+      accent: "text-[#8B5CF6]",
+    },
+    {
+      label: "Người dùng",
+      value: dashboardData?.totalUsers || 0,
+      icon: Users,
+      accent: "text-[#16A34A]",
     },
   ];
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
+  const tooltipStyle = {
+    backgroundColor: "#111827",
+    border: "none",
+    borderRadius: "4px",
+    color: "#fff",
+    fontSize: "12px",
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 16 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.35 } },
-  };
-
-  if (isLoading) {
-    return (
-      <div className="h-full w-full flex items-center justify-center min-h-[400px]">
-        <DotsLoading />
-      </div>
-    );
-  }
+  const sampleBadge = <Badge tone="neutral">Dữ liệu minh họa</Badge>;
 
   return (
-    <div className="space-y-6 max-w-6xl pb-8">
-      {/* ── Header ── */}
-      <motion.div
-        initial={{ opacity: 0, y: -12 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"
-      >
-        <div>
-          <h1 className="font-display text-3xl font-bold text-[#111827] flex items-center gap-3">
-            <BarChart3
-              size={28}
-              className="text-[#3B82F6]"
+    <>
+      <PageHeader
+        title="Thống kê"
+        description="Tổng quan hoạt động kinh doanh của cửa hàng"
+        meta={
+          lastUpdated && (
+            <span className="inline-flex items-center gap-1.5 font-mono text-xs text-[#606562]">
+              <Clock size={12} aria-hidden="true" />
+              Cập nhật lúc{" "}
+              {lastUpdated.toLocaleTimeString("vi-VN", {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </span>
+          )
+        }
+        actions={
+          <button
+            onClick={load}
+            disabled={isLoading}
+            className="btn-admin btn-admin-secondary"
+          >
+            <RefreshCw
+              size={15}
+              className={isLoading ? "animate-spin" : ""}
               aria-hidden="true"
             />
-            Thống Kê
-          </h1>
-          <p className="text-sm text-gray-500 mt-1">
-            Tổng quan hoạt động kinh doanh
-          </p>
-        </div>
-        <div className="flex items-center gap-1.5 text-xs text-gray-400 font-mono">
-          <Clock size={12} aria-hidden="true" />
-          {new Date().toLocaleDateString("vi-VN", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
-        </div>
-      </motion.div>
+            Làm mới
+          </button>
+        }
+      />
 
-      {/* ── Stat cards ── */}
-      <motion.div
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        {statCards.map((card, index) => (
-          <motion.div
-            key={index}
-            variants={itemVariants}
-            whileHover={{ y: -3, transition: { duration: 0.15 } }}
-            className="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-md transition-shadow"
+      {loadError && !isLoading && (
+        <div
+          role="alert"
+          className="mb-6 flex flex-col gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-[#92400E] sm:flex-row sm:items-center sm:justify-between"
+        >
+          <span className="flex items-center gap-2">
+            <AlertTriangle size={16} aria-hidden="true" />
+            Một phần dữ liệu thống kê không tải được. Số liệu bên dưới có thể chưa đầy đủ.
+          </span>
+          <button onClick={load} className="btn-admin btn-admin-secondary h-8 text-xs">
+            Thử lại
+          </button>
+        </div>
+      )}
+
+      {/* ── KPIs ── */}
+      <div className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-6">
+        {statCards.map((card) => (
+          <div
+            key={card.label}
+            className={card.wide ? "col-span-2" : "col-span-1"}
           >
-            <div className="flex items-center justify-between mb-3">
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono">
-                {card.title}
-              </p>
-              <span
-                className={`inline-flex items-center justify-center w-9 h-9 rounded-lg ${card.color} text-white`}
-              >
-                {card.icon}
-              </span>
-            </div>
-            <p className="text-2xl font-bold text-[#111827]">
-              <CountUp
-                end={card.value}
-                duration={2}
-                separator=","
-                formattingFn={card.formatter}
-              />
-            </p>
-          </motion.div>
+            <StatCard
+              label={card.label}
+              icon={card.icon}
+              accent={card.accent}
+              value={
+                isLoading ? (
+                  <span className="inline-block h-7 w-24 animate-pulse rounded bg-brand-mist" />
+                ) : (
+                  <CountUp
+                    end={card.value}
+                    duration={1.2}
+                    separator="."
+                    formattingFn={card.formatter}
+                  />
+                )
+              }
+            />
+          </div>
         ))}
-      </motion.div>
+      </div>
 
       {/* ── Charts ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Area chart */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="bg-white rounded-xl border border-gray-200 p-5"
+      <div className="mb-6 grid grid-cols-1 gap-6 xl:grid-cols-3">
+        <Panel
+          title="Doanh thu theo tháng"
+          actions={sampleBadge}
+          className="xl:col-span-2"
         >
-          <h3 className="text-sm font-semibold text-[#111827] mb-4">
-            Doanh Thu Theo Tháng
-          </h3>
-          <div className="h-64">
+          <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={mockChartData}>
-                <defs>
-                  <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#3B82F6" stopOpacity={0.02} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <AreaChart data={mockChartData} margin={{ left: -16, right: 8 }}>
+                <CartesianGrid vertical={false} stroke="#e5e7eb" />
                 <XAxis
                   dataKey="name"
-                  stroke="#9CA3AF"
+                  stroke="#606562"
                   fontSize={11}
                   tickLine={false}
                   axisLine={false}
                 />
                 <YAxis
-                  stroke="#9CA3AF"
+                  stroke="#606562"
                   fontSize={11}
                   tickLine={false}
                   axisLine={false}
                 />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "#111827",
-                    border: "none",
-                    borderRadius: "8px",
-                    color: "#fff",
-                    fontSize: "12px",
-                  }}
-                />
+                <Tooltip contentStyle={tooltipStyle} />
                 <Area
                   type="monotone"
                   dataKey="value"
+                  name="Doanh thu"
                   stroke="#3B82F6"
                   strokeWidth={2}
-                  fillOpacity={1}
-                  fill="url(#colorRevenue)"
+                  fill="#3B82F6"
+                  fillOpacity={0.08}
                 />
               </AreaChart>
             </ResponsiveContainer>
           </div>
-        </motion.div>
+        </Panel>
 
-        {/* Pie chart */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="bg-white rounded-xl border border-gray-200 p-5"
-        >
-          <h3 className="text-sm font-semibold text-[#111827] mb-4">
-            Phân Bổ Sản Phẩm
-          </h3>
-          <div className="h-64">
+        <Panel title="Phân bổ sản phẩm" actions={sampleBadge}>
+          <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={pieData}
                   cx="50%"
                   cy="50%"
-                  innerRadius={55}
-                  outerRadius={80}
-                  paddingAngle={4}
+                  innerRadius={58}
+                  outerRadius={84}
+                  paddingAngle={2}
                   dataKey="value"
                   strokeWidth={0}
                 >
@@ -335,107 +285,84 @@ const DashBoard = () => {
                     />
                   ))}
                 </Pie>
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "#111827",
-                    border: "none",
-                    borderRadius: "8px",
-                    color: "#fff",
-                    fontSize: "12px",
-                  }}
-                />
-                <Legend
-                  wrapperStyle={{ fontSize: "12px" }}
-                  formatter={(value) => (
-                    <span className="text-gray-600">{value}</span>
-                  )}
-                />
+                <Tooltip contentStyle={tooltipStyle} />
               </PieChart>
             </ResponsiveContainer>
           </div>
-        </motion.div>
+          <ul className="mt-3 space-y-2 text-sm">
+            {pieData.map((d, i) => (
+              <li key={d.name} className="flex items-center justify-between">
+                <span className="flex items-center gap-2 text-[#363537]">
+                  <span
+                    className="h-2.5 w-2.5 rounded-sm"
+                    style={{ backgroundColor: PIE_COLORS[i] }}
+                    aria-hidden="true"
+                  />
+                  {d.name}
+                </span>
+                <span className="font-mono text-xs tabular-nums text-[#606562]">
+                  {d.value}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </Panel>
       </div>
 
-      {/* ── Recent Orders ── */}
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
-        className="bg-white rounded-xl border border-gray-200 overflow-hidden"
-      >
-        <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
-          <h3 className="text-sm font-semibold text-[#111827]">
-            Đơn Hàng Gần Đây
-          </h3>
-          <a
-            href="/admin/manage/orders"
-            className="inline-flex items-center gap-1 text-xs font-semibold text-[#3B82F6] hover:text-[#2563EB] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] rounded"
+      {/* ── Recent orders ── */}
+      <Panel
+        title="Đơn hàng gần đây"
+        bodyClassName=""
+        actions={
+          <button
+            onClick={() => navigate("/admin/manage/orders")}
+            className="btn-admin btn-admin-ghost"
           >
             Xem tất cả
-            <ArrowRight size={12} aria-hidden="true" />
-          </a>
-        </div>
-
-        {/* Table */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm" aria-label="Recent orders">
-            <thead className="bg-gray-50 border-b border-gray-100">
-              <tr>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono">
-                  Mã đơn
-                </th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono">
-                  Khách hàng
-                </th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono">
-                  Trạng thái
-                </th>
-                <th className="text-right px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono">
-                  Tổng tiền
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-50">
-              {newestOrders.map((order, index) => {
-                const status = getStatusLabel(order.orderStatus);
-                return (
-                  <motion.tr
-                    key={index}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.5 + index * 0.05 }}
-                    className="hover:bg-gray-50/50 transition-colors"
-                  >
-                    <td className="px-5 py-3.5">
-                      <span className="font-mono text-xs text-[#111827]">
-                        #{String(order.id).padStart(4, "0")}
-                      </span>
+            <ArrowRight size={14} aria-hidden="true" />
+          </button>
+        }
+      >
+        {isLoading ? (
+          <LoadingRows rows={5} cols={4} />
+        ) : newestOrders.length === 0 ? (
+          <EmptyState
+            icon={ShoppingBag}
+            title="Chưa có đơn hàng"
+            description="Đơn hàng mới sẽ xuất hiện tại đây."
+          />
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="admin-table" aria-label="Recent orders">
+              <thead>
+                <tr>
+                  <th>Mã đơn</th>
+                  <th>Khách hàng</th>
+                  <th>Trạng thái</th>
+                  <th className="!text-right">Tổng tiền</th>
+                </tr>
+              </thead>
+              <tbody>
+                {newestOrders.map((order) => (
+                  <tr key={order.id}>
+                    <td className="font-mono text-xs">
+                      #{String(order.id).padStart(4, "0")}
                     </td>
-                    <td className="px-5 py-3.5">
-                      <span className="text-gray-600">
-                        {order.user?.fullName}
-                      </span>
+                    <td>{order.user?.fullName || "—"}</td>
+                    <td>
+                      <StatusBadge status={order.orderStatus} />
                     </td>
-                    <td className="px-5 py-3.5">
-                      <span
-                        className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider border ${status.style}`}
-                      >
-                        {status.label}
-                      </span>
+                    <td className="text-right font-mono tabular-nums">
+                      {currency.format(order.totalAmount)}
                     </td>
-                    <td className="px-5 py-3.5 text-right">
-                      <span className="font-semibold text-[#111827]">
-                        {currency.format(order.totalAmount)}
-                      </span>
-                    </td>
-                  </motion.tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </motion.div>
-    </div>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </Panel>
+    </>
   );
 };
 

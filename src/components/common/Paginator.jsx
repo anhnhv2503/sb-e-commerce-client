@@ -1,35 +1,34 @@
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-} from "@/components/ui/pagination";
-
+/**
+ * Paginator — square 4px page buttons; the current page is filled brand pink.
+ */
 const Paginator = ({ totalPages, currentPage, onPageChange }) => {
   const pageNumbers = Array.from({ length: totalPages }, (_, index) => index);
+
   return (
-    <div>
-      <Pagination>
-        <PaginationContent>
-          {pageNumbers.map((page) => (
-            <PaginationItem key={page}>
-              <PaginationLink
-                className={`cursor-pointer transition-all ${
-                  page === currentPage
-                    ? "bg-[#d9376e] text-white hover:bg-[#eff0f3] border-2 border-slate-950"
-                    : "hover:bg-gray-100"
-                }`}
+    <nav aria-label="pagination" className="flex justify-center">
+      <ul className="flex flex-wrap items-center gap-2">
+        {pageNumbers.map((page) => {
+          const isActive = page === currentPage;
+          return (
+            <li key={page}>
+              <button
+                type="button"
                 onClick={() => onPageChange(page)}
-                disabled={page === currentPage}
-                isActive={page === currentPage}
+                disabled={isActive}
+                aria-current={isActive ? "page" : undefined}
+                className={`flex h-10 w-10 items-center justify-center rounded font-mono text-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue ${
+                  isActive
+                    ? "bg-brand-pink text-white"
+                    : "border border-hairline text-brand-ink hover:border-brand-ink"
+                }`}
               >
                 {page + 1}
-              </PaginationLink>
-            </PaginationItem>
-          ))}
-        </PaginationContent>
-      </Pagination>
-    </div>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
   );
 };
 

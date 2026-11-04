@@ -18,22 +18,20 @@ const VerifyEmailSuccess = () => {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.4 }}
-        className="max-w-md w-full p-8 bg-white rounded-3xl shadow-xl shadow-green-900/5 text-center relative overflow-hidden"
+        className="max-w-md w-full p-8 bg-white rounded-lg text-center relative overflow-hidden"
       >
         {/* Background decorative blob */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-green-500/10 rounded-full blur-3xl pointer-events-none" />
-
         <div className="relative z-10">
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
-            className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner"
+            className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6"
           >
             <CheckCircle className="w-10 h-10 text-green-500" />
           </motion.div>
           
-          <h1 className="font-display text-3xl font-bold text-[#111827] mb-3">
+          <h1 className="font-display text-[40px] text-[#111827] mb-3">
             Xác Nhận Thành Công!
           </h1>
           
@@ -44,7 +42,7 @@ const VerifyEmailSuccess = () => {
           <div className="space-y-3">
             <button
               onClick={() => navigate("/login")}
-              className="w-full h-12 flex items-center justify-center gap-2 bg-[#3B82F6] hover:bg-[#2563EB] text-white rounded-xl font-semibold shadow-md shadow-blue-500/20 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B82F6]"
+              className="w-full h-12 flex items-center justify-center gap-2 bg-[#3B82F6] hover:bg-[#2563EB] text-white rounded-lg font-semibold transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B82F6]"
             >
               <LogIn size={18} />
               Đăng Nhập Ngay
@@ -52,7 +50,7 @@ const VerifyEmailSuccess = () => {
             
             <button
               onClick={() => navigate("/")}
-              className="w-full h-12 flex items-center justify-center gap-2 bg-white border border-gray-200 text-gray-700 hover:text-[#111827] hover:border-gray-300 hover:bg-gray-50 rounded-xl font-semibold transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-400"
+              className="w-full h-12 flex items-center justify-center gap-2 bg-white border border-gray-200 text-gray-700 hover:text-[#111827] hover:border-gray-300 hover:bg-gray-50 rounded-lg font-semibold transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-400"
             >
               Về Trang Chủ
               <ArrowRight size={18} />

@@ -126,7 +126,7 @@ const OrdersTable = ({ status }) => {
         </p>
         <Button
           onClick={() => nav("/shop")}
-          className="h-11 px-6 bg-[#3B82F6] hover:bg-[#2563EB] text-white shadow-md shadow-blue-500/20 rounded-xl font-semibold transition-all"
+          className="h-11 px-6 bg-[#3B82F6] hover:bg-[#2563EB] text-white rounded-lg font-semibold transition-all"
         >
           Mua Sắm Ngay
         </Button>
@@ -144,12 +144,12 @@ const OrdersTable = ({ status }) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.3, delay: index * 0.05 }}
-            className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden hover:shadow-md hover:border-gray-200 transition-all"
+            className="bg-white border border-gray-100 rounded-lg overflow-hidden hover:border-gray-200 transition-all"
           >
             {/* Order Header */}
             <div className="bg-gray-50/80 px-4 py-3 sm:px-6 sm:py-4 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
               <div className="flex flex-wrap items-center gap-3">
-                <span className="font-mono text-sm font-semibold text-[#111827] bg-white border border-gray-200 px-2.5 py-1 rounded-md shadow-sm">
+                <span className="font-mono text-sm font-semibold text-[#111827] bg-white border border-gray-200 px-2.5 py-1 rounded-md">
                   #{String(order.id).padStart(4, "0")}
                 </span>
                 <div className="flex items-center gap-1.5 text-xs text-gray-500 font-mono">
@@ -175,7 +175,7 @@ const OrdersTable = ({ status }) => {
                   className="p-4 sm:p-6 flex flex-col sm:flex-row gap-4 sm:gap-6 items-start"
                 >
                   <div
-                    className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 rounded-xl border border-gray-100 bg-gray-50 overflow-hidden cursor-pointer"
+                    className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 rounded-lg border border-gray-100 bg-gray-50 overflow-hidden cursor-pointer"
                     onClick={() => nav(`/product/${item.sizeDTO.product?.id}`)}
                   >
                     <img
@@ -251,7 +251,7 @@ const OrdersTable = ({ status }) => {
                       variant="outline"
                       onClick={() => handleCancelOrder(order.id)}
                       disabled={processingId === order.id}
-                      className="w-full sm:w-auto h-11 px-5 border-red-200 text-red-600 hover:text-red-700 hover:bg-red-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-600 rounded-xl font-semibold gap-2 transition-all"
+                      className="w-full sm:w-auto h-11 px-5 border-red-200 text-red-600 hover:text-red-700 hover:bg-red-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-600 rounded-lg font-semibold gap-2 transition-all"
                     >
                       {processingId === order.id ? (
                         <div className="w-4 h-4 border-2 border-red-600/30 border-t-red-600 rounded-full animate-spin" />
@@ -265,7 +265,7 @@ const OrdersTable = ({ status }) => {
                     <Button
                       onClick={() => handleConfirmDelivered(order.id)}
                       disabled={processingId === order.id}
-                      className="w-full sm:w-auto h-11 px-6 bg-[#16A34A] hover:bg-green-700 text-white shadow-md shadow-green-500/20 rounded-xl font-semibold gap-2 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#16A34A]"
+                      className="w-full sm:w-auto h-11 px-6 bg-[#16A34A] hover:bg-green-700 text-white rounded-lg font-semibold gap-2 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#16A34A]"
                     >
                       {processingId === order.id ? (
                         <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />

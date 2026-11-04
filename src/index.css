@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Limelight&family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Oswald:wght@500;600;700&family=Playfair+Display:ital,wght@0,400;1,400&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -62,16 +62,159 @@
   * {
     @apply border-border;
   }
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
   body {
-    @apply bg-background text-foreground;
-    font-family: 'Inter', sans-serif;
+    @apply bg-white font-sans text-base leading-normal text-brand-ink;
   }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Editorial type system (see CLAUDE.md)
+   display → Playfair Display italic 400 (Exposure substitute)
+   label   → Oswald uppercase, positive tracking (bryant substitute)
+   body    → Geist
+   ───────────────────────────────────────────────────────────── */
+@layer components {
   .font-display {
-    font-family: 'Limelight', cursive;
+    font-family: "Playfair Display", ui-serif, Georgia, serif;
+    font-style: italic;
+    font-weight: 400 !important;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
   }
-  .font-mono {
-    font-family: 'JetBrains Mono', monospace;
+
+  .font-label {
+    font-family: "Oswald", "Geist", ui-sans-serif, sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.057em;
+    line-height: 1.1;
   }
+
+  /* Small all-caps label above headings */
+  .eyebrow {
+    @apply font-label text-sm tracking-[0.038em];
+  }
+
+  /* Page / section headline — always 40px+ */
+  .display-heading {
+    @apply font-display text-[40px] text-brand-ink sm:text-5xl;
+  }
+
+  .page-container {
+    @apply mx-auto w-full max-w-page px-4 sm:px-6 lg:px-12;
+  }
+
+  /* ── Buttons: 4px radius, label type, no shadows ── */
+  .btn {
+    @apply font-label inline-flex items-center justify-center gap-2 rounded px-5 py-3 text-base transition-opacity duration-200 hover:opacity-85 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue disabled:cursor-not-allowed disabled:opacity-40;
+  }
+  .btn-sm {
+    @apply px-4 py-2.5 text-sm tracking-[0.038em];
+  }
+  .btn-primary {
+    @apply bg-brand-orange text-white;
+  }
+  .btn-accent {
+    @apply bg-brand-pink text-white;
+  }
+  .btn-dark {
+    @apply bg-brand-ink text-white;
+  }
+  .btn-light {
+    @apply bg-white text-brand-ink;
+  }
+  .btn-outline {
+    @apply border border-brand-ink bg-transparent text-brand-ink hover:bg-brand-ink hover:text-white hover:opacity-100;
+  }
+  .btn-outline-light {
+    @apply border border-white bg-transparent text-white;
+  }
+  .btn-ghost {
+    @apply bg-transparent px-0 text-brand-ink hover:text-brand-orange hover:opacity-100;
+  }
+
+  /* ── Pills: filter chips and badges ── */
+  .chip {
+    @apply font-label inline-flex h-10 items-center justify-center gap-2 rounded-full border border-[#cccfcd] bg-transparent px-5 text-sm tracking-[0.038em] text-[#363537] transition-colors hover:border-brand-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue;
+  }
+  .chip-active {
+    @apply border-brand-ink bg-brand-ink text-white;
+  }
+  .pill {
+    @apply font-label inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs tracking-[0.038em];
+  }
+
+  /* Icon-only buttons in the header and toolbars */
+  .icon-btn {
+    @apply inline-flex items-center justify-center rounded p-2 text-brand-ink transition-colors hover:text-brand-pink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue;
+  }
+
+  /* Form field matching the search-field spec */
+  .field {
+    @apply h-10 w-full rounded border border-[#cccfcd] bg-brand-mist px-3 text-sm text-brand-ink placeholder:text-[#606562] focus:border-brand-ink focus:outline-none;
+  }
+
+  /* ─────────────────────────────────────────────
+     Admin console — dense, utilitarian variants
+     ───────────────────────────────────────────── */
+  .btn-blue {
+    @apply bg-brand-blue text-white;
+  }
+  .btn-admin {
+    @apply inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded px-3 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue disabled:cursor-not-allowed disabled:opacity-40;
+  }
+  .btn-admin-primary {
+    @apply bg-brand-blue text-white hover:bg-[#2563EB];
+  }
+  .btn-admin-secondary {
+    @apply border border-[#cccfcd] bg-white text-brand-ink hover:border-brand-ink;
+  }
+  .btn-admin-ghost {
+    @apply text-[#606562] hover:bg-brand-mist hover:text-brand-ink;
+  }
+  .btn-admin-danger {
+    @apply border border-red-200 bg-white text-[#DC2626] hover:bg-red-50;
+  }
+  .btn-admin-icon {
+    @apply w-9 px-0;
+  }
+
+  .admin-input {
+    @apply h-9 w-full rounded border border-[#cccfcd] bg-white px-3 text-sm text-brand-ink placeholder:text-[#9ca3af] focus:border-brand-blue focus:outline-none focus:ring-1 focus:ring-brand-blue disabled:opacity-50;
+  }
+  .admin-label {
+    @apply mb-1.5 block text-xs font-medium text-[#363537];
+  }
+
+  .admin-table {
+    @apply w-full border-collapse text-sm;
+  }
+  .admin-table thead th {
+    @apply whitespace-nowrap border-b border-hairline bg-[#f7f8f9] px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-[#606562];
+  }
+  .admin-table tbody td {
+    @apply border-b border-hairline px-4 py-3 align-middle text-brand-ink;
+  }
+  .admin-table tbody tr:last-child td {
+    @apply border-b-0;
+  }
+  .admin-table tbody tr:hover > td {
+    @apply bg-[#f7f8f9];
+  }
+}
+
+.hide-scrollbar,
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar,
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
 
 @keyframes shimmer {

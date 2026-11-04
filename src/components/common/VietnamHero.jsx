@@ -89,7 +89,7 @@ export default function VietnamReunionHero() {
         <div
           data-aos="fade-right"
           data-aos-delay="400"
-          className="ml-8 transition-transform duration-300 hover:scale-110 cursor-pointer "
+          className="ml-8 transition-transform duration-300 hover:scale-110 cursor-pointer"
         >
           <TankIcon />
         </div>
@@ -101,7 +101,7 @@ export default function VietnamReunionHero() {
           <img
             src={mtgp}
             alt=""
-            className="w-32 h-32 rounded-full object-cover transition-all hover:shadow-lg hover:shadow-yellow-400/50"
+            className="w-32 h-32 rounded-full object-cover transition-all"
           />
         </div>
       </div>
@@ -135,7 +135,7 @@ export default function VietnamReunionHero() {
             <p
               data-aos="fade-up"
               data-aos-delay="300"
-              className="text-white/90 text-lg mb-6 leading-relaxed transition-all duration-300 hover:text-white  rounded-lg cursor-default"
+              className="text-white/90 text-lg mb-6 leading-relaxed transition-all duration-300 hover:text-white rounded-lg cursor-default"
             >
               {publicHoliday.description}
             </p>
@@ -147,7 +147,7 @@ export default function VietnamReunionHero() {
             >
               <button
                 onClick={handlePrimaryClick}
-                className="px-6 py-3 bg-yellow-400 hover:bg-yellow-500 text-red-800  font-bold rounded-lg transition-all duration-300 shadow-lg flex items-center hover:shadow-red-800/50 hover:shadow-lg hover:-translate-y-1 hover:scale-105"
+                className="px-6 py-3 bg-yellow-400 hover:bg-yellow-500 text-red-800 font-bold rounded-lg transition-all duration-300 flex items-center hover:-translate-y-1 hover:scale-105"
               >
                 <Heart
                   className="w-5 h-5 mr-2 transition-transform duration-300 hover:scale-125 hover:rotate-12"
@@ -158,7 +158,7 @@ export default function VietnamReunionHero() {
                   Yêu Thương Việt Nam
                 </span>
               </button>
-              <button className="px-6 py-3 bg-transparent hover:bg-red-700 text-white border-2 border-white font-medium rounded-lg transition-all duration-300 flex items-center hover:border-yellow-400 hover:text-yellow-400 hover:-translate-y-1 hover:shadow-lg hover:shadow-red-800/50">
+              <button className="px-6 py-3 bg-transparent hover:bg-red-700 text-white border-2 border-white font-medium rounded-lg transition-all duration-300 flex items-center hover:border-yellow-400 hover:text-yellow-400 hover:-translate-y-1">
                 <Star
                   className="w-5 h-5 mr-2 transition-transform duration-300 hover:scale-125 hover:rotate-12"
                   fill="yellow"
@@ -178,7 +178,7 @@ export default function VietnamReunionHero() {
             className="w-full md:w-1/2 flex justify-center md:justify-end"
           >
             <div className="relative w-64 h-64 cursor-pointer transition-all duration-500 hover:scale-110 group">
-              <div className="absolute inset-0 bg-red-600 rounded-full flex items-center justify-center transition-all duration-500 group-hover:shadow-xl group-hover:shadow-yellow-400/30">
+              <div className="absolute inset-0 bg-red-600 rounded-full flex items-center justify-center transition-all duration-500">
                 <img
                   src={vnflag}
                   alt="Vietnam Flag"
@@ -203,7 +203,7 @@ export default function VietnamReunionHero() {
         <div
           data-aos="flip-left"
           data-aos-delay="800"
-          className="animate-bounce hover:animate-none absolute top-4 right-4 md:top-8 md:right-8 bg-yellow-400 text-red-800 rounded-full w-16 h-16 flex items-center justify-center font-bold shadow-lg cursor-pointer transition-all hover:scale-125 hover:bg-white hover:shadow-xl hover:shadow-yellow-400/50"
+          className="animate-bounce hover:animate-none absolute top-4 right-4 md:top-8 md:right-8 bg-yellow-400 text-red-800 rounded-full w-16 h-16 flex items-center justify-center font-bold cursor-pointer transition-all hover:scale-125 hover:bg-white"
         >
           <div className="text-center leading-tight transition-all">
             <div className="text-2xl">

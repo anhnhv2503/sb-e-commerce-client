@@ -1,4 +1,4 @@
-import { jwtDecode } from "jwt-decode";
+import { getCurrentUser, isAdmin } from "@/lib/auth";
 import { createContext, useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -21,12 +21,14 @@ export const AuthProvider = ({ children }) => {
         "accessToken",
         JSON.stringify(response.data?.accessToken),
       );
-      const token = localStorage.getItem("accessToken");
-      const decodedToken = jwtDecode(token);
-      if (decodedToken.roles[0] === "ROLE_ADMIN") {
-        navigate("/admin");
+      const from = location.state?.from;
+      const wantsAdmin = typeof from === "string" && from.startsWith("/admin");
+      if (isAdmin(getCurrentUser())) {
+        // Admins go back to the admin page they were sent away from, else the console home
+        navigate(wantsAdmin ? from : "/admin", { replace: true });
       } else {
-        navigate(location.state?.from ? location.state.from : "/");
+        // Regular users never get sent into /admin (the guard would bounce them)
+        navigate(from && !wantsAdmin ? from : "/", { replace: true });
       }
       toast.success("Đăng nhập thành công", {
         duration: 4000,

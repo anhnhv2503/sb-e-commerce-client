@@ -1,3 +1,4 @@
+import { ORDER_STATUS, StatusBadge } from "@/components/admin/ui/AdminKit";
 import useCurrencyFormat from "@/components/hooks/useCurrencyFormat";
 import {
   cancelOrder,
@@ -13,7 +14,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,47 +22,26 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
-import { AnimatePresence, motion } from "framer-motion";
-import React, { useState } from "react";
-import { toast } from "react-hot-toast";
 import {
-  Check,
   ChevronDown,
-  ChevronUp,
+  Mail,
   MapPin,
   MoreHorizontal,
   Phone,
   RefreshCw,
   User,
-  X,
+  XCircle,
 } from "lucide-react";
+import { Fragment, useState } from "react";
+import { toast } from "react-hot-toast";
 
-const statusMapping = {
-  PENDING: {
-    label: "Chờ xử lý",
-    color: "bg-amber-50 text-[#D97706] border-amber-200",
-    actions: ["IN_PROGRESS", "CANCELLED"],
-  },
-  IN_PROGRESS: {
-    label: "Đang xử lý",
-    color: "bg-blue-50 text-[#3B82F6] border-blue-200",
-    actions: ["SHIPPING", "CANCELLED"],
-  },
-  SHIPPING: {
-    label: "Đang giao",
-    color: "bg-purple-50 text-[#8B5CF6] border-purple-200",
-    actions: ["DELIVERED", "CANCELLED"],
-  },
-  DELIVERED: {
-    label: "Đã giao",
-    color: "bg-green-50 text-[#16A34A] border-green-200",
-    actions: [],
-  },
-  CANCELLED: {
-    label: "Đã hủy",
-    color: "bg-red-50 text-[#DC2626] border-red-200",
-    actions: [],
-  },
+/* Workflow: which transitions are allowed from each status */
+const NEXT_ACTIONS = {
+  PENDING: ["IN_PROGRESS", "CANCELLED"],
+  IN_PROGRESS: ["SHIPPING", "CANCELLED"],
+  SHIPPING: ["DELIVERED", "CANCELLED"],
+  DELIVERED: [],
+  CANCELLED: [],
 };
 
 const actionLabels = {
@@ -73,10 +52,10 @@ const actionLabels = {
 };
 
 /**
- * OrdersTable Component
- * Redesigned to match SKILL.md artistic design system
+ * OrdersTable — order rows with the next workflow step as the primary
+ * inline action, cancel in the overflow menu, and an expandable detail row.
  */
-const OrdersTable = ({ data, status, fetchOrders }) => {
+const OrdersTable = ({ data, fetchOrders }) => {
   const [expandedOrder, setExpandedOrder] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [confirmDialog, setConfirmDialog] = useState({
@@ -86,38 +65,29 @@ const OrdersTable = ({ data, status, fetchOrders }) => {
     description: "",
   });
   const [isOpen, setIsOpen] = useState(false);
-
   const currency = useCurrencyFormat();
 
-  const handleExpand = (id) => {
+  const handleExpand = (id) =>
     setExpandedOrder(expandedOrder === id ? null : id);
-  };
 
-  const handleStatusChange = async (orderId, newStatus) => {
-    let title = "";
-    let description = "";
-
-    if (newStatus === "CANCELLED") {
-      title = "Hủy Đơn Hàng";
-      description =
-        "Bạn có chắc muốn hủy đơn hàng này không? Hành động này không thể hoàn tác.";
-    } else {
-      title = `Cập Nhật Trạng Thái: ${statusMapping[newStatus].label}`;
-      description = "Xác nhận chuyển trạng thái đơn hàng này?";
-    }
-    setIsOpen(true);
+  const handleStatusChange = (orderId, newStatus) => {
+    const isCancel = newStatus === "CANCELLED";
     setConfirmDialog({
       orderId,
       newStatus,
-      title,
-      description,
+      title: isCancel
+        ? `Hủy đơn hàng #${String(orderId).padStart(4, "0")}?`
+        : `Chuyển sang "${ORDER_STATUS[newStatus].label}"?`,
+      description: isCancel
+        ? "Đơn hàng sẽ bị hủy. Hành động này không thể hoàn tác."
+        : `Đơn hàng #${String(orderId).padStart(4, "0")} sẽ được cập nhật trạng thái.`,
     });
+    setIsOpen(true);
   };
 
   const confirmStatusChange = async () => {
     const { orderId, newStatus } = confirmDialog;
     setIsProcessing(true);
-
     try {
       if (newStatus === "CANCELLED") {
         await cancelOrder(orderId);
@@ -125,393 +95,286 @@ const OrdersTable = ({ data, status, fetchOrders }) => {
       } else {
         await updateOrderStatus(orderId, newStatus);
         toast.success(
-          `Đã cập nhật trạng thái đơn hàng thành ${statusMapping[newStatus].label}`,
+          `Đã cập nhật trạng thái đơn hàng thành ${ORDER_STATUS[newStatus].label}`,
         );
       }
       fetchOrders(false);
-      setIsProcessing(false);
-      setIsOpen(false);
     } catch (error) {
       console.error("Error updating order status: ", error);
       toast.error("Không thể cập nhật trạng thái đơn hàng");
+    } finally {
       setIsProcessing(false);
       setIsOpen(false);
     }
   };
 
+  const itemCount = (order) =>
+    (order.items || []).reduce((n, i) => n + (i.quantity || 0), 0);
+
   return (
     <>
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50/80">
+        <table className="admin-table min-w-[880px]">
+          <thead>
             <tr>
-              <th
-                scope="col"
-                className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono"
-              >
-                Mã đơn
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono"
-              >
-                Khách hàng
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono"
-              >
-                Ngày đặt
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono"
-              >
-                Tổng tiền
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono"
-              >
-                Trạng thái
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-4 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono"
-              >
-                Hành động
-              </th>
+              <th className="w-10" aria-label="Mở rộng" />
+              <th>Mã đơn</th>
+              <th>Khách hàng</th>
+              <th>Ngày đặt</th>
+              <th className="!text-right">SL</th>
+              <th className="!text-right">Tổng tiền</th>
+              <th>Trạng thái</th>
+              <th className="!text-right">Thao tác</th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-100">
-            {data.map((order) => (
-              <React.Fragment key={order.id}>
-                <motion.tr
-                  className={`hover:bg-blue-50/30 cursor-pointer transition-colors group ${
-                    expandedOrder === order.id ? "bg-blue-50/20" : ""
-                  }`}
-                  onClick={() => handleExpand(order.id)}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <span className="font-mono bg-gray-50 text-[#111827] px-2.5 py-1 rounded-md border border-gray-100">
-                      #{String(order.id).padStart(4, "0")}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-[#3B82F6]">
-                        <User size={16} />
-                      </div>
-                      <span className="font-semibold text-[#111827]">
-                        {order.user?.fullName || "N/A"}
-                      </span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-mono">
-                    {order.orderDate
-                      ? format(new Date(order.orderDate), "dd/MM/yyyy", {
-                          locale: vi,
-                        })
-                      : "N/A"}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-[#3B82F6]">
-                    {currency.format(order.totalAmount || 0)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span
-                      className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider border ${
-                        statusMapping[order.orderStatus].color
-                      }`}
-                    >
-                      {statusMapping[order.orderStatus].label}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <div
-                      className="flex justify-end items-center gap-2"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      {statusMapping[order.orderStatus].actions.length > 0 && (
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="h-9 w-9 p-0 rounded-lg text-gray-500 hover:text-[#3B82F6] hover:border-blue-200 hover:bg-blue-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6]"
-                            >
-                              <MoreHorizontal size={18} />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent
-                            align="end"
-                            className="w-48 rounded-xl p-1"
-                          >
-                            {statusMapping[order.orderStatus].actions.map(
-                              (action) => (
-                                <DropdownMenuItem
-                                  key={action}
-                                  onClick={() =>
-                                    handleStatusChange(order.id, action)
-                                  }
-                                  className={`rounded-lg cursor-pointer px-3 py-2 text-sm font-medium mb-1 last:mb-0 ${
-                                    action === "CANCELLED"
-                                      ? "text-red-600 focus:bg-red-50 focus:text-red-700"
-                                      : "text-[#111827] focus:bg-blue-50 focus:text-[#3B82F6]"
-                                  }`}
-                                >
-                                  {actionLabels[action]}
-                                </DropdownMenuItem>
-                              ),
-                            )}
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      )}
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className={`h-9 px-3 rounded-lg flex items-center gap-2 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] ${
-                          expandedOrder === order.id
-                            ? "bg-blue-50 text-[#3B82F6]"
-                            : "text-gray-500 hover:text-[#111827] hover:bg-gray-100"
-                        }`}
+          <tbody>
+            {data.map((order) => {
+              const expanded = expandedOrder === order.id;
+              const actions = NEXT_ACTIONS[order.orderStatus] || [];
+              const primary = actions.find((a) => a !== "CANCELLED");
+              const canCancel = actions.includes("CANCELLED");
+
+              return (
+                <Fragment key={order.id}>
+                  <tr
+                    className={`cursor-pointer ${expanded ? "[&>td]:bg-[#f7f8f9]" : ""}`}
+                    onClick={() => handleExpand(order.id)}
+                  >
+                    <td className="!pr-0">
+                      <button
                         onClick={(e) => {
                           e.stopPropagation();
                           handleExpand(order.id);
                         }}
+                        aria-expanded={expanded}
+                        aria-label={expanded ? "Thu gọn" : "Xem chi tiết"}
+                        className="btn-admin btn-admin-ghost btn-admin-icon h-7 w-7"
                       >
-                        <span className="text-xs font-semibold uppercase tracking-wider font-mono">
-                          Chi tiết
-                        </span>
-                        {expandedOrder === order.id ? (
-                          <ChevronUp size={16} />
-                        ) : (
-                          <ChevronDown size={16} />
+                        <ChevronDown
+                          size={16}
+                          className={`transition-transform ${expanded ? "rotate-180" : ""}`}
+                        />
+                      </button>
+                    </td>
+                    <td className="font-mono text-xs">
+                      #{String(order.id).padStart(4, "0")}
+                    </td>
+                    <td>
+                      <p className="font-medium">{order.user?.fullName || "—"}</p>
+                      <p className="text-xs text-[#606562]">
+                        {order.user?.email || ""}
+                      </p>
+                    </td>
+                    <td className="whitespace-nowrap font-mono text-xs text-[#363537]">
+                      {order.orderDate
+                        ? format(new Date(order.orderDate), "dd/MM/yyyy HH:mm", {
+                            locale: vi,
+                          })
+                        : "—"}
+                    </td>
+                    <td className="text-right font-mono tabular-nums">
+                      {itemCount(order)}
+                    </td>
+                    <td className="whitespace-nowrap text-right font-mono font-medium tabular-nums">
+                      {currency.format(order.totalAmount || 0)}
+                    </td>
+                    <td>
+                      <StatusBadge status={order.orderStatus} />
+                    </td>
+                    <td onClick={(e) => e.stopPropagation()}>
+                      <div className="flex items-center justify-end gap-1">
+                        {primary && (
+                          <button
+                            onClick={() => handleStatusChange(order.id, primary)}
+                            className="btn-admin btn-admin-primary h-8 px-2.5 text-xs"
+                          >
+                            {actionLabels[primary]}
+                          </button>
                         )}
-                      </Button>
-                    </div>
-                  </td>
-                </motion.tr>
+                        {canCancel && (
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <button
+                                className="btn-admin btn-admin-ghost btn-admin-icon h-8 w-8"
+                                aria-label="Thao tác khác"
+                              >
+                                <MoreHorizontal size={16} />
+                              </button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-44 rounded p-1">
+                              <DropdownMenuItem
+                                onClick={() =>
+                                  handleStatusChange(order.id, "CANCELLED")
+                                }
+                                className="cursor-pointer gap-2 rounded text-sm text-[#DC2626] focus:bg-red-50 focus:text-[#DC2626]"
+                              >
+                                <XCircle size={15} />
+                                {actionLabels.CANCELLED}
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        )}
+                        {!primary && !canCancel && (
+                          <span className="text-xs text-[#9ca3af]">—</span>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
 
-                {/* Expanded Order Details */}
-                <AnimatePresence>
-                  {expandedOrder === order.id && (
-                    <motion.tr
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <td colSpan={6} className="p-0 border-b border-gray-100">
-                        <motion.div
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                          transition={{ duration: 0.2, delay: 0.1 }}
-                          className="px-6 py-6 bg-gray-50/80"
-                        >
-                          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                            {/* Customer and Shipping Info */}
-                            <div className="space-y-5 lg:col-span-1">
-                              <div>
-                                <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono mb-3">
-                                  Thông Tin Giao Hàng
-                                </h4>
-                                <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm space-y-4">
-                                  <div className="flex gap-3">
-                                    <User
-                                      size={18}
-                                      className="text-gray-400 shrink-0 mt-0.5"
-                                    />
-                                    <div>
-                                      <p className="text-sm font-semibold text-[#111827]">
-                                        {order.user?.fullName || "N/A"}
-                                      </p>
-                                      <p className="text-sm text-gray-500 mt-0.5">
-                                        {order.user?.email || "N/A"}
-                                      </p>
-                                    </div>
-                                  </div>
-
-                                  <div className="flex gap-3">
-                                    <Phone
-                                      size={18}
-                                      className="text-gray-400 shrink-0 mt-0.5"
-                                    />
-                                    <p className="text-sm text-[#111827] font-mono">
-                                      {order.user?.phone || "N/A"}
-                                    </p>
-                                  </div>
-
-                                  <div className="flex gap-3">
-                                    <MapPin
-                                      size={18}
-                                      className="text-gray-400 shrink-0 mt-0.5"
-                                    />
-                                    <p className="text-sm text-[#111827] leading-relaxed">
-                                      {order.user?.address || "N/A"}
-                                    </p>
-                                  </div>
-                                </div>
-                              </div>
-
-                              <div>
-                                <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono mb-3">
-                                  Ghi Chú Đơn Hàng
-                                </h4>
-                                <div className="bg-white rounded-xl p-5 border border-gray-200 shadow-sm min-h-[80px]">
-                                  <p className="text-sm text-gray-600 italic">
-                                    {order.note || "Không có ghi chú"}
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Order Items */}
-                            <div className="lg:col-span-2">
-                              <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider font-mono mb-3">
-                                Sản Phẩm Đã Đặt
+                  {expanded && (
+                    <tr>
+                      <td colSpan={8} className="!bg-[#f7f8f9] !p-0">
+                        <div className="grid grid-cols-1 gap-6 px-6 py-5 lg:grid-cols-3">
+                          {/* Customer & shipping */}
+                          <div className="space-y-4">
+                            <div>
+                              <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-[#606562]">
+                                Thông tin giao hàng
                               </h4>
-                              <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                                <div className="max-h-80 overflow-y-auto">
-                                  <table className="min-w-full divide-y divide-gray-100">
-                                    <thead className="bg-gray-50">
-                                      <tr>
-                                        <th
-                                          scope="col"
-                                          className="px-5 py-3 text-left text-[10px] font-semibold text-gray-500 uppercase tracking-widest font-mono"
-                                        >
-                                          Sản Phẩm
-                                        </th>
-                                        <th
-                                          scope="col"
-                                          className="px-5 py-3 text-center text-[10px] font-semibold text-gray-500 uppercase tracking-widest font-mono"
-                                        >
-                                          SL
-                                        </th>
-                                        <th
-                                          scope="col"
-                                          className="px-5 py-3 text-right text-[10px] font-semibold text-gray-500 uppercase tracking-widest font-mono"
-                                        >
-                                          Đơn Giá
-                                        </th>
-                                      </tr>
-                                    </thead>
-                                    <tbody className="bg-white divide-y divide-gray-50">
-                                      {order.items?.map((item, index) => (
-                                        <tr
-                                          key={index}
-                                          className="hover:bg-gray-50/50 transition-colors"
-                                        >
-                                          <td className="px-5 py-3 whitespace-nowrap">
-                                            <div className="flex items-center gap-4">
-                                              <div className="h-12 w-12 flex-shrink-0 rounded-lg bg-gray-50 border border-gray-100 overflow-hidden">
-                                                <img
-                                                  src={
-                                                    item.sizeDTO?.product
-                                                      ?.images?.[0]?.url ||
-                                                    "https://via.placeholder.com/50"
-                                                  }
-                                                  alt={
-                                                    item.sizeDTO?.product?.name
-                                                  }
-                                                  className="h-full w-full object-cover"
-                                                />
-                                              </div>
-                                              <div>
-                                                <p className="text-sm font-semibold text-[#111827] max-w-[200px] sm:max-w-[300px] truncate">
-                                                  {item.sizeDTO?.product
-                                                    ?.name || "N/A"}
-                                                </p>
-                                                <div className="flex items-center gap-2 mt-1">
-                                                  <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-gray-100 text-gray-600">
-                                                    Size{" "}
-                                                    {item.sizeDTO?.sizeName ||
-                                                      "N/A"}
-                                                  </span>
-                                                </div>
-                                              </div>
-                                            </div>
-                                          </td>
-                                          <td className="px-5 py-3 whitespace-nowrap text-sm font-medium text-center text-[#111827]">
-                                            {item.quantity}
-                                          </td>
-                                          <td className="px-5 py-3 whitespace-nowrap text-sm font-medium text-right text-gray-600">
-                                            {currency.format(item.price || 0)}
-                                          </td>
-                                        </tr>
-                                      ))}
-                                    </tbody>
-                                  </table>
-                                </div>
+                              <ul className="divide-y divide-hairline rounded border border-hairline bg-white text-sm">
+                                {[
+                                  [User, order.user?.fullName],
+                                  [Mail, order.user?.email],
+                                  [Phone, order.user?.phone, true],
+                                  [MapPin, order.user?.address],
+                                ].map(([Icon, value, mono], i) => (
+                                  <li key={i} className="flex gap-3 px-3 py-2">
+                                    <Icon
+                                      size={15}
+                                      className="mt-0.5 flex-shrink-0 text-[#9ca3af]"
+                                      aria-hidden="true"
+                                    />
+                                    <span className={mono ? "font-mono" : ""}>
+                                      {value || "—"}
+                                    </span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                            <div>
+                              <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-[#606562]">
+                                Ghi chú
+                              </h4>
+                              <p className="rounded border border-hairline bg-white p-3 text-sm text-[#363537]">
+                                {order.note || "Không có ghi chú"}
+                              </p>
+                            </div>
+                          </div>
 
-                                {/* Order Summary */}
-                                <div className="bg-gray-50 px-5 py-4 border-t border-gray-200">
-                                  <div className="flex justify-between items-center">
-                                    <p className="text-sm font-semibold uppercase tracking-wider text-gray-500 font-mono">
-                                      Tổng Thành Tiền
-                                    </p>
-                                    <p className="text-xl font-bold text-[#3B82F6]">
-                                      {currency.format(order.totalAmount || 0)}
-                                    </p>
-                                  </div>
-                                </div>
+                          {/* Items */}
+                          <div className="lg:col-span-2">
+                            <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-[#606562]">
+                              Sản phẩm đã đặt
+                            </h4>
+                            <div className="overflow-hidden rounded border border-hairline bg-white">
+                              <div className="max-h-80 overflow-y-auto">
+                                <table className="admin-table">
+                                  <thead>
+                                    <tr>
+                                      <th>Sản phẩm</th>
+                                      <th className="!text-right">SL</th>
+                                      <th className="!text-right">Đơn giá</th>
+                                      <th className="!text-right">Thành tiền</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {order.items?.map((item, index) => (
+                                      <tr key={index}>
+                                        <td>
+                                          <div className="flex items-center gap-3">
+                                            <img
+                                              src={item.sizeDTO?.product?.images?.[0]?.url}
+                                              alt=""
+                                              className="h-10 w-10 flex-shrink-0 rounded bg-brand-mist object-cover"
+                                            />
+                                            <div className="min-w-0">
+                                              <p className="max-w-[260px] truncate font-medium">
+                                                {item.sizeDTO?.product?.name || "—"}
+                                              </p>
+                                              <p className="font-mono text-xs text-[#606562]">
+                                                Size {item.sizeDTO?.sizeName || "—"}
+                                              </p>
+                                            </div>
+                                          </div>
+                                        </td>
+                                        <td className="text-right font-mono tabular-nums">
+                                          {item.quantity}
+                                        </td>
+                                        <td className="whitespace-nowrap text-right font-mono tabular-nums text-[#606562]">
+                                          {currency.format(item.price || 0)}
+                                        </td>
+                                        <td className="whitespace-nowrap text-right font-mono tabular-nums">
+                                          {currency.format(
+                                            (item.price || 0) * (item.quantity || 0),
+                                          )}
+                                        </td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                              <div className="flex items-center justify-between border-t border-hairline bg-[#f7f8f9] px-4 py-3">
+                                <span className="text-xs font-semibold uppercase tracking-wide text-[#606562]">
+                                  Tổng thành tiền
+                                </span>
+                                <span className="font-mono text-base font-semibold tabular-nums text-brand-ink">
+                                  {currency.format(order.totalAmount || 0)}
+                                </span>
                               </div>
                             </div>
                           </div>
-                        </motion.div>
+                        </div>
                       </td>
-                    </motion.tr>
+                    </tr>
                   )}
-                </AnimatePresence>
-              </React.Fragment>
-            ))}
+                </Fragment>
+              );
+            })}
           </tbody>
         </table>
       </div>
 
-      {isOpen && (
-        <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-          <AlertDialogContent className="rounded-2xl max-w-md">
-            <AlertDialogHeader>
-              <AlertDialogTitle className="font-display text-xl text-[#111827]">
-                {confirmDialog.title}
-              </AlertDialogTitle>
-              <AlertDialogDescription className="text-gray-600 text-base">
-                {confirmDialog.description}
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter className="mt-6 gap-3 sm:gap-0">
-              <AlertDialogCancel
-                disabled={isProcessing}
-                className="h-11 px-6 rounded-lg font-semibold"
-              >
-                Hủy Qua
-              </AlertDialogCancel>
-              <AlertDialogAction
-                onClick={confirmStatusChange}
-                disabled={isProcessing}
-                className={`h-11 px-6 rounded-lg font-semibold text-white shadow-md transition-all ${
-                  confirmDialog.newStatus === "CANCELLED"
-                    ? "bg-[#DC2626] hover:bg-red-700 shadow-red-500/20"
-                    : "bg-[#3B82F6] hover:bg-[#2563EB] shadow-blue-500/20"
-                }`}
-              >
-                {isProcessing ? (
-                  <RefreshCw size={18} className="animate-spin mr-2" />
-                ) : confirmDialog.newStatus === "CANCELLED" ? (
-                  <X size={18} className="mr-2" />
-                ) : (
-                  <Check size={18} className="mr-2" />
-                )}
-                {isProcessing ? "Đang Xử Lý..." : "Xác Nhận"}
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      )}
+      <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+        <AlertDialogContent className="max-w-md rounded-lg">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-base font-semibold text-brand-ink">
+              {confirmDialog.title}
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-sm text-[#606562]">
+              {confirmDialog.description}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="mt-2 gap-2 sm:gap-0">
+            <AlertDialogCancel
+              disabled={isProcessing}
+              className="h-9 rounded border-[#cccfcd] px-4 text-sm font-medium"
+            >
+              Quay lại
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault();
+                confirmStatusChange();
+              }}
+              disabled={isProcessing}
+              className={`h-9 rounded px-4 text-sm font-medium text-white ${
+                confirmDialog.newStatus === "CANCELLED"
+                  ? "bg-[#DC2626] hover:bg-red-700"
+                  : "bg-brand-blue hover:bg-[#2563EB]"
+              }`}
+            >
+              {isProcessing && (
+                <RefreshCw size={15} className="mr-1.5 animate-spin" />
+              )}
+              {isProcessing
+                ? "Đang xử lý..."
+                : confirmDialog.newStatus === "CANCELLED"
+                  ? "Hủy đơn"
+                  : "Xác nhận"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 };

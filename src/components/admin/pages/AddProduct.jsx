@@ -1,9 +1,10 @@
+import { PageHeader, Panel } from "@/components/admin/ui/AdminKit";
 import PreviewImages from "@/components/common/PreviewImages";
+import useCurrencyFormat from "@/components/hooks/useCurrencyFormat";
 import {
   addProduct,
   getAllCategories,
 } from "@/components/service/ApiFunctions.js";
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -12,25 +13,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useDocumentTitle } from "@uidotdev/usehooks";
-import { motion } from "framer-motion";
-import {
-  Box,
-  Image as ImageIcon,
-  Layers,
-  Sparkles,
-  Tag,
-  Upload,
-} from "lucide-react";
+import { Check, Eye, Save, Upload, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 import { sizeOptions } from "../../../data/data.js";
 
 /**
- * AddProduct Page
- * Redesigned full-page form to match SKILL.md artistic design system
+ * AddProduct — two-column console form with a completion checklist.
  */
 const AddProduct = () => {
   useDocumentTitle("Thêm Sản Phẩm — VA Shop Admin");
+  const navigate = useNavigate();
+  const currency = useCurrencyFormat();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -57,10 +52,15 @@ const AddProduct = () => {
   }, []);
 
   const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
-    setImages(files);
-    const imagesUrl = files.map((file) => URL.createObjectURL(file));
-    setPreviewImages(imagesUrl);
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+    // Append to the current selection; individual images can be removed.
+    setImages((prev) => [...prev, ...files]);
+    setPreviewImages((prev) => [
+      ...prev,
+      ...files.map((file) => URL.createObjectURL(file)),
+    ]);
+    e.target.value = "";
   };
 
   const handleSubmit = async (e) => {
@@ -96,16 +96,7 @@ const AddProduct = () => {
       const response = await addProduct(formData);
       if (response.status === 200) {
         toast.success("Thêm sản phẩm thành công!");
-        // Reset form
-        setName("");
-        setDescription("");
-        setPrice("");
-        setBrand("");
-        setInventory("");
-        setCategory("");
-        setSizeName("");
-        setImages([]);
-        setPreviewImages([]);
+        resetForm();
       }
     } catch (error) {
       console.error("Error adding product", error);
@@ -115,260 +106,331 @@ const AddProduct = () => {
     }
   };
 
+  const removeImage = (index) => {
+    setImages((prev) => prev.filter((_, i) => i !== index));
+    setPreviewImages((prev) => {
+      URL.revokeObjectURL(prev[index]);
+      return prev.filter((_, i) => i !== index);
+    });
+  };
+
+  const resetForm = () => {
+    setName("");
+    setDescription("");
+    setPrice("");
+    setBrand("");
+    setInventory("");
+    setCategory("");
+    setSizeName("");
+    setImages([]);
+    setPreviewImages([]);
+  };
+
+  const checklist = [
+    ["Tên sản phẩm", !!name.trim()],
+    ["Thương hiệu & giá", !!brand.trim() && !!price],
+    ["Mô tả", !!description.trim()],
+    ["Danh mục", !!category],
+    ["Size & số lượng", !!sizename && !!inventory],
+    ["Hình ảnh", images.length > 0],
+  ];
+  const completed = checklist.filter(([, ok]) => ok).length;
+
+  const selectTriggerCls =
+    "h-9 w-full rounded border-[#cccfcd] bg-white text-sm focus:ring-1 focus:ring-brand-blue focus:ring-offset-0";
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      className="max-w-5xl mx-auto space-y-6 pb-12"
-    >
-      {/* Header */}
-      <div className="relative overflow-hidden rounded-2xl bg-[#111827] p-8 sm:p-10 border border-gray-800">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-[#3B82F6]/15 rounded-full blur-3xl -mr-10 -mt-10" />
-        <div className="relative z-10 flex flex-col sm:flex-row sm:items-end justify-between gap-6">
-          <div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 border border-white/10 text-white/80 text-[10px] font-mono tracking-widest uppercase mb-4">
-              <Sparkles size={12} className="text-[#3B82F6]" />
-              Sản Phẩm Mới
-            </div>
-            <h1 className="font-display text-3xl font-bold text-white mb-2">
-              Thêm Sản Phẩm
-            </h1>
-            <p className="text-white/60 text-sm max-w-lg">
-              Điền thông tin chi tiết, chọn danh mục và tải lên hình ảnh để tạo
-              một sản phẩm mới trong hệ thống.
-            </p>
-          </div>
-        </div>
-      </div>
+    <>
+      <PageHeader
+        title="Thêm sản phẩm"
+        description="Điền thông tin, chọn danh mục và tải ảnh lên để tạo sản phẩm mới."
+        actions={
+          <>
+            <button
+              type="button"
+              onClick={() => navigate("/admin/product/list")}
+              className="btn-admin btn-admin-secondary"
+            >
+              Hủy
+            </button>
+            <button
+              type="submit"
+              form="add-product-form"
+              disabled={isLoading}
+              className="btn-admin btn-admin-primary min-w-[120px]"
+            >
+              {isLoading ? (
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+              ) : (
+                <>
+                  <Save size={15} aria-hidden="true" />
+                  Lưu sản phẩm
+                </>
+              )}
+            </button>
+          </>
+        }
+      />
 
-      {/* Main Form */}
       <form
+        id="add-product-form"
         onSubmit={handleSubmit}
-        className="grid grid-cols-1 lg:grid-cols-3 gap-6"
+        className="grid grid-cols-1 items-start gap-6 lg:grid-cols-3"
       >
-        {/* Left Column - Main Info */}
-        <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm space-y-5">
-            <h2 className="text-sm font-semibold text-[#111827] uppercase tracking-wider font-mono flex items-center gap-2 border-b border-gray-100 pb-3">
-              <Box size={16} className="text-[#3B82F6]" />
-              Thông Tin Cơ Bản
-            </h2>
-
-            <div className="space-y-2">
-              <label
-                htmlFor="name"
-                className="text-xs font-semibold text-gray-500 uppercase tracking-wider"
-              >
-                Tên sản phẩm <span className="text-red-500">*</span>
-              </label>
-              <Input
-                id="name"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Ví dụ: Giày thể thao Nike Air Force 1"
-                className="h-11 bg-gray-50 border-gray-200 focus:border-[#3B82F6] focus:ring-[#3B82F6] rounded-lg text-[#111827]"
-              />
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              <div className="space-y-2">
-                <label
-                  htmlFor="brand"
-                  className="text-xs font-semibold text-gray-500 uppercase tracking-wider"
-                >
-                  Thương hiệu <span className="text-red-500">*</span>
+        {/* ── Main column ── */}
+        <div className="space-y-6 lg:col-span-2">
+          <Panel title="Thông tin cơ bản">
+            <div className="space-y-4">
+              <div>
+                <label htmlFor="name" className="admin-label">
+                  Tên sản phẩm <span className="text-[#DC2626]">*</span>
                 </label>
-                <Input
-                  id="brand"
+                <input
+                  id="name"
                   required
-                  value={brand}
-                  onChange={(e) => setBrand(e.target.value)}
-                  placeholder="Ví dụ: Nike"
-                  className="h-11 bg-gray-50 border-gray-200 focus:border-[#3B82F6] focus:ring-[#3B82F6] rounded-lg text-[#111827]"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Ví dụ: Áo blazer nam Coolmate"
+                  className="admin-input"
                 />
               </div>
-              <div className="space-y-2">
-                <label
-                  htmlFor="price"
-                  className="text-xs font-semibold text-gray-500 uppercase tracking-wider"
-                >
-                  Giá tiền (VNĐ) <span className="text-red-500">*</span>
+
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div>
+                  <label htmlFor="brand" className="admin-label">
+                    Thương hiệu <span className="text-[#DC2626]">*</span>
+                  </label>
+                  <input
+                    id="brand"
+                    required
+                    value={brand}
+                    onChange={(e) => setBrand(e.target.value)}
+                    placeholder="Ví dụ: Coolmate"
+                    className="admin-input"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="price" className="admin-label">
+                    Giá bán (VNĐ) <span className="text-[#DC2626]">*</span>
+                  </label>
+                  <input
+                    id="price"
+                    type="number"
+                    min="0"
+                    required
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    placeholder="1500000"
+                    className="admin-input font-mono"
+                  />
+                  {price && (
+                    <p className="mt-1 font-mono text-xs text-[#606562]">
+                      = {currency.format(Number(price))}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="description" className="admin-label">
+                  Mô tả chi tiết <span className="text-[#DC2626]">*</span>
                 </label>
-                <Input
-                  id="price"
+                <textarea
+                  id="description"
+                  required
+                  rows={6}
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Chất liệu, tính năng, cách sử dụng..."
+                  className="admin-input h-auto resize-y py-2 leading-relaxed"
+                />
+              </div>
+            </div>
+          </Panel>
+
+          <Panel
+            title="Hình ảnh"
+            description="PNG, JPG, JPEG — tối đa 5MB mỗi ảnh"
+            actions={
+              previewImages.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setIsModalOpen(true)}
+                  className="btn-admin btn-admin-ghost h-8 text-xs"
+                >
+                  <Eye size={14} aria-hidden="true" />
+                  Xem trước
+                </button>
+              )
+            }
+          >
+            <label
+              htmlFor="images"
+              className="relative flex cursor-pointer flex-col items-center justify-center rounded border border-dashed border-[#cccfcd] bg-[#f7f8f9] px-6 py-8 text-center transition-colors hover:border-brand-blue focus-within:border-brand-blue"
+            >
+              <input
+                type="file"
+                id="images"
+                multiple
+                accept="image/*"
+                onChange={handleImageChange}
+                className="sr-only"
+              />
+              <Upload size={20} className="mb-2 text-[#606562]" aria-hidden="true" />
+              <span className="text-sm font-medium text-brand-ink">
+                Nhấp để chọn ảnh
+              </span>
+              <span className="mt-0.5 text-xs text-[#606562]">
+                Ảnh đầu tiên sẽ là ảnh đại diện
+              </span>
+            </label>
+
+            {previewImages.length > 0 && (
+              <ul className="mt-4 grid grid-cols-4 gap-3 sm:grid-cols-6">
+                {previewImages.map((url, index) => (
+                  <li
+                    key={url}
+                    className="group relative aspect-square overflow-hidden rounded border border-hairline bg-brand-mist"
+                  >
+                    <img
+                      src={url}
+                      alt={`Ảnh ${index + 1}`}
+                      className="h-full w-full object-cover"
+                    />
+                    {index === 0 && (
+                      <span className="absolute bottom-1 left-1 rounded bg-brand-ink px-1.5 py-0.5 text-[10px] text-white">
+                        Đại diện
+                      </span>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => removeImage(index)}
+                      aria-label={`Bỏ ảnh ${index + 1}`}
+                      className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded bg-white/90 text-brand-ink opacity-0 transition-opacity hover:text-[#DC2626] focus-visible:opacity-100 group-hover:opacity-100"
+                    >
+                      <X size={14} />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </Panel>
+        </div>
+
+        {/* ── Side column ── */}
+        <div className="space-y-6 lg:sticky lg:top-0">
+          <Panel title="Phân loại & tồn kho">
+            <div className="space-y-4">
+              <div>
+                <span className="admin-label">
+                  Danh mục <span className="text-[#DC2626]">*</span>
+                </span>
+                <Select value={category} onValueChange={setCategory}>
+                  <SelectTrigger className={selectTriggerCls} aria-label="Danh mục">
+                    <SelectValue placeholder="Chọn danh mục" />
+                  </SelectTrigger>
+                  <SelectContent className="rounded">
+                    {categories.map((cat) => (
+                      <SelectItem key={cat.id} value={cat.name} className="cursor-pointer">
+                        {cat.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <fieldset>
+                <legend className="admin-label">
+                  Size ban đầu <span className="text-[#DC2626]">*</span>
+                </legend>
+                <div className="flex flex-wrap gap-2">
+                  {sizeOptions.map((size) => (
+                    <button
+                      key={size.id}
+                      type="button"
+                      onClick={() => setSizeName(size.name)}
+                      aria-pressed={sizename === size.name}
+                      className={`h-9 min-w-[3rem] rounded border px-3 font-mono text-sm transition-colors ${
+                        sizename === size.name
+                          ? "border-brand-blue bg-brand-blue text-white"
+                          : "border-[#cccfcd] bg-white text-brand-ink hover:border-brand-ink"
+                      }`}
+                    >
+                      {size.name}
+                    </button>
+                  ))}
+                </div>
+              </fieldset>
+
+              <div>
+                <label htmlFor="inventory" className="admin-label">
+                  Số lượng kho <span className="text-[#DC2626]">*</span>
+                </label>
+                <input
+                  id="inventory"
                   type="number"
                   min="0"
                   required
-                  value={price}
-                  onChange={(e) => setPrice(e.target.value)}
-                  placeholder="Ví dụ: 1500000"
-                  className="h-11 bg-gray-50 border-gray-200 focus:border-[#3B82F6] focus:ring-[#3B82F6] rounded-lg text-[#111827] font-mono"
+                  value={inventory}
+                  onChange={(e) => setInventory(e.target.value)}
+                  placeholder="0"
+                  className="admin-input font-mono"
                 />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label
-                htmlFor="description"
-                className="text-xs font-semibold text-gray-500 uppercase tracking-wider"
-              >
-                Mô tả chi tiết <span className="text-red-500">*</span>
-              </label>
-              <textarea
-                id="description"
-                required
-                rows={6}
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Nhập mô tả về chất liệu, tính năng, cách sử dụng..."
-                className="w-full p-3 bg-gray-50 border border-gray-200 focus:border-[#3B82F6] focus:ring-1 focus:ring-[#3B82F6] rounded-lg text-[#111827] text-sm transition-colors outline-none resize-y"
-              />
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm space-y-5">
-            <h2 className="text-sm font-semibold text-[#111827] uppercase tracking-wider font-mono flex items-center gap-2 border-b border-gray-100 pb-3">
-              <ImageIcon size={16} className="text-[#3B82F6]" />
-              Hình Ảnh Sản Phẩm
-            </h2>
-
-            <div className="space-y-4">
-              {/* Custom file upload zone */}
-              <div className="relative border-2 border-dashed border-gray-200 hover:border-[#3B82F6] bg-gray-50 hover:bg-blue-50/50 rounded-xl p-8 transition-colors flex flex-col items-center justify-center text-center group cursor-pointer focus-within:ring-2 focus-within:ring-[#3B82F6] focus-within:ring-offset-2">
-                <input
-                  type="file"
-                  id="images"
-                  multiple
-                  required={previewImages.length === 0}
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                />
-                <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <Upload size={20} className="text-[#3B82F6]" />
-                </div>
-                <p className="text-sm font-medium text-[#111827] mb-1">
-                  Kéo thả hoặc nhấp để tải ảnh lên
-                </p>
-                <p className="text-xs text-gray-500">
-                  PNG, JPG, JPEG (Tối đa 5MB)
+                <p className="mt-1 text-xs text-[#606562]">
+                  Thêm size khác sau tại danh sách sản phẩm.
                 </p>
               </div>
-
-              {/* Preview Grid */}
-              {previewImages.length > 0 && (
-                <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-3 pt-2">
-                  {previewImages.map((url, index) => (
-                    <div
-                      key={index}
-                      className="relative aspect-square rounded-lg border border-gray-200 overflow-hidden cursor-pointer group hover:border-[#3B82F6] transition-colors shadow-sm"
-                      onClick={() => setIsModalOpen(true)}
-                    >
-                      <img
-                        src={url}
-                        alt={`Preview ${index + 1}`}
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
-          </div>
-        </div>
+          </Panel>
 
-        {/* Right Column - Classification & Actions */}
-        <div className="space-y-6">
-          <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm space-y-5">
-            <h2 className="text-sm font-semibold text-[#111827] uppercase tracking-wider font-mono flex items-center gap-2 border-b border-gray-100 pb-3">
-              <Layers size={16} className="text-[#3B82F6]" />
-              Phân Loại
-            </h2>
-
-            <div className="space-y-2">
-              <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                Danh mục <span className="text-red-500">*</span>
-              </label>
-              <Select value={category} onValueChange={setCategory} required>
-                <SelectTrigger className="w-full h-11 bg-gray-50 border-gray-200 focus:ring-[#3B82F6] rounded-lg">
-                  <SelectValue placeholder="Chọn danh mục" />
-                </SelectTrigger>
-                <SelectContent className="rounded-xl border-gray-100">
-                  {categories.map((cat) => (
-                    <SelectItem
-                      key={cat.id}
-                      value={cat.name}
-                      className="cursor-pointer"
-                    >
-                      {cat.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                Thuộc tính Size <span className="text-red-500">*</span>
-              </label>
-              <Select value={sizename} onValueChange={setSizeName} required>
-                <SelectTrigger className="w-full h-11 bg-gray-50 border-gray-200 focus:ring-[#3B82F6] rounded-lg">
-                  <div className="flex items-center gap-2">
-                    <Tag size={16} className="text-gray-400" />
-                    <SelectValue placeholder="Chọn size" />
-                  </div>
-                </SelectTrigger>
-                <SelectContent className="rounded-xl border-gray-100">
-                  {sizeOptions.map((size) => (
-                    <SelectItem
-                      key={size.id}
-                      value={size.name}
-                      className="cursor-pointer"
-                    >
-                      Size {size.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <label
-                htmlFor="inventory"
-                className="text-xs font-semibold text-gray-500 uppercase tracking-wider"
-              >
-                Số lượng kho <span className="text-red-500">*</span>
-              </label>
-              <Input
-                id="inventory"
-                type="number"
-                min="0"
-                required
-                value={inventory}
-                onChange={(e) => setInventory(e.target.value)}
-                placeholder="0"
-                className="h-11 bg-gray-50 border-gray-200 focus:border-[#3B82F6] focus:ring-[#3B82F6] rounded-lg text-[#111827] font-mono"
-              />
-            </div>
-          </div>
-
-          {/* Action Card */}
-          <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full h-12 flex items-center justify-center rounded-xl bg-[#3B82F6] hover:bg-[#2563EB] text-white font-semibold shadow-md shadow-blue-500/20 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B82F6] disabled:opacity-50 disabled:shadow-none"
-            >
-              {isLoading ? (
-                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              ) : (
-                "Lưu Sản Phẩm"
-              )}
-            </button>
-          </div>
+          <Panel
+            title="Kiểm tra"
+            actions={
+              <span className="font-mono text-xs text-[#606562]">
+                {completed}/{checklist.length}
+              </span>
+            }
+            footer={
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={resetForm}
+                  className="btn-admin btn-admin-secondary flex-1"
+                >
+                  Làm lại
+                </button>
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="btn-admin btn-admin-primary flex-1"
+                >
+                  {isLoading ? (
+                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                  ) : (
+                    "Lưu sản phẩm"
+                  )}
+                </button>
+              </div>
+            }
+          >
+            <ul className="space-y-2 text-sm">
+              {checklist.map(([label, ok]) => (
+                <li key={label} className="flex items-center gap-2">
+                  <span
+                    className={`flex h-4 w-4 items-center justify-center rounded-full ${
+                      ok ? "bg-[#16A34A] text-white" : "border border-[#cccfcd]"
+                    }`}
+                    aria-hidden="true"
+                  >
+                    {ok && <Check size={11} strokeWidth={3} />}
+                  </span>
+                  <span className={ok ? "text-brand-ink" : "text-[#606562]"}>
+                    {label}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </Panel>
         </div>
       </form>
 
@@ -377,7 +439,7 @@ const AddProduct = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />
-    </motion.div>
+    </>
   );
 };
 

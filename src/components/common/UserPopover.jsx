@@ -21,65 +21,63 @@ const UserPopover = () => {
     <Popover>
       <PopoverTrigger asChild>
         <button
-          className="rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] focus-visible:outline-offset-2 transition-transform hover:scale-105 active:scale-95"
+          className="rounded-full p-1 transition-opacity hover:opacity-85 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue"
           aria-label="Menu người dùng"
         >
-          <Avatar className="h-10 w-10 border-2 border-white shadow-sm">
+          <Avatar className="h-9 w-9 border border-hairline">
             <AvatarImage
               src={vietnameseBoy}
               alt="Avatar"
               className="object-cover"
             />
-            <AvatarFallback className="bg-gray-100 text-[#111827] font-semibold text-sm">
+            <AvatarFallback className="bg-brand-mist font-label text-sm text-brand-ink">
               VA
             </AvatarFallback>
           </Avatar>
         </button>
       </PopoverTrigger>
       <PopoverContent
-        className="w-56 p-2 rounded-xl shadow-xl border border-gray-100 bg-white"
+        className="w-60 rounded-lg border border-hairline bg-white p-2"
         align="end"
       >
         <div className="flex flex-col gap-1">
           {token ? (
             <>
-              <div className="px-3 py-2 mb-1 border-b border-gray-100">
-                <p className="text-sm font-semibold text-[#111827]">
-                  Tài Khoản
-                </p>
-              </div>
+              <p className="eyebrow mb-1 border-b border-hairline px-3 pb-3 pt-2 text-xs text-[#606562]">
+                Tài Khoản
+              </p>
               <button
                 onClick={() => nav("/user/profile")}
-                className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg border-2 border-black text-sm font-medium text-gray-700 hover:text-[#111827] hover:bg-gray-50 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6]"
+                className="flex w-full items-center gap-3 rounded px-3 py-2.5 text-sm text-brand-ink transition-colors hover:bg-brand-mist focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-blue"
               >
-                <User size={18} className="text-gray-400" />
+                <User size={18} className="text-[#606562]" strokeWidth={1.5} />
                 Thông tin
               </button>
               <button
                 onClick={() => nav("/user/my-orders")}
-                className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg border-2 border-black text-sm font-medium text-gray-700 hover:text-[#111827] hover:bg-gray-50 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6]"
+                className="flex w-full items-center gap-3 rounded px-3 py-2.5 text-sm text-brand-ink transition-colors hover:bg-brand-mist focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-blue"
               >
-                <ShoppingBag size={18} className="text-gray-400" />
+                <ShoppingBag size={18} className="text-[#606562]" strokeWidth={1.5} />
                 Đơn hàng của Tôi
               </button>
               <div className="w-full">
-                <Logout className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-white bg-[#d9376e] hover:bg-[#d9376e] border-2 border-black transition-colors focus-visible:outline focus-visible:outline-2 justify-center" />
+                <Logout className="font-label mt-2 h-10 w-full rounded bg-brand-pink text-sm tracking-[0.038em] text-white hover:bg-brand-pink hover:opacity-85" />
               </div>
             </>
           ) : (
             <>
               <button
                 onClick={() => nav("/login")}
-                className="flex items-center gap-3 rounded-md border-2 border-slate-950 w-full px-3 py-2.5 text-sm font-medium text-[#fffffe] bg-[#ff8e3c] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#ff8e3c]"
+                className="btn btn-sm btn-primary w-full"
               >
-                <LogIn size={18} className="text-[#fffffe]" />
+                <LogIn size={16} />
                 Đăng Nhập
               </button>
               <button
                 onClick={() => nav("/register")}
-                className="flex items-center gap-3 rounded-md border-2 border-slate-950 w-full px-3 py-2.5 text-sm font-medium text-[#fffffe] bg-[#d9376e] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#d9376e]"
+                className="btn btn-sm btn-outline w-full"
               >
-                <UserPlus size={18} className="text-[#fffffe]" />
+                <UserPlus size={16} />
                 Đăng Ký
               </button>
             </>

@@ -76,26 +76,24 @@ const ChangePassword = ({ open, setOpen }) => {
     <Dialog open={open} onClose={() => setOpen(false)} className="relative z-50">
       <DialogBackdrop
         transition
-        className="fixed inset-0 bg-[#111827]/60 backdrop-blur-sm transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
+        className="fixed inset-0 bg-[#111827]/60 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
       />
       <Toaster />
       <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
         <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
           <DialogPanel
             transition
-            className="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-md data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95 border-none"
+            className="relative transform overflow-hidden rounded-lg bg-white text-left transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-md data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95 border-none"
           >
             {/* Header */}
-            <div className="bg-[#111827] px-6 py-8 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-[#3B82F6]/20 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none" />
-              
+            <div className="bg-[#111827] px-6 py-8 relative overflow-hidden font-label font-semibold tracking-[0.057em]">
               <div className="relative z-10">
-                <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center border border-white/10 mb-4 backdrop-blur-md">
+                <div className="w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center border border-white/10 mb-4">
                   <ShieldCheck size={24} className="text-[#3B82F6]" />
                 </div>
                 <DialogTitle
                   as="h3"
-                  className="font-display text-2xl font-bold text-white mb-2"
+                  className="font-label text-2xl text-white mb-2"
                 >
                   Đổi Mật Khẩu
                 </DialogTitle>
@@ -237,7 +235,7 @@ const ChangePassword = ({ open, setOpen }) => {
                 type="button"
                 onClick={handleSaveChange}
                 disabled={loading || !oldPassword || !newPassword || !confirmPassword}
-                className="w-full sm:w-auto h-11 px-6 bg-[#3B82F6] hover:bg-[#2563EB] text-white rounded-lg shadow-md shadow-blue-500/20 font-semibold transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B82F6] disabled:opacity-50 disabled:shadow-none flex items-center justify-center"
+                className="w-full sm:w-auto h-11 px-6 bg-[#3B82F6] hover:bg-[#2563EB] text-white rounded-lg font-semibold transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B82F6] disabled:opacity-50 flex items-center justify-center"
               >
                 {loading ? (
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

@@ -1,249 +1,191 @@
 import CartIcon from "@/components/common/CartIcon";
 import UserPopover from "@/components/common/UserPopover";
 import { Transition } from "@headlessui/react";
-import { motion } from "framer-motion";
-import {
-  Home,
-  Info,
-  Menu as MenuIcon,
-  ShoppingBag,
-  Store,
-  X,
-} from "lucide-react";
-import { useEffect, useState } from "react";
+import { Menu as MenuIcon, ShoppingBag, X } from "lucide-react";
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import newLogo from "../../assets/logo.png";
 
+const NAV_LINKS = [
+  { path: "/", label: "Trang Chủ" },
+  { path: "/shop", label: "Cửa Hàng" },
+  { path: "/about", label: "Về Chúng Tôi" },
+];
+
+const ANNOUNCEMENTS = [
+  "Miễn phí giao hàng",
+  "Đổi trả miễn phí",
+  "Bảo hành 12 tháng",
+];
+
+/**
+ * Header
+ * Announcement strip + flat white nav bar with hairline bottom border.
+ * Labels use the condensed uppercase label face; the active link is marked
+ * with the brand pink and an underline rule instead of a filled box.
+ */
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Handle scroll effect for sticky header
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // Check if link is active
-  const isActive = (path) => {
-    return location.pathname === path;
-  };
-
+  const isActive = (path) => location.pathname === path;
   const token = localStorage.getItem("accessToken");
 
-  return (
-    <header
-      className={`sticky top-0 z-50 w-full transition-all duration-300 ${
-        scrolled
-          ? "bg-white shadow-md"
-          : "bg-gray-50 border-b border-gray-200/50"
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <nav className="flex items-center justify-between h-14">
-          {/* Logo */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="flex-shrink-0"
-          >
-            <button
-              onClick={() => navigate("/")}
-              className="flex items-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] focus-visible:outline-offset-4 rounded-lg"
-              aria-label="Trang chủ VA Shop"
-            >
-              <img src={newLogo} alt="VA Shop Logo" className="h-10 w-auto" />
-            </button>
-          </motion.div>
+  const go = (path) => {
+    navigate(path);
+    setMobileMenuOpen(false);
+  };
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex md:items-center md:space-x-8">
-            <button
-              onClick={() => navigate("/")}
-              className={`px-4 py-3 text-sm font-semibold uppercase tracking-wider transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] rounded-lg ${
-                isActive("/")
-                  ? "text-[#eff0f3] rounded-md bg-[#d9376e] hover:bg-[#d9376e] border-2 border-slate-950"
-                  : "text-[#111827] hover:text-[#ff8e3c] hover:bg-blue-50/50"
+  return (
+    <>
+      {/* ── Announcement bar ── */}
+      <div className="bg-brand-night text-white">
+        <div className="page-container flex h-8 items-center justify-center gap-6 overflow-hidden">
+          {ANNOUNCEMENTS.map((text, i) => (
+            <span
+              key={text}
+              className={`eyebrow whitespace-nowrap text-xs ${
+                i > 0 ? "hidden sm:inline" : ""
               }`}
             >
-              Trang Chủ
-            </button>
-            <button
-              onClick={() => navigate("/shop")}
-              className={`px-4 py-3 text-sm font-semibold uppercase tracking-wider transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] rounded-lg ${
-                isActive("/shop")
-                  ? "text-[#eff0f3] rounded-md bg-[#d9376e] hover:bg-[#d9376e] border-2 border-slate-950"
-                  : "text-[#111827] hover:text-[#ff8e3c] hover:bg-blue-50/50"
-              }`}
-            >
-              Cửa Hàng
-            </button>
-            <button
-              onClick={() => navigate("/about")}
-              className={`px-4 py-3 text-sm font-semibold uppercase tracking-wider transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] rounded-lg ${
-                isActive("/about")
-                  ? "text-[#eff0f3] rounded-md bg-[#d9376e] hover:bg-[#d9376e] border-2 border-slate-950"
-                  : "text-[#111827] hover:text-[#ff8e3c] hover:bg-blue-50/50"
-              }`}
-            >
-              Về Chúng Tôi
-            </button>
+              {text}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <header className="sticky top-0 z-50 w-full border-b border-hairline bg-white">
+        <nav className="page-container flex h-16 items-center justify-between gap-6">
+          {/* Logo */}
+          <button
+            onClick={() => navigate("/")}
+            className="flex flex-shrink-0 items-center rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-blue"
+            aria-label="Trang chủ VA Shop"
+          >
+            <img src={newLogo} alt="VA Shop Logo" className="h-10 w-auto" />
+          </button>
+
+          {/* Desktop navigation */}
+          <div className="hidden flex-1 items-center gap-8 md:flex lg:pl-8">
+            {NAV_LINKS.map(({ path, label }) => (
+              <button
+                key={path}
+                onClick={() => navigate(path)}
+                aria-current={isActive(path) ? "page" : undefined}
+                className={`font-label relative py-2 text-base transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-blue ${
+                  isActive(path)
+                    ? "text-brand-pink after:absolute after:inset-x-0 after:-bottom-[15px] after:h-0.5 after:bg-brand-pink"
+                    : "text-[#363537] hover:text-brand-orange"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
           </div>
 
-          {/* Right Section: Cart and User */}
-          <div className="flex items-center space-x-6">
-            {/* Cart Button */}
-            {token && (
-              <div className="flex items-center h-12 w-12 justify-center">
-                <CartIcon />
-              </div>
-            )}
+          {/* Right: cart + account */}
+          <div className="flex items-center gap-2">
+            {token && <CartIcon />}
 
-            {/* User Menu - Desktop */}
             <div className="hidden md:block">
               <UserPopover />
             </div>
 
-            {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="md:hidden flex items-center justify-center h-12 w-12 rounded-lg text-[#111827] hover:text-[#3B82F6] hover:bg-blue-50 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6]"
+              className="icon-btn md:hidden"
               aria-label="Mở menu"
             >
-              <MenuIcon size={24} />
+              <MenuIcon size={24} strokeWidth={1.5} />
             </button>
           </div>
         </nav>
-      </div>
 
-      {/* Mobile Menu Overlay */}
-      <Transition
-        show={mobileMenuOpen}
-        enter="transition-opacity duration-300"
-        enterFrom="opacity-0"
-        enterTo="opacity-100"
-        leave="transition-opacity duration-300"
-        leaveFrom="opacity-100"
-        leaveTo="opacity-0"
-      >
-        <div
-          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
-          onClick={() => setMobileMenuOpen(false)}
-        />
-      </Transition>
+        {/* Mobile menu overlay */}
+        <Transition
+          show={mobileMenuOpen}
+          enter="transition-opacity duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="transition-opacity duration-300"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div
+            className="fixed inset-0 z-40 bg-black/40"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+        </Transition>
 
-      {/* Mobile Menu Panel */}
-      <Transition
-        show={mobileMenuOpen}
-        enter="transition-transform duration-300"
-        enterFrom="translate-x-full"
-        enterTo="translate-x-0"
-        leave="transition-transform duration-300"
-        leaveFrom="translate-x-0"
-        leaveTo="translate-x-full"
-      >
-        <div className="fixed inset-y-0 right-0 z-50 w-full max-w-sm bg-white shadow-2xl flex flex-col">
-          <div className="flex items-center justify-between p-6 border-b border-gray-100">
-            <button
-              onClick={() => {
-                navigate("/");
-                setMobileMenuOpen(false);
-              }}
-              className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] rounded-lg"
-              aria-label="Trang chủ VA Shop"
-            >
-              <img src={newLogo} alt="VA Shop Logo" className="h-8 w-auto" />
-            </button>
-            <button
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center justify-center h-11 w-11 rounded-full text-gray-500 hover:text-[#111827] hover:bg-gray-100 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6]"
-              aria-label="Đóng menu"
-            >
-              <X size={24} />
-            </button>
-          </div>
-
-          <div className="flex-1 overflow-y-auto py-6 px-4">
-            <div className="space-y-2">
+        {/* Mobile menu panel */}
+        <Transition
+          show={mobileMenuOpen}
+          enter="transition-transform duration-300"
+          enterFrom="translate-x-full"
+          enterTo="translate-x-0"
+          leave="transition-transform duration-300"
+          leaveFrom="translate-x-0"
+          leaveTo="translate-x-full"
+        >
+          <div className="fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col bg-white">
+            <div className="flex h-16 items-center justify-between border-b border-hairline px-4">
               <button
-                onClick={() => {
-                  navigate("/");
-                  setMobileMenuOpen(false);
-                }}
-                className={`flex items-center w-full px-4 py-4 rounded-xl text-base font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] ${
-                  isActive("/")
-                    ? "text-[#eff0f3] rounded-md bg-[#d9376e] hover:bg-[#d9376e] border-2 border-slate-950"
-                    : "text-[#111827] hover:bg-gray-50"
-                }`}
+                onClick={() => go("/")}
+                className="rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-blue"
+                aria-label="Trang chủ VA Shop"
               >
-                <Home size={20} className="mr-4" />
-                <span>Trang Chủ</span>
+                <img src={newLogo} alt="VA Shop Logo" className="h-8 w-auto" />
               </button>
               <button
-                onClick={() => {
-                  navigate("/shop");
-                  setMobileMenuOpen(false);
-                }}
-                className={`flex items-center w-full px-4 py-4 rounded-xl text-base font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] ${
-                  isActive("/shop")
-                    ? "text-[#eff0f3] rounded-md bg-[#d9376e] hover:bg-[#d9376e] border-2 border-slate-950"
-                    : "text-[#111827] hover:bg-gray-50"
-                }`}
+                onClick={() => setMobileMenuOpen(false)}
+                className="icon-btn"
+                aria-label="Đóng menu"
               >
-                <Store size={20} className="mr-4" />
-                <span>Cửa Hàng</span>
-              </button>
-              <button
-                onClick={() => {
-                  navigate("/about");
-                  setMobileMenuOpen(false);
-                }}
-                className={`flex items-center w-full px-4 py-4 rounded-xl text-base font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] ${
-                  isActive("/about")
-                    ? "text-[#eff0f3] rounded-md bg-[#d9376e] hover:bg-[#d9376e] border-2 border-slate-950"
-                    : "text-[#111827] hover:bg-gray-50"
-                }`}
-              >
-                <Info size={20} className="mr-4" />
-                <span>Về Chúng Tôi</span>
+                <X size={24} strokeWidth={1.5} />
               </button>
             </div>
 
-            <div className="mt-8 border-t border-gray-100 pt-6">
-              <div className="px-4 mb-4">
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider font-mono">
-                  Tài Khoản
-                </p>
+            <div className="flex-1 overflow-y-auto px-4 py-6">
+              <p className="eyebrow mb-2 text-xs text-[#606562]">Danh Mục</p>
+              <div className="divide-y divide-hairline border-y border-hairline">
+                {NAV_LINKS.map(({ path, label }) => (
+                  <button
+                    key={path}
+                    onClick={() => go(path)}
+                    aria-current={isActive(path) ? "page" : undefined}
+                    className={`font-label flex w-full items-center justify-between py-4 text-2xl transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-blue ${
+                      isActive(path)
+                        ? "text-brand-pink"
+                        : "text-brand-ink hover:text-brand-orange"
+                    }`}
+                  >
+                    {label}
+                    {isActive(path) && (
+                      <span className="h-2 w-2 rounded-full bg-brand-pink" />
+                    )}
+                  </button>
+                ))}
               </div>
 
+              <p className="eyebrow mb-2 mt-10 text-xs text-[#606562]">
+                Tài Khoản
+              </p>
               {token && (
                 <button
-                  onClick={() => {
-                    navigate("/user/cart");
-                    setMobileMenuOpen(false);
-                  }}
-                  className="flex items-center w-full px-4 py-4 mb-2 text-[#111827] hover:bg-gray-50 rounded-xl text-base font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6]"
+                  onClick={() => go("/user/cart")}
+                  className="mb-4 flex w-full items-center gap-3 border-b border-hairline py-4 text-base text-brand-ink transition-colors hover:text-brand-orange focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-blue"
                 >
-                  <ShoppingBag size={20} className="mr-4 text-gray-500" />
-                  <span>Giỏ Hàng</span>
+                  <ShoppingBag size={20} strokeWidth={1.5} />
+                  Giỏ Hàng
                 </button>
               )}
-
-              <div className="px-2">
-                <UserPopover />
-              </div>
+              <UserPopover />
             </div>
           </div>
-        </div>
-      </Transition>
-    </header>
+        </Transition>
+      </header>
+    </>
   );
 };
 

@@ -68,9 +68,6 @@ const Login = () => {
       {/* ── Left decorative panel (hidden on mobile) ── */}
       <div className="hidden lg:flex lg:w-1/2 relative bg-[#111827] items-center justify-center overflow-hidden">
         {/* Gradient orbs */}
-        <div className="absolute top-1/4 -left-20 w-72 h-72 bg-[#3B82F6]/30 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-[#8B5CF6]/20 rounded-full blur-3xl" />
-
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -81,7 +78,7 @@ const Login = () => {
             <Sparkles size={14} className="text-[#8B5CF6]" aria-hidden="true" />
             VA Shop
           </div>
-          <h2 className="font-display text-4xl xl:text-5xl text-white leading-tight mb-6">
+          <h2 className="font-display text-5xl xl:text-[64px] text-white mb-6">
             Chào Mừng Trở Lại
           </h2>
           <p className="text-white/60 text-base leading-relaxed">
@@ -99,11 +96,11 @@ const Login = () => {
           animate="visible"
           className="w-full max-w-md"
         >
-          <Card className="border-2 border-black shadow-lg bg-white">
+          <Card className="border border-hairline bg-white">
             <CardHeader className="pb-2 pt-8 px-8">
               <motion.div variants={itemVariants}>
-                <h1 className="font-display text-3xl font-bold text-[#111827] text-center">
-                  ĐĂNG NHẬP
+                <h1 className="font-display text-[40px] text-[#111827] text-center">
+                  Đăng nhập
                 </h1>
                 <p className="text-sm text-gray-500 text-center mt-2">
                   Nhập thông tin tài khoản của bạn
@@ -133,7 +130,7 @@ const Login = () => {
                       {...register("email")}
                       placeholder="you@example.com"
                       required
-                      className="pl-10 h-11 bg-white border-2 border-black text-[#111827] transition-all"
+                      className="pl-10 h-11 bg-white border border-hairline text-[#111827] transition-all"
                     />
                   </div>
                   {errors.email && (
@@ -163,7 +160,7 @@ const Login = () => {
                       {...register("password")}
                       placeholder="••••••••"
                       required
-                      className="pl-10 pr-10 h-11 bg-white border-2 border-black text-[#111827] transition-all"
+                      className="pl-10 pr-10 h-11 bg-white border border-hairline text-[#111827] transition-all"
                     />
                     <button
                       type="button"
@@ -227,7 +224,7 @@ const Login = () => {
                     type="submit"
                     disabled={isSubmitting}
                     id="login-submit-btn"
-                    className="w-full h-12 bg-[#ff8e3c] hover:bg-[#ff8e3c] text-white font-semibold text-base transition-colors shadow-md shadow-blue-500/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff8e3c] rounded-lg border-2 border-black"
+                    className="w-full h-12 bg-[#ff8e3c] hover:bg-[#ff8e3c] text-white text-base transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff8e3c] rounded font-label font-semibold tracking-[0.057em]"
                   >
                     {isSubmitting ? (
                       <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -262,7 +259,7 @@ const Login = () => {
                 <Button
                   variant="outline"
                   id="login-google-btn"
-                  className="w-full h-12 bg-white hover:bg-gray-50 text-[#111827] font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B82F6] rounded-lg border-2 border-black"
+                  className="w-full h-12 bg-white hover:bg-gray-50 text-[#111827] font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B82F6] rounded-lg border border-hairline"
                   onClick={handleGoogleLogin}
                 >
                   <FaGoogle className="mr-2 text-[#EA4335]" />

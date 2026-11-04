@@ -1,7 +1,6 @@
 import DotsLoading from "@/components/common/DotsLoading";
 import ProductItem from "@/components/products/ProductItem";
 import { getProductsByCategory } from "@/components/service/ApiFunctions";
-import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -21,8 +20,8 @@ const RelatedProducts = ({ categoryId }) => {
 
   const scroll = (dir) => {
     if (!scrollRef.current) return;
-    const cardWidth = 220; // match min-w
-    const gap = 16; // Tailwind gap-x-4 is 1rem = 16px
+    const cardWidth = scrollRef.current.firstElementChild?.offsetWidth || 220;
+    const gap = 24; // gap-x-6
     const scrollAmount = cardWidth + gap;
     scrollRef.current.scrollBy({
       left: dir === "left" ? -scrollAmount : scrollAmount,
@@ -77,42 +76,45 @@ const RelatedProducts = ({ categoryId }) => {
   return (
     <motion.div
       ref={sectionRef}
-      className="relative w-full my-4 px-1"
+      className="relative w-full"
       initial={{ opacity: 0, y: 20 }}
       animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Sản phẩm liên quan</h2>
-        <div className="space-x-2">
-          <Button
-            size="icon"
-            variant="outline"
+      <div className="mb-10 flex items-end justify-between gap-4">
+        <div>
+          <p className="eyebrow mb-3 text-brand-pink">Có thể bạn thích</p>
+          <h2 className="display-heading">Sản phẩm liên quan —</h2>
+        </div>
+        <div className="flex flex-shrink-0 gap-2">
+          <button
+            type="button"
             onClick={() => scroll("left")}
             disabled={!canScrollLeft}
-            className={!canScrollLeft ? "opacity-50 cursor-not-allowed" : ""}
+            aria-label="Cuộn trái"
+            className="flex h-10 w-10 items-center justify-center rounded border border-[#cccfcd] text-brand-ink transition-colors hover:border-brand-ink disabled:cursor-not-allowed disabled:opacity-40"
           >
-            <ChevronLeft />
-          </Button>
-          <Button
-            size="icon"
-            variant="outline"
+            <ChevronLeft size={20} strokeWidth={1.5} />
+          </button>
+          <button
+            type="button"
             onClick={() => scroll("right")}
             disabled={!canScrollRight}
-            className={!canScrollRight ? "opacity-50 cursor-not-allowed" : ""}
+            aria-label="Cuộn phải"
+            className="flex h-10 w-10 items-center justify-center rounded border border-[#cccfcd] text-brand-ink transition-colors hover:border-brand-ink disabled:cursor-not-allowed disabled:opacity-40"
           >
-            <ChevronRight />
-          </Button>
+            <ChevronRight size={20} strokeWidth={1.5} />
+          </button>
         </div>
       </div>
 
       <div
         ref={scrollRef}
-        className="flex overflow-x-auto gap-x-4 scroll-smooth pb-4 hide-scrollbar snap-x"
+        className="hide-scrollbar flex snap-x gap-x-6 overflow-x-auto scroll-smooth pb-2"
         onScroll={checkScrollPosition}
       >
         {products.map((product, index) => (
-          <div key={index} className="snap-start min-w-[220px]">
+          <div key={index} className="w-[220px] flex-shrink-0 snap-start sm:w-[260px]">
             <ProductItem product={product} />
           </div>
         ))}

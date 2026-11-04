@@ -9,7 +9,7 @@ const PreviewImages = ({ imageUrls, isOpen, onClose }) => {
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-lg overflow-hidden shadow-xl max-w-7xl w-full"
+        className="bg-white rounded-lg overflow-hidden max-w-7xl w-full"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="relative">
@@ -19,13 +19,13 @@ const PreviewImages = ({ imageUrls, isOpen, onClose }) => {
                 key={index}
                 src={imageUrl}
                 alt="Preview"
-                className="w-96 h-96 object-cover rounded-md"
+                className="w-96 h-96 object-cover rounded-lg"
               />
             ))}
           </div>
           <button
             onClick={onClose}
-            className="absolute top-0 right-0 m-2 text-white bg-indigo-600 rounded-full px-3 py-1"
+            className="absolute top-0 right-0 m-2 text-white bg-brand-ink rounded px-2 py-1"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

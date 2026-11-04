@@ -41,7 +41,7 @@ const VerifyEmail = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
-        className="mt-8 font-display text-2xl font-bold text-[#111827]"
+        className="mt-8 font-label text-2xl text-[#111827]"
       >
         Đang Xác Nhận...
       </motion.h2>

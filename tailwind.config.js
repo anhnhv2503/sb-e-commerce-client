@@ -8,12 +8,40 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: [
+          "Geist",
+          "Inter",
+          "ui-sans-serif",
+          "system-ui",
+          "-apple-system",
+          "Segoe UI",
+          "Roboto",
+          "sans-serif",
+        ],
+        display: ["Playfair Display", "ui-serif", "Georgia", "serif"],
+        label: ["Oswald", "Geist", "ui-sans-serif", "sans-serif"],
+        mono: ["Geist Mono", "ui-monospace", "Consolas", "monospace"],
+      },
+      maxWidth: {
+        page: "1440px",
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
       colors: {
+        /* Brand palette — the project's existing colors, kept as named tokens */
+        brand: {
+          pink: "#d9376e",
+          orange: "#ff8e3c",
+          mist: "#eff0f3",
+          ink: "#111827",
+          blue: "#3B82F6",
+          night: "#0d0d0d",
+        },
+        hairline: "#e5e7eb",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {

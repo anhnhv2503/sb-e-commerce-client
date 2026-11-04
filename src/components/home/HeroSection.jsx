@@ -1,6 +1,6 @@
 import { images } from "@/data/carouselData";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -8,17 +8,13 @@ const SLIDE_INTERVAL = 5000;
 const AUTOPLAY_RESUME_DELAY = 10000;
 
 const slideVariants = {
-  enter: { opacity: 0, scale: 1.04 },
-  center: {
-    opacity: 1,
-    scale: 1,
-    transition: { duration: 1.1, ease: "easeOut" },
-  },
+  enter: { opacity: 0 },
+  center: { opacity: 1, transition: { duration: 0.9, ease: "easeOut" } },
   exit: { opacity: 0, transition: { duration: 0.6, ease: "easeIn" } },
 };
 
 const contentVariants = {
-  hidden: { opacity: 0, y: 32 },
+  hidden: { opacity: 0, y: 24 },
   visible: (delay = 0) => ({
     opacity: 1,
     y: 0,
@@ -27,9 +23,9 @@ const contentVariants = {
 };
 
 /**
- * HeroSection
- * Replaces the old Carousel with a cinematic, split-typography hero.
- * Accessibility: all interactive controls have aria-labels; reduced-motion respected via Framer Motion's system preference detection.
+ * HeroSection — editorial split panel.
+ * Left: dark panel carrying eyebrow, display headline, subtext and CTAs.
+ * Right: full-bleed image carousel, flush to the viewport edge.
  */
 const HeroSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -70,150 +66,133 @@ const HeroSection = () => {
   return (
     <section
       aria-label="Featured promotions"
-      className="relative w-full h-[92vh] min-h-[560px] overflow-hidden bg-[#0d0d0d]"
+      className="grid w-full bg-brand-night lg:min-h-[600px] lg:grid-cols-2"
     >
-      {/* ── Background slides ── */}
-      <AnimatePresence mode="sync">
-        <motion.div
-          key={currentIndex}
-          variants={slideVariants}
-          initial="enter"
-          animate="center"
-          exit="exit"
-          className="absolute inset-0"
-        >
-          <img
+      {/* ── Text panel ── */}
+      <div className="order-2 flex items-center px-4 py-16 sm:px-12 lg:order-1 lg:px-16 lg:py-20 xl:px-24">
+        <div className="max-w-xl">
+          <motion.p
+            custom={0}
+            variants={contentVariants}
+            initial="hidden"
+            animate="visible"
+            className="eyebrow mb-4 text-brand-orange"
+          >
+            Bộ Sưu Tập Mới Nhất
+          </motion.p>
+
+          <motion.h1
+            custom={0.15}
+            variants={contentVariants}
+            initial="hidden"
+            animate="visible"
+            className="font-display text-5xl text-white sm:text-6xl xl:text-[80px]"
+          >
+            Phong cách <span className="text-brand-pink">của bạn</span>
+          </motion.h1>
+
+          <motion.p
+            custom={0.3}
+            variants={contentVariants}
+            initial="hidden"
+            animate="visible"
+            className="mt-6 max-w-md text-base leading-relaxed text-white/80"
+          >
+            Khám phá hàng nghìn sản phẩm thời trang cao cấp — từ casual đến formal
+            — được tuyển chọn dành riêng cho bạn.
+          </motion.p>
+
+          <motion.div
+            custom={0.45}
+            variants={contentVariants}
+            initial="hidden"
+            animate="visible"
+            className="mt-10 flex flex-wrap gap-3"
+          >
+            <button
+              onClick={() => navigate("/shop")}
+              id="hero-cta-shop"
+              className="btn btn-primary"
+              aria-label="Xem cửa hàng"
+            >
+              Mua Ngay
+              <ArrowRight size={18} aria-hidden="true" />
+            </button>
+            <button
+              onClick={() => navigate("/about")}
+              id="hero-cta-about"
+              className="btn btn-outline-light"
+              aria-label="Tìm hiểu thêm về chúng tôi"
+            >
+              Về Chúng Tôi
+            </button>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* ── Image panel ── */}
+      <div className="relative order-1 aspect-[4/3] overflow-hidden sm:aspect-[16/9] lg:order-2 lg:aspect-auto">
+        <AnimatePresence mode="sync">
+          <motion.img
+            key={currentIndex}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
             src={images[currentIndex]}
             alt={`Slide ${currentIndex + 1}`}
-            className="w-full h-full object-cover object-center"
+            className="absolute inset-0 h-full w-full object-cover object-center"
             loading="eager"
           />
-          {/* Multi-layer overlay for legibility (WCAG AA contrast requirement) */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/10" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
-        </motion.div>
-      </AnimatePresence>
+        </AnimatePresence>
 
-      {/* ── Hero content ── */}
-      <div className="relative z-10 h-full flex flex-col justify-center px-6 sm:px-12 lg:px-20 max-w-7xl mx-auto">
-        {/* Badge */}
-        <motion.div
-          custom={0}
-          variants={contentVariants}
-          initial="hidden"
-          animate="visible"
-          className="mb-6 inline-flex items-center gap-2 w-fit"
-        >
-          <span className="flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-semibold tracking-widest uppercase border border-white/20 bg-white/10 backdrop-blur-md text-white">
-            Bộ Sưu Tập Mới Nhất
-          </span>
-        </motion.div>
-
-        {/* Headline – Limelight display font (SKILL.md typography) */}
-        <motion.h1
-          custom={0.15}
-          variants={contentVariants}
-          initial="hidden"
-          animate="visible"
-          className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-[1.05] text-white max-w-3xl"
-        >
-          Phong Cách{" "}
-          <span className="animate-shimmer" aria-label="Của Bạn">
-            Của Bạn
-          </span>
-        </motion.h1>
-
-        {/* Sub-headline */}
-        <motion.p
-          custom={0.3}
-          variants={contentVariants}
-          initial="hidden"
-          animate="visible"
-          className="mt-6 text-base sm:text-lg text-white/75 max-w-xl leading-relaxed"
-        >
-          Khám phá hàng nghìn sản phẩm thời trang cao cấp — từ casual đến formal
-          — được tuyển chọn dành riêng cho bạn.
-        </motion.p>
-
-        {/* CTAs – 44px+ touch targets (SKILL.md accessibility) */}
-        <motion.div
-          custom={0.45}
-          variants={contentVariants}
-          initial="hidden"
-          animate="visible"
-          className="mt-10 flex flex-wrap gap-4"
-        >
-          <motion.button
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={() => navigate("/shop")}
-            id="hero-cta-shop"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-md bg-[#ff8e3c] hover:bg-[#ff8e3c] text-white font-semibold text-base transition-colors shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 border-2 border-slate-950"
-            aria-label="Xem cửa hàng"
+        {/* Controls bar */}
+        <div className="absolute inset-x-0 bottom-0 z-10 flex items-center justify-between gap-4 px-4 pb-4 sm:px-6 sm:pb-6">
+          <div
+            role="tablist"
+            aria-label="Slide indicators"
+            className="flex h-10 items-center gap-2 rounded-full bg-brand-night/70 px-4"
           >
-            Mua Ngay
-            <ArrowRight size={18} aria-hidden="true" />
-          </motion.button>
+            {images.map((_, idx) => (
+              <button
+                key={idx}
+                role="tab"
+                aria-selected={currentIndex === idx}
+                aria-label={`Go to slide ${idx + 1}`}
+                onClick={() => goToSlide(idx)}
+                className={`h-2 rounded-full transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white ${
+                  currentIndex === idx
+                    ? "w-6 bg-brand-blue"
+                    : "w-2 bg-white/60 hover:bg-white"
+                }`}
+              />
+            ))}
+          </div>
 
-          <motion.button
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={() => navigate("/about")}
-            id="hero-cta-about"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-md bg-[#d9376e] hover:bg-[#d9376e] text-white font-semibold text-base transition-colors shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 border-2 border-slate-950"
-            aria-label="Tìm hiểu thêm về chúng tôi"
-          >
-            Về Chúng Tôi
-          </motion.button>
-        </motion.div>
-      </div>
-
-      {/* ── Slide indicators ── */}
-      <div
-        role="tablist"
-        aria-label="Slide indicators"
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-20"
-      >
-        {images.map((_, idx) => (
-          <button
-            key={idx}
-            role="tab"
-            aria-selected={currentIndex === idx}
-            aria-label={`Go to slide ${idx + 1}`}
-            onClick={() => goToSlide(idx)}
-            className={`h-1.5 rounded-full transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white ${
-              currentIndex === idx
-                ? "w-8 bg-[#3B82F6]"
-                : "w-2 bg-white/40 hover:bg-white/70"
-            }`}
-          />
-        ))}
-      </div>
-
-      {/* ── Navigation arrows ── */}
-      <button
-        onClick={goToPrev}
-        aria-label="Previous slide"
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-black/30 hover:bg-black/50 backdrop-blur-sm text-white transition-all border-2 border-white/10 hover:border-white/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white "
-      >
-        <ChevronLeft size={22} aria-hidden="true" />
-      </button>
-
-      <button
-        onClick={goToNext}
-        aria-label="Next slide"
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-black/30 hover:bg-black/50 backdrop-blur-sm text-white transition-all border-white/10 hover:border-white/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white border-2"
-      >
-        <ChevronRight size={22} aria-hidden="true" />
-      </button>
-
-      {/* ── Slide counter (decorative) ── */}
-      <div
-        aria-hidden="true"
-        className="absolute bottom-8 right-8 font-mono text-xs text-white/40 tracking-widest z-20"
-      >
-        {String(currentIndex + 1).padStart(2, "0")} /{" "}
-        {String(images.length).padStart(2, "0")}
+          <div className="flex items-center gap-2">
+            <span
+              aria-hidden="true"
+              className="mr-1 flex h-10 items-center rounded bg-brand-night px-3 font-mono text-sm text-white"
+            >
+              {String(currentIndex + 1).padStart(2, "0")} /{" "}
+              {String(images.length).padStart(2, "0")}
+            </span>
+            <button
+              onClick={goToPrev}
+              aria-label="Previous slide"
+              className="flex h-10 w-10 items-center justify-center rounded bg-white text-brand-ink transition-opacity hover:opacity-85 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            >
+              <ChevronLeft size={20} strokeWidth={1.5} aria-hidden="true" />
+            </button>
+            <button
+              onClick={goToNext}
+              aria-label="Next slide"
+              className="flex h-10 w-10 items-center justify-center rounded bg-white text-brand-ink transition-opacity hover:opacity-85 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            >
+              <ChevronRight size={20} strokeWidth={1.5} aria-hidden="true" />
+            </button>
+          </div>
+        </div>
       </div>
     </section>
   );
