@@ -2,17 +2,16 @@ import AddMoreSize from "@/components/admin/pages/AddMoreSize";
 import {
   Badge,
   EmptyState,
-  LoadingRows,
   PageHeader,
   Panel,
 } from "@/components/admin/ui/AdminKit";
+import DataTable from "@/components/admin/ui/DataTable";
 import Paginator from "@/components/common/Paginator";
 import useCurrencyFormat from "@/components/hooks/useCurrencyFormat";
 import { getProducts } from "@/components/service/ApiFunctions";
 import { useDebounce, useDocumentTitle } from "@uidotdev/usehooks";
 import {
   AlertTriangle,
-  ChevronDown,
   ExternalLink,
   Image as ImageIcon,
   PackageSearch,
@@ -21,7 +20,7 @@ import {
   RefreshCw,
   Search,
 } from "lucide-react";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const PAGE_SIZES = [5, 10, 20];
@@ -59,7 +58,6 @@ const ProductList = () => {
   const [pageSize, setPageSize] = useState(10);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
-  const [expandedProduct, setExpandedProduct] = useState(null);
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search.trim(), 400);
 
@@ -102,8 +100,107 @@ const ProductList = () => {
     fetchProducts();
   }, [currentPage, filtersKey]);
 
-  const toggleExpand = (id) =>
-    setExpandedProduct(expandedProduct === id ? null : id);
+  const columns = [
+    {
+      id: "product",
+      header: "Sản phẩm",
+      cell: (product) => (
+        <div className="flex items-center gap-3">
+          <img
+            src={product.images?.[0]?.url}
+            alt=""
+            className="h-12 w-10 flex-shrink-0 rounded bg-brand-mist object-cover"
+          />
+          <div className="min-w-0">
+            <p className="max-w-[260px] truncate font-medium">{product.name}</p>
+            <p className="font-mono text-xs text-[#606562]">ID #{product.id}</p>
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: "category",
+      header: "Danh mục",
+      cell: (product) =>
+        product.category?.name ? <Badge tone="info">{product.category.name}</Badge> : "—",
+    },
+    {
+      id: "brand",
+      header: "Thương hiệu",
+      className: "text-[#363537]",
+      cell: (product) => brandName(product.brand),
+    },
+    {
+      id: "price",
+      header: "Giá bán",
+      align: "right",
+      className: "whitespace-nowrap font-mono tabular-nums",
+      cell: (product) => currency.format(product.price),
+    },
+    {
+      id: "sizes",
+      header: "Tồn kho theo size",
+      cell: (product) => (
+        <div className="flex max-w-[240px] flex-wrap gap-1">
+          {product.size?.length ? (
+            product.size.map((s) => (
+              <span
+                key={s.id ?? s.sizeName}
+                className={`inline-flex items-center gap-1 rounded border px-1.5 py-0.5 font-mono text-[11px] ${
+                  s.quantity <= 0
+                    ? "border-red-200 bg-red-50 text-[#DC2626]"
+                    : "border-hairline bg-white text-brand-ink"
+                }`}
+              >
+                {s.sizeName}
+                <span className="text-[#9ca3af]">·</span>
+                {s.quantity}
+              </span>
+            ))
+          ) : (
+            <span className="text-xs text-[#9ca3af]">—</span>
+          )}
+        </div>
+      ),
+    },
+    {
+      id: "status",
+      header: "Trạng thái",
+      cell: (product) => {
+        const status = stockStatus(product.size);
+        return <Badge tone={status.tone}>{status.label}</Badge>;
+      },
+    },
+    {
+      id: "actions",
+      header: "Thao tác",
+      pin: "end",
+      align: "right",
+      cell: (product) => (
+        <div className="flex items-center justify-end gap-1">
+          <AddMoreSize productId={product.id} fetchProduct={fetchProducts} />
+          <a
+            href={`/product/${product.id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-admin btn-admin-ghost btn-admin-icon"
+            aria-label="Xem trên cửa hàng"
+            title="Xem trên cửa hàng"
+          >
+            <ExternalLink size={15} />
+          </a>
+          <button
+            disabled
+            className="btn-admin btn-admin-ghost btn-admin-icon"
+            aria-label="Sửa sản phẩm (chưa hỗ trợ)"
+            title="Chức năng sửa chưa được hỗ trợ"
+          >
+            <Pencil size={15} />
+          </button>
+        </div>
+      ),
+    },
+  ];
 
   return (
     <>
@@ -200,243 +297,123 @@ const ProductList = () => {
           </div>
         </div>
 
-        {isLoading ? (
-          <LoadingRows rows={pageSize > 8 ? 8 : pageSize} cols={6} />
-        ) : loadError ? (
-          <EmptyState
-            icon={AlertTriangle}
-            title="Không thể tải sản phẩm"
-            description="Kiểm tra kết nối tới máy chủ rồi thử lại."
-            action={
-              <button onClick={fetchProducts} className="btn-admin btn-admin-secondary">
-                <RefreshCw size={15} aria-hidden="true" />
-                Thử lại
-              </button>
-            }
-          />
-        ) : products.length === 0 ? (
-          <EmptyState
-            icon={PackageSearch}
-            title={debouncedSearch ? "Không tìm thấy sản phẩm" : "Kho hàng trống"}
-            description={
-              debouncedSearch
-                ? `Không có sản phẩm nào khớp với "${debouncedSearch}".`
-                : "Chưa có sản phẩm nào trong hệ thống. Hãy thêm sản phẩm đầu tiên."
-            }
-            action={
-              debouncedSearch ? (
-                <button
-                  onClick={() => setSearch("")}
-                  className="btn-admin btn-admin-secondary"
-                >
-                  Xóa tìm kiếm
+        <DataTable
+          storageKey="products"
+          ariaLabel="Danh sách sản phẩm"
+          columns={columns}
+          data={products}
+          minWidth={960}
+          loading={isLoading}
+          loadingRows={pageSize > 8 ? 8 : pageSize}
+          error={loadError && (
+            <EmptyState
+              icon={AlertTriangle}
+              title="Không thể tải sản phẩm"
+              description="Kiểm tra kết nối tới máy chủ rồi thử lại."
+              action={
+                <button onClick={fetchProducts} className="btn-admin btn-admin-secondary">
+                  <RefreshCw size={15} aria-hidden="true" />
+                  Thử lại
                 </button>
-              ) : (
-                <button
-                  onClick={() => navigate("/admin/product/add")}
-                  className="btn-admin btn-admin-primary"
-                >
-                  <PlusCircle size={16} aria-hidden="true" />
-                  Thêm sản phẩm
-                </button>
-              )
-            }
-          />
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="admin-table min-w-[960px]">
-              <thead>
-                <tr>
-                  <th className="w-10" aria-label="Mở rộng" />
-                  <th>Sản phẩm</th>
-                  <th>Danh mục</th>
-                  <th>Thương hiệu</th>
-                  <th className="!text-right">Giá bán</th>
-                  <th>Tồn kho theo size</th>
-                  <th>Trạng thái</th>
-                  <th className="!text-right">Thao tác</th>
-                </tr>
-              </thead>
-              <tbody>
-                {products.map((product) => {
-                  const expanded = expandedProduct === product.id;
-                  const status = stockStatus(product.size);
-                  return (
-                    <Fragment key={product.id}>
-                      <tr className={expanded ? "[&>td]:bg-[#f7f8f9]" : ""}>
-                        <td className="!pr-0">
-                          <button
-                            onClick={() => toggleExpand(product.id)}
-                            aria-expanded={expanded}
-                            aria-label={expanded ? "Thu gọn" : "Xem chi tiết"}
-                            className="btn-admin btn-admin-ghost btn-admin-icon h-7 w-7"
-                          >
-                            <ChevronDown
-                              size={16}
-                              className={`transition-transform ${expanded ? "rotate-180" : ""}`}
-                            />
-                          </button>
-                        </td>
-                        <td>
-                          <div className="flex items-center gap-3">
-                            <img
-                              src={product.images?.[0]?.url}
-                              alt=""
-                              className="h-12 w-10 flex-shrink-0 rounded bg-brand-mist object-cover"
-                            />
-                            <div className="min-w-0">
-                              <p className="max-w-[260px] truncate font-medium">
-                                {product.name}
-                              </p>
-                              <p className="font-mono text-xs text-[#606562]">
-                                ID #{product.id}
-                              </p>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          {product.category?.name ? (
-                            <Badge tone="info">{product.category.name}</Badge>
-                          ) : (
-                            "—"
-                          )}
-                        </td>
-                        <td className="text-[#363537]">
-                          {brandName(product.brand)}
-                        </td>
-                        <td className="whitespace-nowrap text-right font-mono tabular-nums">
-                          {currency.format(product.price)}
-                        </td>
-                        <td>
-                          <div className="flex max-w-[240px] flex-wrap gap-1">
-                            {product.size?.length ? (
-                              product.size.map((s) => (
-                                <span
-                                  key={s.id ?? s.sizeName}
-                                  className={`inline-flex items-center gap-1 rounded border px-1.5 py-0.5 font-mono text-[11px] ${
-                                    s.quantity <= 0
-                                      ? "border-red-200 bg-red-50 text-[#DC2626]"
-                                      : "border-hairline bg-white text-brand-ink"
-                                  }`}
-                                >
-                                  {s.sizeName}
-                                  <span className="text-[#9ca3af]">·</span>
-                                  {s.quantity}
-                                </span>
-                              ))
-                            ) : (
-                              <span className="text-xs text-[#9ca3af]">—</span>
-                            )}
-                          </div>
-                        </td>
-                        <td>
-                          <Badge tone={status.tone}>{status.label}</Badge>
-                        </td>
-                        <td>
-                          <div className="flex items-center justify-end gap-1">
-                            <AddMoreSize
-                              productId={product.id}
-                              fetchProduct={fetchProducts}
-                            />
-                            <a
-                              href={`/product/${product.id}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="btn-admin btn-admin-ghost btn-admin-icon"
-                              aria-label="Xem trên cửa hàng"
-                              title="Xem trên cửa hàng"
-                            >
-                              <ExternalLink size={15} />
-                            </a>
-                            <button
-                              disabled
-                              className="btn-admin btn-admin-ghost btn-admin-icon"
-                              aria-label="Sửa sản phẩm (chưa hỗ trợ)"
-                              title="Chức năng sửa chưa được hỗ trợ"
-                            >
-                              <Pencil size={15} />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-
-                      {expanded && (
-                        <tr>
-                          <td colSpan={8} className="!bg-[#f7f8f9] !p-0">
-                            <div className="grid grid-cols-1 gap-6 px-6 py-5 lg:grid-cols-3">
-                              <div>
-                                <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-[#606562]">
-                                  Thông tin
-                                </h4>
-                                <dl className="divide-y divide-hairline rounded border border-hairline bg-white text-sm">
-                                  {[
-                                    ["Mã sản phẩm", `#${product.id}`, true],
-                                    [
-                                      "Ngày tạo",
-                                      product.createdAt
-                                        ? new Date(product.createdAt).toLocaleDateString("vi-VN")
-                                        : "—",
-                                    ],
-                                    [
-                                      "Cập nhật",
-                                      product.updatedAt
-                                        ? new Date(product.updatedAt).toLocaleDateString("vi-VN")
-                                        : "—",
-                                    ],
-                                    ["Tổng tồn kho", totalStock(product.size), true],
-                                  ].map(([k, v, mono]) => (
-                                    <div
-                                      key={k}
-                                      className="flex justify-between gap-4 px-3 py-2"
-                                    >
-                                      <dt className="text-[#606562]">{k}</dt>
-                                      <dd className={mono ? "font-mono" : ""}>
-                                        {v}
-                                      </dd>
-                                    </div>
-                                  ))}
-                                </dl>
-                              </div>
-                              <div>
-                                <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-[#606562]">
-                                  Mô tả
-                                </h4>
-                                <p className="rounded border border-hairline bg-white p-3 text-sm leading-relaxed text-[#363537]">
-                                  {product.description || "Chưa có mô tả."}
-                                </p>
-                              </div>
-                              <div>
-                                <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-[#606562]">
-                                  Hình ảnh ({product.images?.length || 0})
-                                </h4>
-                                {product.images?.length ? (
-                                  <div className="grid grid-cols-4 gap-2">
-                                    {product.images.map((image, idx) => (
-                                      <img
-                                        key={idx}
-                                        src={image.url}
-                                        alt={`Ảnh ${idx + 1}`}
-                                        className="aspect-square w-full rounded border border-hairline bg-white object-cover"
-                                      />
-                                    ))}
-                                  </div>
-                                ) : (
-                                  <div className="flex items-center gap-2 rounded border border-hairline bg-white p-3 text-sm text-[#9ca3af]">
-                                    <ImageIcon size={16} /> Chưa có hình ảnh
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          </td>
-                        </tr>
-                      )}
-                    </Fragment>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
+              }
+            />
+          )}
+          empty={
+            <EmptyState
+              icon={PackageSearch}
+              title={debouncedSearch ? "Không tìm thấy sản phẩm" : "Kho hàng trống"}
+              description={
+                debouncedSearch
+                  ? `Không có sản phẩm nào khớp với "${debouncedSearch}".`
+                  : "Chưa có sản phẩm nào trong hệ thống. Hãy thêm sản phẩm đầu tiên."
+              }
+              action={
+                debouncedSearch ? (
+                  <button
+                    onClick={() => setSearch("")}
+                    className="btn-admin btn-admin-secondary"
+                  >
+                    Xóa tìm kiếm
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => navigate("/admin/product/add")}
+                    className="btn-admin btn-admin-primary"
+                  >
+                    <PlusCircle size={16} aria-hidden="true" />
+                    Thêm sản phẩm
+                  </button>
+                )
+              }
+            />
+          }
+          renderExpanded={(product) => (
+      <div className="grid grid-cols-1 gap-6 px-6 py-5 lg:grid-cols-3">
+        <div>
+          <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-[#606562]">
+            Thông tin
+          </h4>
+          <dl className="divide-y divide-hairline rounded border border-hairline bg-white text-sm">
+            {[
+              ["Mã sản phẩm", `#${product.id}`, true],
+              [
+                "Ngày tạo",
+                product.createdAt
+                  ? new Date(product.createdAt).toLocaleDateString("vi-VN")
+                  : "—",
+              ],
+              [
+                "Cập nhật",
+                product.updatedAt
+                  ? new Date(product.updatedAt).toLocaleDateString("vi-VN")
+                  : "—",
+              ],
+              ["Tổng tồn kho", totalStock(product.size), true],
+            ].map(([k, v, mono]) => (
+              <div
+                key={k}
+                className="flex justify-between gap-4 px-3 py-2"
+              >
+                <dt className="text-[#606562]">{k}</dt>
+                <dd className={mono ? "font-mono" : ""}>
+                  {v}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+        <div>
+          <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-[#606562]">
+            Mô tả
+          </h4>
+          <p className="rounded border border-hairline bg-white p-3 text-sm leading-relaxed text-[#363537]">
+            {product.description || "Chưa có mô tả."}
+          </p>
+        </div>
+        <div>
+          <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-[#606562]">
+            Hình ảnh ({product.images?.length || 0})
+          </h4>
+          {product.images?.length ? (
+            <div className="grid grid-cols-4 gap-2">
+              {product.images.map((image, idx) => (
+                <img
+                  key={idx}
+                  src={image.url}
+                  alt={`Ảnh ${idx + 1}`}
+                  className="aspect-square w-full rounded border border-hairline bg-white object-cover"
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 rounded border border-hairline bg-white p-3 text-sm text-[#9ca3af]">
+              <ImageIcon size={16} /> Chưa có hình ảnh
+            </div>
+          )}
+        </div>
+      </div>
+          )}
+        />
       </Panel>
     </>
   );

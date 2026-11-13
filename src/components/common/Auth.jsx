@@ -1,6 +1,7 @@
 import AppLoading from "@/components/common/AppLoading";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 const Auth = () => {
@@ -25,6 +26,10 @@ const Auth = () => {
           setIsLoggedIn(true);
         } catch (error) {
           console.log(error);
+          toast.error(
+            error?.response?.data?.message || "Đăng nhập bằng Google thất bại",
+          );
+          nav("/login", { replace: true });
         }
       };
       fetchToken();

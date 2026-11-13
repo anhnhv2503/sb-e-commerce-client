@@ -1,7 +1,6 @@
 import OrdersTable from "@/components/admin/pages/OrdersTable";
 import {
   EmptyState,
-  LoadingRows,
   ORDER_STATUS,
   PageHeader,
   Panel,
@@ -14,13 +13,17 @@ import {
   CheckCircle,
   Clock,
   Inbox,
+  LayoutList,
   RefreshCw,
   Truck,
   XCircle,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
+const ALL = "ALL";
+
 const STATUS_TABS = [
+  { id: ALL, icon: LayoutList },
   { id: "PENDING", icon: Clock },
   { id: "IN_PROGRESS", icon: Inbox },
   { id: "SHIPPING", icon: Truck },
@@ -45,7 +48,10 @@ const ManageOrder = () => {
     if (showLoading) setIsLoading(true);
     setLoadError(false);
     try {
-      const response = await getOrdersByStatus(currentPage, status);
+      const response = await getOrdersByStatus(
+        currentPage,
+        status === ALL ? undefined : status,
+      );
       setOrders(response.data?.content || []);
       setTotalPages(response.data?.page?.totalPages || 0);
       setTotalElements(response.data?.page?.totalElements ?? null);
@@ -68,7 +74,8 @@ const ManageOrder = () => {
     setCurrentPage(0);
   };
 
-  const currentLabel = ORDER_STATUS[status]?.label;
+  const tabLabel = (id) => (id === ALL ? "Tất cả" : ORDER_STATUS[id].label);
+  const currentLabel = status === ALL ? null : ORDER_STATUS[status]?.label;
 
   return (
     <>
@@ -134,43 +141,47 @@ const ManageOrder = () => {
                     : "text-[#606562] hover:text-brand-ink"
                 }`}
               >
-                <span
-                  className={`h-1.5 w-1.5 rounded-full ${ORDER_STATUS[id].dot}`}
-                  aria-hidden="true"
-                />
+                {id !== ALL && (
+                  <span
+                    className={`h-1.5 w-1.5 rounded-full ${ORDER_STATUS[id].dot}`}
+                    aria-hidden="true"
+                  />
+                )}
                 <Icon size={15} strokeWidth={1.75} aria-hidden="true" />
-                {ORDER_STATUS[id].label}
+                {tabLabel(id)}
               </button>
             );
           })}
         </div>
 
-        {isLoading ? (
-          <LoadingRows rows={6} cols={6} />
-        ) : loadError ? (
-          <EmptyState
-            icon={AlertTriangle}
-            title="Không thể tải đơn hàng"
-            description="Kiểm tra kết nối hoặc quyền truy cập, rồi thử lại."
-            action={
-              <button
-                onClick={() => fetchOrders()}
-                className="btn-admin btn-admin-secondary"
-              >
-                <RefreshCw size={15} aria-hidden="true" />
-                Thử lại
-              </button>
-            }
-          />
-        ) : orders.length === 0 ? (
-          <EmptyState
-            icon={Inbox}
-            title="Không có đơn hàng"
-            description={`Hiện không có đơn hàng nào ở trạng thái "${currentLabel}".`}
-          />
-        ) : (
-          <OrdersTable data={orders} status={status} fetchOrders={fetchOrders} />
-        )}
+        <OrdersTable
+          data={orders}
+          fetchOrders={fetchOrders}
+          loading={isLoading}
+          error={loadError && (
+            <EmptyState
+              icon={AlertTriangle}
+              title="Không thể tải đơn hàng"
+              description="Kiểm tra kết nối hoặc quyền truy cập, rồi thử lại."
+              action={
+                <button
+                  onClick={() => fetchOrders()}
+                  className="btn-admin btn-admin-secondary"
+                >
+                  <RefreshCw size={15} aria-hidden="true" />
+                  Thử lại
+                </button>
+              }
+            />
+          )}
+          empty={
+            <EmptyState
+              icon={Inbox}
+              title="Không có đơn hàng"
+              description={`Hiện không có đơn hàng nào ở trạng thái "${currentLabel}".`}
+            />
+          }
+        />
       </Panel>
     </>
   );

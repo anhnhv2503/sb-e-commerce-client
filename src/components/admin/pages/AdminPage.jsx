@@ -9,6 +9,7 @@ import {
   Layers,
   PlusCircle,
   ShoppingBag,
+  Tag,
   Users,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -36,15 +37,22 @@ const MODULES = [
     path: "/admin/manage/category",
   },
   {
+    title: "Thương hiệu",
+    description: "Thêm, sửa và xóa thương hiệu sản phẩm",
+    icon: Tag,
+    accent: "text-[#0EA5E9]",
+    path: "/admin/manage/brand",
+  },
+  {
     title: "Người dùng",
-    description: "Xem thông tin và lịch sử mua hàng của khách",
+    description: "Tìm kiếm, phân quyền, khóa hoặc mở khóa tài khoản",
     icon: Users,
     accent: "text-[#16A34A]",
     path: "/admin/manage/user",
   },
   {
     title: "Thống kê",
-    description: "Báo cáo doanh số và xu hướng kinh doanh",
+    description: "Doanh thu theo tháng, sản phẩm bán chạy và tồn kho thấp",
     icon: BarChart3,
     accent: "text-brand-pink",
     path: "/admin/dashboard",

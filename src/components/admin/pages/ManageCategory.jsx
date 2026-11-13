@@ -1,15 +1,54 @@
 import AddCategory from "@/components/admin/pages/AddCategory";
-import {
-  EmptyState,
-  LoadingRows,
-  PageHeader,
-  Panel,
-} from "@/components/admin/ui/AdminKit";
+import { EmptyState, PageHeader, Panel } from "@/components/admin/ui/AdminKit";
+import DataTable from "@/components/admin/ui/DataTable";
 import { getAllCategories } from "@/components/service/ApiFunctions";
 import { useDocumentTitle } from "@uidotdev/usehooks";
 import { FolderOpen, Pencil, RefreshCw, Search, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "react-hot-toast";
+
+const columns = [
+  {
+    id: "id",
+    header: "ID",
+    headerClassName: "w-28",
+    className: "font-mono text-xs text-[#606562]",
+    cell: (c) => `#${String(c.id).padStart(3, "0")}`,
+  },
+  {
+    id: "name",
+    header: "Tên danh mục",
+    className: "font-medium",
+    cell: (c) => c.name,
+  },
+  {
+    id: "actions",
+    header: "Thao tác",
+    pin: "end",
+    align: "right",
+    headerClassName: "w-32",
+    cell: (c) => (
+      <div className="flex justify-end gap-1">
+        <button
+          disabled
+          className="btn-admin btn-admin-ghost btn-admin-icon"
+          aria-label={`Sửa ${c.name} (chưa hỗ trợ)`}
+          title="Chức năng sửa chưa được hỗ trợ"
+        >
+          <Pencil size={15} />
+        </button>
+        <button
+          disabled
+          className="btn-admin btn-admin-ghost btn-admin-icon hover:text-[#DC2626]"
+          aria-label={`Xóa ${c.name} (chưa hỗ trợ)`}
+          title="Chức năng xóa chưa được hỗ trợ"
+        >
+          <Trash2 size={15} />
+        </button>
+      </div>
+    ),
+  },
+];
 
 /**
  * ManageCategory — category table with client-side search.
@@ -96,78 +135,41 @@ const ManageCategory = () => {
           </button>
         </div>
 
-        {loading ? (
-          <LoadingRows rows={6} cols={3} />
-        ) : filtered.length === 0 ? (
-          <EmptyState
-            icon={FolderOpen}
-            title={searchQuery ? "Không tìm thấy kết quả" : "Chưa có danh mục"}
-            description={
-              searchQuery
-                ? `Không có danh mục nào khớp với "${searchQuery}".`
-                : "Hệ thống chưa có danh mục sản phẩm nào. Hãy tạo danh mục đầu tiên."
-            }
-            action={
-              searchQuery ? (
-                <button
-                  onClick={() => setSearchQuery("")}
-                  className="btn-admin btn-admin-secondary"
-                >
-                  Xóa tìm kiếm
-                </button>
-              ) : (
-                <button
-                  onClick={() => setAddDialogOpen(true)}
-                  className="btn-admin btn-admin-primary"
-                >
-                  Thêm danh mục
-                </button>
-              )
-            }
-          />
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="admin-table">
-              <thead>
-                <tr>
-                  <th className="w-28">ID</th>
-                  <th>Tên danh mục</th>
-                  <th className="w-32 !text-right">Thao tác</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map((category) => (
-                  <tr key={category.id}>
-                    <td className="font-mono text-xs text-[#606562]">
-                      #{String(category.id).padStart(3, "0")}
-                    </td>
-                    <td className="font-medium">{category.name}</td>
-                    <td>
-                      <div className="flex justify-end gap-1">
-                        <button
-                          disabled
-                          className="btn-admin btn-admin-ghost btn-admin-icon"
-                          aria-label={`Sửa ${category.name} (chưa hỗ trợ)`}
-                          title="Chức năng sửa chưa được hỗ trợ"
-                        >
-                          <Pencil size={15} />
-                        </button>
-                        <button
-                          disabled
-                          className="btn-admin btn-admin-ghost btn-admin-icon hover:text-[#DC2626]"
-                          aria-label={`Xóa ${category.name} (chưa hỗ trợ)`}
-                          title="Chức năng xóa chưa được hỗ trợ"
-                        >
-                          <Trash2 size={15} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        <DataTable
+          storageKey="categories"
+          ariaLabel="Danh sách danh mục"
+          columns={columns}
+          data={filtered}
+          loading={loading}
+          empty={
+            <EmptyState
+              icon={FolderOpen}
+              title={searchQuery ? "Không tìm thấy kết quả" : "Chưa có danh mục"}
+              description={
+                searchQuery
+                  ? `Không có danh mục nào khớp với "${searchQuery}".`
+                  : "Hệ thống chưa có danh mục sản phẩm nào. Hãy tạo danh mục đầu tiên."
+              }
+              action={
+                searchQuery ? (
+                  <button
+                    onClick={() => setSearchQuery("")}
+                    className="btn-admin btn-admin-secondary"
+                  >
+                    Xóa tìm kiếm
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setAddDialogOpen(true)}
+                    className="btn-admin btn-admin-primary"
+                  >
+                    Thêm danh mục
+                  </button>
+                )
+              }
+            />
+          }
+        />
       </Panel>
     </>
   );

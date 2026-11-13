@@ -1,3 +1,4 @@
+import ManageBrand from "@/components/admin/pages/ManageBrand";
 import ManageCategory from "@/components/admin/pages/ManageCategory";
 import ManageOrder from "@/components/admin/pages/ManageOrder";
 import { AuthProvider } from "@/components/auth/AuthContext";
@@ -168,6 +169,10 @@ function App() {
         {
           path: "manage/category",
           element: <ManageCategory />,
+        },
+        {
+          path: "manage/brand",
+          element: <ManageBrand />,
         },
         {
           path: "manage/orders",

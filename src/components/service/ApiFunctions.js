@@ -332,3 +332,109 @@ export const getCartCount = async () => {
     },
   });
 };
+
+/* ───────────── Admin: shared helpers ───────────── */
+
+const authHeaders = () => {
+  const token = JSON.parse(localStorage.getItem("accessToken"));
+  return { headers: { Authorization: `Bearer ${token}` } };
+};
+
+/** Pull the most useful error message out of a backend error response. */
+export const getApiErrorMessage = (error, fallback) => {
+  const data = error?.response?.data;
+  if (typeof data === "string" && data.trim()) return data;
+  if (data?.message) return data.message;
+  if (typeof data?.data === "string") return data.data;
+  if (data && typeof data === "object") {
+    const firstFieldError = Object.values(data).find((v) => typeof v === "string");
+    if (firstFieldError) return firstFieldError;
+  }
+  return fallback;
+};
+
+/* ───────────── Admin: users ───────────── */
+
+export const getAdminUsers = async ({ page = 0, size = 10, search, role, active } = {}) => {
+  return axios.get("/api/admin/users", {
+    ...authHeaders(),
+    params: {
+      page,
+      size,
+      search: search || undefined,
+      role: role || undefined,
+      active: active === undefined || active === "" ? undefined : active,
+    },
+  });
+};
+
+export const getAdminUser = async (userId) => {
+  return axios.get(`/api/admin/users/${userId}`, authHeaders());
+};
+
+export const createAdminUser = async (data) => {
+  return axios.post("/api/admin/users", data, authHeaders());
+};
+
+export const updateAdminUser = async (userId, data) => {
+  return axios.put(`/api/admin/users/${userId}`, data, authHeaders());
+};
+
+export const lockUser = async (userId) => {
+  return axios.put(`/api/admin/users/${userId}/lock`, null, authHeaders());
+};
+
+export const unlockUser = async (userId) => {
+  return axios.put(`/api/admin/users/${userId}/unlock`, null, authHeaders());
+};
+
+export const activateUser = async (userId) => {
+  return axios.put(`/api/admin/users/${userId}/activate`, null, authHeaders());
+};
+
+export const changeUserRole = async (userId, roleName) => {
+  return axios.put(`/api/admin/users/${userId}/role`, null, {
+    ...authHeaders(),
+    params: { roleName },
+  });
+};
+
+export const deleteAdminUser = async (userId) => {
+  return axios.delete(`/api/admin/users/${userId}`, authHeaders());
+};
+
+/* ───────────── Admin: dashboard ───────────── */
+
+export const getOrderStatusStatistics = async () => {
+  return axios.get("/api/dashboard/order-status", authHeaders());
+};
+
+export const getMonthlyRevenue = async (year) => {
+  return axios.get("/api/dashboard/revenue", { ...authHeaders(), params: { year } });
+};
+
+export const getTopSellingProducts = async (limit = 5) => {
+  return axios.get("/api/dashboard/top-products", { ...authHeaders(), params: { limit } });
+};
+
+export const getLowStockProducts = async (threshold = 5) => {
+  return axios.get("/api/dashboard/low-stock", { ...authHeaders(), params: { threshold } });
+};
+
+/* ───────────── Brands ───────────── */
+
+export const getAllBrands = async () => {
+  return axios.get("/api/brands");
+};
+
+export const createBrand = async (data) => {
+  return axios.post("/api/brands", data, authHeaders());
+};
+
+export const updateBrand = async (id, data) => {
+  return axios.put(`/api/brands/${id}`, data, authHeaders());
+};
+
+export const deleteBrand = async (id) => {
+  return axios.delete(`/api/brands/${id}`, authHeaders());
+};

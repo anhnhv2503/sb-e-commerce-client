@@ -5,6 +5,7 @@ import {
   List,
   PlusCircle,
   ShoppingBag,
+  Tag,
   Users,
 } from "lucide-react";
 
@@ -32,6 +33,7 @@ export const ADMIN_NAV = [
       { path: "/admin/product/list", label: "Tất cả sản phẩm", icon: List },
       { path: "/admin/product/add", label: "Thêm sản phẩm", icon: PlusCircle },
       { path: "/admin/manage/category", label: "Danh mục", icon: FolderOpen },
+      { path: "/admin/manage/brand", label: "Thương hiệu", icon: Tag },
     ],
   },
   {
