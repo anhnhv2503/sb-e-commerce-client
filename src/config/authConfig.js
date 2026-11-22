@@ -1,6 +1,5 @@
 export const authConfig = {
-  client_id:
-    "835106965547-rt5ogefe10hvidq1oj38rh1p2i1q9u9o.apps.googleusercontent.com",
-  auth_uri: "https://accounts.google.com/o/oauth2/auth",
-  redirect_uris: "http://localhost:5173/auth",
+  client_id:  import.meta.env.VITE_CLIENT_ID,
+  auth_uri: import.meta.env.VITE_AUTH_URI,
+  redirect_uris: import.meta.env.VITE_REDIRECT_URI,
 };

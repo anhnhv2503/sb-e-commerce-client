@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { authConfig } from "@/config/authConfig";
 import { loginSchema } from "@/schemas/auth.schema";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDocumentTitle } from "@uidotdev/usehooks";
@@ -54,9 +53,9 @@ const Login = () => {
   };
 
   const handleGoogleLogin = () => {
-    const callbackUrl = authConfig.redirect_uris;
-    const authUrl = authConfig.auth_uri;
-    const googleClientId = authConfig.client_id;
+    const callbackUrl = import.meta.env.VITE_REDIRECT_URI;
+    const authUrl = import.meta.env.VITE_AUTH_URI;
+    const googleClientId = import.meta.env.VITE_CLIENT_ID;
     const targetUrl = `${authUrl}?redirect_uri=${encodeURIComponent(
       callbackUrl,
     )}&response_type=code&client_id=${googleClientId}&scope=openid%20email%20profile`;
@@ -72,8 +71,7 @@ const Login = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2 }}
-          className="relative z-10 px-16 max-w-lg text-center"
-        >
+          className="relative z-10 px-16 max-w-lg text-center">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/10 text-white/80 text-sm font-mono tracking-widest uppercase mb-8">
             <Sparkles size={14} className="text-[#8B5CF6]" aria-hidden="true" />
             VA Shop
@@ -94,8 +92,7 @@ const Login = () => {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="w-full max-w-md"
-        >
+          className="w-full max-w-md">
           <Card className="border border-hairline bg-white">
             <CardHeader className="pb-2 pt-8 px-8">
               <motion.div variants={itemVariants}>
@@ -114,8 +111,7 @@ const Login = () => {
                 <motion.div variants={itemVariants}>
                   <Label
                     htmlFor="login-email"
-                    className="text-[#111827] text-sm font-medium"
-                  >
+                    className="text-[#111827] text-sm font-medium">
                     Email
                   </Label>
                   <div className="relative mt-1.5">
@@ -144,8 +140,7 @@ const Login = () => {
                 <motion.div variants={itemVariants}>
                   <Label
                     htmlFor="login-password"
-                    className="text-[#111827] text-sm font-medium"
-                  >
+                    className="text-[#111827] text-sm font-medium">
                     Mật khẩu
                   </Label>
                   <div className="relative mt-1.5">
@@ -168,8 +163,7 @@ const Login = () => {
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors p-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#3B82F6] rounded"
                       aria-label={
                         showPassword ? "Ẩn mật khẩu" : "Hiển thị mật khẩu"
-                      }
-                    >
+                      }>
                       {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
                   </div>
@@ -183,8 +177,7 @@ const Login = () => {
                 {/* Show password checkbox */}
                 <motion.div
                   variants={itemVariants}
-                  className="flex items-center justify-between"
-                >
+                  className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Checkbox
                       id="login-show-password"
@@ -194,16 +187,14 @@ const Login = () => {
                     />
                     <Label
                       htmlFor="login-show-password"
-                      className="text-sm text-gray-500 cursor-pointer"
-                    >
+                      className="text-sm text-gray-500 cursor-pointer">
                       Hiển thị mật khẩu
                     </Label>
                   </div>
                   <button
                     type="button"
                     onClick={() => nav("/forgot/password")}
-                    className="text-sm text-[#d9376e] hover:text-[#d9376e] font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#d9376e] rounded"
-                  >
+                    className="text-sm text-[#d9376e] hover:text-[#d9376e] font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#d9376e] rounded">
                     Quên mật khẩu?
                   </button>
                 </motion.div>
@@ -212,8 +203,7 @@ const Login = () => {
                 {error && (
                   <p
                     className="text-[#DC2626] text-sm bg-red-50 border border-red-200 rounded-lg px-4 py-2"
-                    role="alert"
-                  >
+                    role="alert">
                     {error}
                   </p>
                 )}
@@ -224,8 +214,7 @@ const Login = () => {
                     type="submit"
                     disabled={isSubmitting}
                     id="login-submit-btn"
-                    className="w-full h-12 bg-[#ff8e3c] hover:bg-[#ff8e3c] text-white text-base transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff8e3c] rounded font-label font-semibold tracking-[0.057em]"
-                  >
+                    className="w-full h-12 bg-[#ff8e3c] hover:bg-[#ff8e3c] text-white text-base transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff8e3c] rounded font-label font-semibold tracking-[0.057em]">
                     {isSubmitting ? (
                       <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                     ) : (
@@ -245,8 +234,7 @@ const Login = () => {
               {/* Divider */}
               <motion.div
                 variants={itemVariants}
-                className="flex items-center gap-4"
-              >
+                className="flex items-center gap-4">
                 <div className="flex-1 h-px bg-gray-200" />
                 <span className="text-xs text-gray-400 uppercase tracking-widest font-mono">
                   hoặc
@@ -260,8 +248,7 @@ const Login = () => {
                   variant="outline"
                   id="login-google-btn"
                   className="w-full h-12 bg-white hover:bg-gray-50 text-[#111827] font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B82F6] rounded-lg border border-hairline"
-                  onClick={handleGoogleLogin}
-                >
+                  onClick={handleGoogleLogin}>
                   <FaGoogle className="mr-2 text-[#EA4335]" />
                   Đăng Nhập với Google
                 </Button>
@@ -273,8 +260,7 @@ const Login = () => {
                   Chưa có tài khoản?{" "}
                   <button
                     onClick={() => nav("/register")}
-                    className="text-[#d9376e] hover:text-[#d9376e] font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#d9376e] rounded"
-                  >
+                    className="text-[#d9376e] hover:text-[#d9376e] font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#d9376e] rounded">
                     Đăng Ký Ngay
                   </button>
                 </p>
