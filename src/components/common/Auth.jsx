@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
+
 const Auth = () => {
   const nav = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -17,7 +19,7 @@ const Auth = () => {
         const authCode = isMatch[1];
         try {
           const response = await axios.post(
-            `http://localhost:8080/api/auth/google-login?code=${authCode}`,
+            `${BASE_URL}/api/auth/google-login?code=${authCode}`,
           );
           localStorage.setItem(
             "accessToken",
