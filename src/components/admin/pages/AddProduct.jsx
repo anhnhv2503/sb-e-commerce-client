@@ -17,7 +17,11 @@ import { Check, Eye, Save, Upload, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { sizeOptions } from "../../../data/data.js";
+import {
+  clothesSizes,
+  shoeSizes,
+  getSizeTypeFromCategory,
+} from "../../../data/data.js";
 
 /**
  * AddProduct — two-column console form with a completion checklist.
@@ -32,6 +36,7 @@ const AddProduct = () => {
   const [brand, setBrand] = useState("");
   const [inventory, setInventory] = useState("");
   const [category, setCategory] = useState("");
+  const [sizeType, setSizeType] = useState("clothes");
   const [sizename, setSizeName] = useState("");
   const [images, setImages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -114,6 +119,11 @@ const AddProduct = () => {
     });
   };
 
+  const handleCategoryChange = (val) => {
+    setCategory(val);
+    setSizeType(getSizeTypeFromCategory(val));
+  };
+
   const resetForm = () => {
     setName("");
     setDescription("");
@@ -121,6 +131,7 @@ const AddProduct = () => {
     setBrand("");
     setInventory("");
     setCategory("");
+    setSizeType("clothes");
     setSizeName("");
     setImages([]);
     setPreviewImages([]);
@@ -325,7 +336,7 @@ const AddProduct = () => {
                 <span className="admin-label">
                   Danh mục <span className="text-[#DC2626]">*</span>
                 </span>
-                <Select value={category} onValueChange={setCategory}>
+                <Select value={category} onValueChange={handleCategoryChange}>
                   <SelectTrigger className={selectTriggerCls} aria-label="Danh mục">
                     <SelectValue placeholder="Chọn danh mục" />
                   </SelectTrigger>
@@ -340,11 +351,37 @@ const AddProduct = () => {
               </div>
 
               <fieldset>
-                <legend className="admin-label">
-                  Size ban đầu <span className="text-[#DC2626]">*</span>
-                </legend>
+                <div className="mb-2 flex items-center justify-between">
+                  <legend className="admin-label !mb-0">
+                    Size ban đầu <span className="text-[#DC2626]">*</span>
+                  </legend>
+                  <div className="flex rounded border border-[#e5e7eb] bg-[#f9fafb] p-0.5">
+                    <button
+                      type="button"
+                      onClick={() => setSizeType("clothes")}
+                      className={`rounded px-2.5 py-0.5 text-xs font-medium transition-colors ${
+                        sizeType === "clothes"
+                          ? "bg-white text-brand-ink shadow-sm"
+                          : "text-[#606562] hover:text-brand-ink"
+                      }`}
+                    >
+                      Quần áo
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setSizeType("shoes")}
+                      className={`rounded px-2.5 py-0.5 text-xs font-medium transition-colors ${
+                        sizeType === "shoes"
+                          ? "bg-white text-brand-ink shadow-sm"
+                          : "text-[#606562] hover:text-brand-ink"
+                      }`}
+                    >
+                      Giày dép
+                    </button>
+                  </div>
+                </div>
                 <div className="flex flex-wrap gap-2">
-                  {sizeOptions.map((size) => (
+                  {(sizeType === "shoes" ? shoeSizes : clothesSizes).map((size) => (
                     <button
                       key={size.id}
                       type="button"

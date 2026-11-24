@@ -40,16 +40,18 @@ const Login = () => {
   const { login } = useAuth();
   const nav = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState(null);
+  const [error] = useState(null);
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm({ resolver: yupResolver(loginSchema) });
+  } = useForm({
+    resolver: yupResolver(loginSchema),
+  });
 
   const onSubmit = async (data) => {
-    login(data);
+    await login(data);
   };
 
   const handleGoogleLogin = () => {

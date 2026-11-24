@@ -178,7 +178,11 @@ const ProductList = () => {
       align: "right",
       cell: (product) => (
         <div className="flex items-center justify-end gap-1">
-          <AddMoreSize productId={product.id} fetchProduct={fetchProducts} />
+          <AddMoreSize
+            productId={product.id}
+            productCategory={product.category?.name}
+            fetchProduct={fetchProducts}
+          />
           <a
             href={`/product/${product.id}`}
             target="_blank"

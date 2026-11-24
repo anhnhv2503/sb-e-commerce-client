@@ -8,18 +8,31 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Plus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { sizeOptions } from "../../../data/data.js";
+import {
+  clothesSizes,
+  shoeSizes,
+  getSizeTypeFromCategory,
+} from "../../../data/data.js";
 
 /**
  * AddMoreSize — dialog to add stock for a size of a product.
  */
-const AddMoreSize = ({ productId, fetchProduct }) => {
+const AddMoreSize = ({ productId, productCategory, fetchProduct }) => {
   const [sizeName, setSizeName] = useState("");
   const [quantity, setQuantity] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const [sizeType, setSizeType] = useState(() =>
+    getSizeTypeFromCategory(productCategory),
+  );
+
+  useEffect(() => {
+    if (open) {
+      setSizeType(getSizeTypeFromCategory(productCategory));
+    }
+  }, [open, productCategory]);
 
   const handleAddMoreSize = async () => {
     if (!sizeName || !quantity) {
@@ -78,11 +91,37 @@ const AddMoreSize = ({ productId, fetchProduct }) => {
         >
           <div className="space-y-4 px-5 py-5">
             <fieldset>
-              <legend className="admin-label">
-                Size <span className="text-[#DC2626]">*</span>
-              </legend>
+              <div className="mb-2 flex items-center justify-between">
+                <legend className="admin-label !mb-0">
+                  Size <span className="text-[#DC2626]">*</span>
+                </legend>
+                <div className="flex rounded border border-[#e5e7eb] bg-[#f9fafb] p-0.5">
+                  <button
+                    type="button"
+                    onClick={() => setSizeType("clothes")}
+                    className={`rounded px-2.5 py-0.5 text-xs font-medium transition-colors ${
+                      sizeType === "clothes"
+                        ? "bg-white text-brand-ink shadow-sm"
+                        : "text-[#606562] hover:text-brand-ink"
+                    }`}
+                  >
+                    Quần áo
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSizeType("shoes")}
+                    className={`rounded px-2.5 py-0.5 text-xs font-medium transition-colors ${
+                      sizeType === "shoes"
+                        ? "bg-white text-brand-ink shadow-sm"
+                        : "text-[#606562] hover:text-brand-ink"
+                    }`}
+                  >
+                    Giày dép
+                  </button>
+                </div>
+              </div>
               <div className="flex flex-wrap gap-2">
-                {sizeOptions.map((size) => (
+                {(sizeType === "shoes" ? shoeSizes : clothesSizes).map((size) => (
                   <button
                     key={size.id}
                     type="button"
